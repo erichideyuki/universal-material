@@ -503,11 +503,15 @@ $text-field-elevated-height: 3rem !default;
 $text-field-label-padding-top: $text-field-item-margin !default;
 
 $text-field-box-border-radius: .25rem !default;
-$text-field-box-padding: 1rem !default;
+$text-field-box-label-padding-top: .6875rem !default;
+$text-field-box-label-padding-bottom: .25rem !default;
+$text-field-box-padding-sides: .75rem !default;
+$text-field-box-input-padding-top: .25rem !default;
+$text-field-box-input-padding-bottom: .625rem !default;
 $text-field-box-border-width: .125rem !default;
-$text-field-box-label-transform: 1.25rem - $text-field-item-margin !default;
+$text-field-box-label-transform: 1.3125rem - $text-field-item-margin !default;
 $text-field-box-label-font-weight: $font-medium !default;
-$text-field-box-label-line-height: .9375rem !default;
+$text-field-box-label-line-height: .75rem !default;
 
 $text-area-border-radius: .25rem !default;
 $text-area-border-width: .0625rem !default;
@@ -519,9 +523,9 @@ $text-area-hover-focus-top-padding: $text-area-top-base-padding - $text-area-den
 $text-area-bottom-base-padding: $text-field-item-margin !default;
 $text-area-bottom-padding: $text-area-bottom-base-padding - $text-area-border-width !default;
 $text-area-hover-focus-bottom-padding: $text-area-bottom-base-padding - $text-area-dense-border-width !default;
-$text-area-horizontal-base-padding: $text-field-box-padding !default;
-$text-area-horizontal-padding: $text-field-box-padding - $text-area-border-width !default;
-$text-area-hover-focus-horizontal-padding: $text-field-box-padding - $text-area-dense-border-width !default;
+$text-area-horizontal-base-padding: $text-field-box-label-padding-top !default;
+$text-area-horizontal-padding: $text-field-box-label-padding-top - $text-area-border-width !default;
+$text-area-hover-focus-horizontal-padding: $text-field-box-label-padding-top - $text-area-dense-border-width !default;
 
 $text-input-color-light-theme: $text-high-contrast-light-theme;
 $text-input-color-dark-theme: $text-high-contrast-dark-theme;
