@@ -21,12 +21,6 @@
       "@universal-material/angular/*": [
         "src/*"
       ],
-      "@universal-material/web": [
-        "universal-material-web/dist/index"
-      ],
-      "@universal-material/web/*": [
-        "universal-material-web/dist/*"
-      ],
       "@docs/*": [
         "demo/src/app/*"
       ]
@@ -41,18 +35,6 @@
   },
   "files": [],
   "references": [
-    {
-      "path": "./tsconfig.app.json"
-    },
-    {
-      "path": "./tsconfig.spec.json"
-    },
-    {
-      "path": "./demo/tsconfig.app.json"
-    },
-    {
-      "path": "./demo/tsconfig.spec.json"
-    },
     {
       "path": "./src/tsconfig.lib.json"
     },
