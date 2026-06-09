@@ -1,4 +1,0 @@
-[submodule "universal-material-web"]
-	path = universal-material-web
-	url = https://github.com/universal-material/universal-material-web.git
-	branch = main
