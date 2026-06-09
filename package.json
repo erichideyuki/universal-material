@@ -17,6 +17,9 @@
   "module": "index.js",
   "types": "index.d.ts",
   "sass": "scss/universal-material.scss",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "build": "run-s clean script:sass-to-ts build:esm build:bundle sass analyze copy && node remove-scripts-from-package.js",
     "build:watch": "gulp -f gulpfile.js scripts:watch",
@@ -47,7 +50,11 @@
     "checksize": "rollup -c ; cat my-element.bundled.js | gzip -9 | wc -c ; rm my-element.bundled.js",
     "prettier": "prettier . --write",
     "publish": "npm run lint:eslint && cd dist && npm publish",
-    "postinstall": "node ./change-compiler-to-add-custom-elements.js"
+    "postinstall": "node ./change-compiler-to-add-custom-elements.js",
+    "build:all": "npm run build && npm run build -w @universal-material/angular --if-present && npm run build -w @universal-material/react --if-present",
+    "test:all": "npm test && npm test -ws --if-present",
+    "lint:all": "npm run lint && npm run lint -ws --if-present",
+    "changeset": "changeset"
   },
   "author": "https://github.com/universal-material/universal-material/graphs/contributors",
   "repository": {
@@ -76,6 +83,7 @@
     "@angular/forms": "^20.0.0",
     "@angular/platform-browser": "^20.0.0",
     "@angular/router": "^20.0.0",
+    "@changesets/cli": "^2.27.0",
     "@custom-elements-manifest/analyzer": "^0.10.4",
     "@eslint/compat": "^1.2.7",
     "@eslint/eslintrc": "^3.3.0",

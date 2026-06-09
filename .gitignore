@@ -54,3 +54,8 @@ Thumbs.db
 custom-elements.json
 vscode.css-custom-data.json
 vscode.html-custom-data.json
+
+# Monorepo package build output (Angular ng-packagr, React tsup, …)
+/packages/*/dist
+/packages/*/node_modules
+/packages/*/.angular/cache

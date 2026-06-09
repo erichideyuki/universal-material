@@ -1,4 +1,5 @@
 {
+  "extends": "./tsconfig.base.json",
   "compileOnSave": false,
   "compilerOptions": {
     "lib": ["es2021", "DOM", "DOM.Iterable"],
@@ -8,39 +9,16 @@
     "inlineSources": true,
     "outDir": "./dist",
     "rootDir": "./src",
-    "strict": true,
-    "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitAny": true,
-    "noImplicitThis": true,
-    "skipLibCheck": true,
-    "isolatedModules": true,
-    "esModuleInterop": true,
     "experimentalDecorators": true,
-    "moduleResolution": "node",
-    "importHelpers": true,
-    "target": "ES2022",
-    "module": "ES2022",
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
     "useDefineForClassFields": false,
-    "plugins": [
-      {
-        "name": "ts-lit-plugin",
-        "strict": true
-      }
-    ],
+    "plugins": [{ "name": "ts-lit-plugin", "strict": true }],
     "types": ["mocha"]
   },
   "include": ["src/**/*.ts"],
-  "exclude": [
-    "./node_modules/lit/decorators.d.ts",
-    "src/**/*.test.ts"
-  ],
+  "exclude": ["./node_modules/lit/decorators.d.ts", "src/**/*.test.ts"],
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
