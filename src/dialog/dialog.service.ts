@@ -1,4 +1,4 @@
-import { ApplicationRef, ComponentFactoryResolver, Injectable, InjectionToken, Injector, Type } from '@angular/core';
+import { ApplicationRef, ComponentFactoryResolver, Injectable, InjectionToken, Injector, Type, inject } from '@angular/core';
 
 import { DialogInjector } from './dialog-injector';
 import { DialogStackService } from './dialog-stack.service';
@@ -10,11 +10,16 @@ export const DIALOG_DATA = new InjectionToken<any>('DIALOG_DATA');
   providedIn: 'root'
 })
 export class DialogService {
+  private readonly _componentFactoryResolver = inject(ComponentFactoryResolver);
+  private readonly _appRef = inject(ApplicationRef);
+  private readonly _injector = inject(Injector);
+  private readonly _dialogStackService = inject(DialogStackService);
 
-  constructor(private readonly _componentFactoryResolver: ComponentFactoryResolver,
-              private readonly _appRef: ApplicationRef,
-              private readonly _injector: Injector,
-              private readonly _dialogStackService: DialogStackService) {
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+
+  constructor() {
 
   }
 

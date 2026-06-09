@@ -1,4 +1,4 @@
-import { Directive, ElementRef } from '@angular/core';
+import { Directive, ElementRef, inject } from '@angular/core';
 
 import { ScrollBehavior } from '../util/scroll-behavior';
 
@@ -9,7 +9,12 @@ import { ScrollBehavior } from '../util/scroll-behavior';
 export class DialogBodyDirective extends ScrollBehavior {
   dialog: any;
 
-  constructor(_elementRef: ElementRef) {
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const _elementRef = inject(ElementRef);
+
     super();
     this.defaultTarget = _elementRef.nativeElement
   }
@@ -21,14 +26,14 @@ export class DialogBodyDirective extends ScrollBehavior {
     }
 
     const scrollTop = this._scrollableWrapper.scrollTop;
-    this.dialog.scrollTopDivider = !!scrollTop;
+    this.dialog.scrollTopDivider.set(!!scrollTop);
 
     if (scrollTop === null) {
-      this.dialog.scrollBottomDivider = false;
+      this.dialog.scrollBottomDivider.set(false);
       return;
     }
 
     const scrollBottom = scrollTop + this._scrollableWrapper.container.offsetHeight;
-    this.dialog.scrollBottomDivider = scrollBottom !== this._scrollableWrapper.container.scrollHeight
+    this.dialog.scrollBottomDivider.set(scrollBottom !== this._scrollableWrapper.container.scrollHeight);
   }
 }

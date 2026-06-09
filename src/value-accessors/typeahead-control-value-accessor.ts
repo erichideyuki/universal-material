@@ -1,6 +1,6 @@
 import { ControlValueAccessor, DefaultValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Directive, ElementRef, forwardRef, Provider, Renderer2 } from '@angular/core';
-import { UmChipField, UmTypeahead } from '@universal-material/web';
+import { Directive, ElementRef, forwardRef, Provider, Renderer2, inject } from '@angular/core';
+import { Typeahead } from '@universal-material/web';
 
 const TYPEAHEAD_VALUE_ACCESSOR: Provider = {
   provide: NG_VALUE_ACCESSOR,
@@ -17,12 +17,17 @@ const TYPEAHEAD_VALUE_ACCESSOR: Provider = {
   standalone: false,
 })
 export class UmTypeaheadControlValueAccessor implements ControlValueAccessor {
+  private _renderer = inject(Renderer2);
+  private _elementRef = inject<ElementRef<Typeahead>>(ElementRef);
+
 
   onChange = (_: any) => {};
   onTouched = () => {};
 
-  constructor(private _renderer: Renderer2,
-              private _elementRef: ElementRef<UmTypeahead>) {
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() {
   }
 
   writeValue(obj: any): void {

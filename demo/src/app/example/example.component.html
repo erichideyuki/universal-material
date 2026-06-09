@@ -1,7 +1,7 @@
 <div class="u-card-elevated">
   <div class="u-toolbar">
     <div class="u-toolbar-row">
-      <div class="u-toolbar-title">{{title}}</div>
+      <div class="u-toolbar-title">{{title()}}</div>
       <div class="u-toolbar-end">
         <div class="u-toolbar-actions">
           <u-icon-button class="u-toolbar-action" (click)="showCode = !showCode">
@@ -14,20 +14,30 @@
       </div>
     </div>
   </div>
-  <div *ngIf="showCode">
-    <u-tab-bar [(activeTabIndex)]="tabIndex">
-      <u-tab>HTML</u-tab>
-      <u-tab>TS</u-tab>
-      <u-tab>SCSS</u-tab>
-    </u-tab-bar>
-    <div class="u-divider"></div>
-    <div class="u-card-content" highlightChildren [ngSwitch]="tabIndex">
-      <pre *ngSwitchCase="0" highlight-js lang="html"><code>{{ htmlCode }}</code></pre>
-      <pre *ngSwitchCase="1" highlight-js lang="typescript"><code>{{ tsCode }}</code></pre>
-      <pre *ngSwitchCase="2" highlight-js lang="scss"><code>{{ cssCode }}</code></pre>
+  @if (showCode) {
+    <div>
+      <u-tab-bar [(activeTabIndex)]="tabIndex">
+        <u-tab>HTML</u-tab>
+        <u-tab>TS</u-tab>
+        <u-tab>SCSS</u-tab>
+      </u-tab-bar>
+      <div class="u-divider"></div>
+      <div class="u-card-content" highlightChildren>
+        @switch (tabIndex) {
+          @case (0) {
+            <pre highlight-js lang="html"><code>{{ htmlCode() }}</code></pre>
+          }
+          @case (1) {
+            <pre highlight-js lang="typescript"><code>{{ tsCode() }}</code></pre>
+          }
+          @case (2) {
+            <pre highlight-js lang="scss"><code>{{ cssCode() }}</code></pre>
+          }
+        }
+      </div>
+      <div class="u-divider"></div>
     </div>
-    <div class="u-divider"></div>
-  </div>
+  }
   <div class="u-card-content">
     <ng-content></ng-content>
   </div>

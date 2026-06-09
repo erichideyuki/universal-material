@@ -1,5 +1,5 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, input, inject } from '@angular/core';
+
 
 import { UniversalMaterialModule } from '@universal-material/angular';
 import { StackBlitzService } from './stackblitz/stack-blitz.service';
@@ -11,34 +11,38 @@ import { HighlightJsDirective } from 'ngx-highlight-js';
   styleUrls: ['./example.component.scss'],
   standalone: true,
   imports: [
-    CommonModule,
     UniversalMaterialModule,
     HighlightJsDirective
-  ],
+],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ExampleComponent {
+  private readonly _stackBlitzService = inject(StackBlitzService);
 
-  @Input() title!: string;
 
-  @Input() dashName!: string;
-  @Input() htmlCode!: string;
-  @Input() tsCode!: string;
-  @Input() cssCode!: string;
+  readonly title = input.required<string>();
+
+  readonly dashName = input.required<string>();
+  readonly htmlCode = input.required<string>();
+  readonly tsCode = input.required<string>();
+  readonly cssCode = input.required<string>();
 
   tabIndex: number = 0;
   showCode = false;
 
-  constructor(private readonly _stackBlitzService: StackBlitzService) {
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() {
 
   }
 
   createProject() {
     this._stackBlitzService.createProject({
-      cssCode: this.cssCode,
-      htmlCode: this.htmlCode,
-      tsCode: this.tsCode,
-      name: this.dashName
+      cssCode: this.cssCode(),
+      htmlCode: this.htmlCode(),
+      tsCode: this.tsCode(),
+      name: this.dashName()
     });
   }
 }

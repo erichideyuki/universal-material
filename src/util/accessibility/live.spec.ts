@@ -1,5 +1,5 @@
 import {TestBed, ComponentFixture, inject} from '@angular/core/testing';
-import {Component} from '@angular/core';
+import { Component, inject as inject_1 } from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {Live, ARIA_LIVE_DELAY} from './live';
 
@@ -31,8 +31,8 @@ describe('LiveAnnouncer', () => {
     it('should correctly update the text message', () => {
       say();
       const liveElement = getLiveElement();
-      expect(liveElement.textContent).toBe('test');
-      expect(liveElement.id).toBe('u-live');
+      expect(liveElement!.textContent).toBe('test');
+      expect(liveElement!.id).toBe('u-live');
     });
 
     it('should remove the used element from the DOM on destroy', () => {
@@ -46,8 +46,13 @@ describe('LiveAnnouncer', () => {
 
 
 
-@Component({template: `<button (click)="say()">say</button>`})
+@Component({template: `<button (click)="say()">say</button>`, standalone: false})
 class TestComponent {
-  constructor(public live: Live) {}
+  live = inject_1(Live);
+
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() {}
   say() { this.live.say('test'); }
 }

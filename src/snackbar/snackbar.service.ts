@@ -1,8 +1,8 @@
-import { Inject, Injectable, Optional } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { SNACKBAR_DEFAULT_OPTIONS, SnackbarConfig } from './snackbar-config.model';
 import { SnackbarDuration } from './snackbar-duration';
 import { SnackbarRef } from './snackbar-ref.model';
-import { UmSnackbar } from '@universal-material/web';
+import { Snackbar } from '@universal-material/web';
 import { fromEvent } from 'rxjs';
 
 const _defaultConfig: SnackbarConfig = {
@@ -16,7 +16,12 @@ export class SnackbarService {
 
   private readonly _defaultConfig: SnackbarConfig;
 
-  constructor(@Optional() @Inject(SNACKBAR_DEFAULT_OPTIONS) userOptions: SnackbarConfig) {
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const userOptions = inject<SnackbarConfig>(SNACKBAR_DEFAULT_OPTIONS, { optional: true })!;
+
 
 
     this._defaultConfig = { ..._defaultConfig, ... userOptions };
@@ -25,7 +30,7 @@ export class SnackbarService {
 
   open(message: string, config?: SnackbarConfig): SnackbarRef {
 
-    const snackbar = UmSnackbar.show({
+    const snackbar = Snackbar.show({
       message: message,
       action: config?.actionLabel!,
       duration: config?.duration || this._defaultConfig.duration,

@@ -1,10 +1,10 @@
-import { AfterContentInit, Directive, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { AfterContentInit, Directive, OnChanges, SimpleChanges, input } from '@angular/core';
 
 import { ScrollableContainerWrapper } from './scrollable-container-wrapper';
 
 @Directive()
 export abstract class ScrollBehavior implements AfterContentInit, OnChanges {
-  @Input() scrollContainer: HTMLElement | null = null;
+  readonly scrollContainer = input<HTMLElement | null>(null);
   protected _scrollableWrapper: ScrollableContainerWrapper | null = null;
 
   protected abstract _processBehavior: (scrollTop: number | null) => void;
@@ -13,7 +13,7 @@ export abstract class ScrollBehavior implements AfterContentInit, OnChanges {
   protected _setScrollWrapper() {
     this._scrollableWrapper = new ScrollableContainerWrapper();
     this._scrollableWrapper.defaultTarget = this.defaultTarget;
-    this._scrollableWrapper.container = this.scrollContainer;
+    this._scrollableWrapper.container = this.scrollContainer();
     this._scrollableWrapper.scrollTop$.subscribe(this._processBehavior.bind(this));
   }
 
@@ -23,7 +23,7 @@ export abstract class ScrollBehavior implements AfterContentInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['scrollContainer'] && this._scrollableWrapper) {
-      this._scrollableWrapper.container = this.scrollContainer;
+      this._scrollableWrapper.container = this.scrollContainer();
     }
   }
 }

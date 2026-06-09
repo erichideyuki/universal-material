@@ -1,44 +1,7 @@
-<app-example [title]="'Datepicker'" [htmlCode]="htmlCode" [cssCode]="cssCode" [tsCode]="tsCode" dashName="datepicker-example">
-  <u-card variant="outlined">
-    <u-select [(ngModel)]="batata" [compareWith]="compareStates">
-      @for (state of states; track state.id) {
-        <u-option
-          [ngValue]="state">{{ state.name }}</u-option>
-      }
+<docs-title title="Datepicker" tag="u-datepicker, u-range-datepicker">Pick a date or a date range. Bound with [(ngModel)].</docs-title>
 
-      @if (renderExtraState) {
-      <u-option
-        [ngValue]="extraState">{{ extraState.name }}</u-option>
-      }
-    </u-select>
-<!--    <select [(ngModel)]="batata" [compareWith]="compareStates">-->
-<!--      <option-->
-<!--        *ngFor="let state of states"-->
-<!--        [ngValue]="state">{{ state.name }}</option>-->
-
-<!--      <option-->
-<!--        *ngIf="renderExtraState"-->
-<!--        [ngValue]="extraState">{{ extraState.name }}</option>-->
-<!--    </select>-->
-    <div>{{batata | json}}</div>
-    <u-button (click)="renderExtraState = !renderExtraState">Toggle</u-button>
-<!--    <u-select [(ngModel)]="batata2">-->
-<!--      <ng-container *ngIf="true">-->
-<!--        <u-option [ngValue]="Batata.Frita">Frita</u-option>-->
-<!--        <u-option [ngValue]="Batata.Assada">Assada</u-option>-->
-<!--        <u-option [ngValue]="Batata.Rostie">Rostie</u-option>-->
-<!--      </ng-container>-->
-<!--    </u-select>-->
-<!--    <select [(ngModel)]="batata2">-->
-<!--      <ng-container *ngIf="true">-->
-<!--        <option [ngValue]="Batata.Frita">Frita</option>-->
-<!--        <option [ngValue]="Batata.Assada">Assada</option>-->
-<!--        <option [ngValue]="Batata.Rostie">Rostie</option>-->
-<!--      </ng-container>-->
-<!--    </select>-->
-
-    <h1>{{batata?.name}}</h1>
-  </u-card>
-
-  <app-datepicker-example></app-datepicker-example>
-</app-example>
+<docs-example [html]="htmlCode" [renderExample]="false" sectionTitle="Usage">
+  <div example>
+    <app-datepicker-example></app-datepicker-example>
+  </div>
+</docs-example>

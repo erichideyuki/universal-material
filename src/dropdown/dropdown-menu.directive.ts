@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostBinding, HostListener, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Directive, ElementRef, HostBinding, HostListener, OnChanges, SimpleChanges, input, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 
 import { Direction } from '../util/direction';
@@ -10,20 +10,25 @@ const autoDirection = 'auto';
   standalone: false,
 })
 export class DropdownMenuDirective implements OnChanges {
+  readonly _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
 
   click = new Subject<void>();
 
   private _innerDirection: Direction | null = null;
 
   @HostBinding('class.show') show = false;
-  @Input() direction: Direction | null = null;
+  readonly direction = input<Direction | null>(null);
 
   @HostListener('click', ['$event']) _click = (e: Event) => {
     e.stopPropagation();
     this.click.next();
   }
 
-  constructor(readonly _elementRef: ElementRef<HTMLElement>) {
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() {
 
   }
 

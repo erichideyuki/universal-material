@@ -1,14 +1,4 @@
-import {
-  Directive,
-  ElementRef,
-  forwardRef,
-  HostBinding,
-  HostListener,
-  Inject,
-  Input,
-  Optional,
-  Self
-} from '@angular/core';
+import { Directive, HostBinding, inject, input } from '@angular/core';
 import { NgControl } from '@angular/forms';
 
 import { TextInputBase } from '../shared/text-input-base';
@@ -19,15 +9,19 @@ import { FormFieldComponent } from '../form-field/form-field.component';
   standalone: false,
 })
 export class TextInputDirective extends TextInputBase {
+  override readonly ngControl: NgControl;
 
-  @Input()
+
   @HostBinding('class.u-text-input')
-  setInputClass = true;
+readonly setInputClass = input(true);
 
-  constructor(@Optional() @Self() override readonly ngControl: NgControl,
-              @Optional() @Inject(forwardRef(() => FormFieldComponent)) formField: FormFieldComponent,
-              elementRef: ElementRef) {
-    super(ngControl, formField, elementRef);
-    elementRef.nativeElement.addEventListener('click', (e: Event) => e.stopPropagation());
+  constructor() {
+    const ngControl = inject(NgControl, { optional: true, self: true })!;
+    const formField = inject(FormFieldComponent, { optional: true })!;
+
+    super(ngControl, formField);
+    this.ngControl = ngControl;
+
+    this._elementRef.nativeElement.addEventListener('click', (e: Event) => e.stopPropagation());
   }
 }

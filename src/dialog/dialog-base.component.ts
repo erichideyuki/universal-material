@@ -2,13 +2,12 @@ import {
   Component,
   ContentChild,
   ElementRef,
-  EventEmitter,
   HostBinding,
   inject,
   model,
-  Output,
   signal,
-  ViewChild
+  ViewChild,
+  output
 } from '@angular/core';
 
 import { DialogBodyDirective } from "./dialog-body.directive";
@@ -26,6 +25,9 @@ export const DefaultDialogConfig: DialogConfig = {
   host: {
     '[class.hide]': '_hiding()',
     '[class.show]': 'show()',
+    '[class.u-dialog-scroll-top-divider]': 'scrollTopDivider()',
+    '[class.u-dialog-scroll-bottom-divider]': 'scrollBottomDivider()',
+    '[attr.tabindex]': '-1',
   }
 })
 export class DialogBaseComponent {
@@ -37,8 +39,8 @@ export class DialogBaseComponent {
 
   protected readonly _hiding = signal(false);
   readonly show = model(false);
-  @Output() afterClose = new EventEmitter();
-  @Output() closedFromBackdrop = new EventEmitter();
+  readonly afterClose = output();
+  readonly closedFromBackdrop = output();
 
   @ContentChild(DialogBodyDirective)
   set _contentChildBody(dialogBody: DialogBodyDirective) {
@@ -52,10 +54,8 @@ export class DialogBaseComponent {
 
   dialogBody: DialogBodyDirective | null = null;
 
-  @HostBinding('tabindex') _tabIndex = -1;
-
-  @HostBinding('class.u-dialog-scroll-top-divider') scrollTopDivider = false;
-  @HostBinding('class.u-dialog-scroll-bottom-divider') scrollBottomDivider = false;
+  readonly scrollTopDivider = signal(false);
+  readonly scrollBottomDivider = signal(false);
 
   constructor() {
     this._elementRef.nativeElement.classList.add('u-dialog');

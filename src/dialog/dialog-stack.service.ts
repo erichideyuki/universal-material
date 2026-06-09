@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { first } from 'rxjs/operators';
 
 import { DialogComponent } from './dialog.component';
@@ -8,9 +8,14 @@ import { toObservable } from '@angular/core/rxjs-interop';
 
 @Injectable({providedIn: 'root'})
 export class DialogStackService {
+  private readonly _document = inject(DOCUMENT);
+
   private static _dialogStack: DialogComponent[] = [];
 
-  constructor(@Inject(DOCUMENT) private readonly _document: any) {
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() {
     this._document.body.addEventListener('keydown', (e: KeyboardEvent) => {
       if (e.keyCode === Key.Escape) {
         this.closeTopMostDialog();

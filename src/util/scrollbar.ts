@@ -1,4 +1,4 @@
-import {Injectable, Inject} from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 
 
@@ -19,7 +19,12 @@ export type CompensationReverter = () => void;
  */
 @Injectable({providedIn: 'root'})
 export class ScrollBar {
-  constructor(@Inject(DOCUMENT) private _document: any) {}
+  private _document = inject(DOCUMENT);
+
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() {}
 
   /**
    * Detects if a scrollbar is present and if yes, already compensates for its

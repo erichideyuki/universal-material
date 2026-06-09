@@ -1,17 +1,4 @@
-import {
-  Component,
-  ContentChild,
-  ElementRef,
-  EventEmitter,
-  HostBinding,
-  HostListener,
-  Inject,
-  InjectionToken,
-  Input,
-  Optional,
-  Output,
-  ViewChild
-} from '@angular/core';
+import { Component, ContentChild, ElementRef, HostBinding, HostListener, InjectionToken, Input, ViewChild, output, input, inject } from '@angular/core';
 import { LabelDirective } from './label.directive';
 import { InputBaseComponent } from '../shared/input-base.component';
 import { FormFieldAppearance } from './form-field-appearance';
@@ -25,6 +12,8 @@ export const FORM_FIELD_DEFAULT_APPEARANCE = new InjectionToken('FORM_FIELD_DEFA
   standalone: false,
 })
 export class FormFieldComponent {
+  readonly _elementRef = inject(ElementRef);
+
 
   _appearanceClass!: string;
   _appearance!: FormFieldAppearance;
@@ -33,7 +22,7 @@ export class FormFieldComponent {
   _hasLabel = false;
 
   @HostBinding('class.u-form-field-selection')
-  @Input() selectionField = false;
+readonly selectionField = input(false);
 
   set labelWidth(width: number) {
     this._elementRef.nativeElement.style.setProperty('--u-text-field-label-width', `${width}px`);
@@ -42,14 +31,14 @@ export class FormFieldComponent {
 
   @HostBinding('style.margin-bottom')
   get removeMarginStyle() {
-    return this.removeMargin ? '0' : '';
+    return this.removeMargin() ? '0' : '';
   }
 
-  @Input() invalid = false;
-  @Input() removeMargin = false;
-  @Input() supportingText: string | null = null;
-  @Input() errorText: string | null = null;
-  @Output() activated = new EventEmitter<void>();
+  readonly invalid = input(false);
+  readonly removeMargin = input(false);
+  readonly supportingText = input<string | null>(null);
+  readonly errorText = input<string | null>(null);
+  readonly activated = output<void>();
 
   @Input()
   get appearance(): FormFieldAppearance {
@@ -70,8 +59,13 @@ export class FormFieldComponent {
     this._appearanceClass = `u-text-field-${value}`;
   }
 
-  constructor(readonly _elementRef: ElementRef,
-              @Optional() @Inject(FORM_FIELD_DEFAULT_APPEARANCE) defaultAppearance: FormFieldAppearance) {
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const _elementRef = this._elementRef;
+    const defaultAppearance = inject<FormFieldAppearance>(FORM_FIELD_DEFAULT_APPEARANCE, { optional: true })!;
+
     this._defaultAppearance = defaultAppearance || 'box';
     this.appearance = this._defaultAppearance;
     _elementRef.nativeElement.classList.add('u-form-field');
@@ -81,7 +75,7 @@ export class FormFieldComponent {
 
     if (!this._input?.disabled) {
       this._input?.focus();
-      this.activated.next();
+      this.activated.emit();
     }
   }
 

@@ -1,13 +1,4 @@
-import {
-  AfterContentInit,
-  ContentChild,
-  Directive,
-  ElementRef,
-  EventEmitter,
-  HostListener,
-  Input,
-  Output
-} from '@angular/core';
+import { AfterContentInit, Directive, ElementRef, EventEmitter, HostListener, Output, contentChild, input, inject } from '@angular/core';
 
 import { DropdownToggleDirective } from './dropdown-toggle.directive';
 import { DropdownMenuDirective } from './dropdown-menu.directive';
@@ -17,13 +8,15 @@ import { DropdownMenuDirective } from './dropdown-menu.directive';
   standalone: false,
 })
 export class DropdownDirective implements AfterContentInit {
+  private readonly _elementRef = inject(ElementRef);
+
 
   private _justToggle = false;
 
-  @Input() autoClose: boolean | 'outside' = true;
+  readonly autoClose = input<boolean | 'outside'>(true);
 
-  @ContentChild(DropdownToggleDirective) _dropdownToggle: DropdownToggleDirective | null = null;
-  @ContentChild(DropdownMenuDirective) _dropdownMenu!: DropdownMenuDirective;
+  readonly _dropdownToggle = contentChild(DropdownToggleDirective);
+  readonly _dropdownMenu = contentChild.required(DropdownMenuDirective);
 
   @HostListener('window:click') _windowClick() {
     if (this._justToggle) {
@@ -31,29 +24,37 @@ export class DropdownDirective implements AfterContentInit {
       return;
     }
 
-    if ((this.autoClose === 'outside' || this.autoClose) && this._dropdownMenu.show) {
-      this._dropdownMenu.show = false;
+    const _dropdownMenu = this._dropdownMenu();
+    const autoClose = this.autoClose();
+    if ((autoClose === 'outside' || autoClose) && _dropdownMenu.show) {
+      _dropdownMenu.show = false;
     }
   }
 
-  constructor(private readonly _elementRef: ElementRef) {
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() {
 
   }
 
   private _autoClose() {
-    if (this.autoClose && this._dropdownMenu.show) {
-      this._dropdownMenu.show = false;
+    const _dropdownMenu = this._dropdownMenu();
+    if (this.autoClose() && _dropdownMenu.show) {
+      _dropdownMenu.show = false;
     }
   }
 
   ngAfterContentInit() {
 
-    this._dropdownToggle?.click.subscribe(() => this.toggle());
+    this._dropdownToggle()?.click.subscribe(() => this.toggle());
 
-    this._dropdownMenu.click.subscribe(() => {
+    this._dropdownMenu().click.subscribe(() => {
 
-      if (this.autoClose && this.autoClose !== 'outside' && this._dropdownMenu.show) {
-        this._dropdownMenu.show = false;
+      const _dropdownMenu = this._dropdownMenu();
+      const autoClose = this.autoClose();
+      if (autoClose && autoClose !== 'outside' && _dropdownMenu.show) {
+        _dropdownMenu.show = false;
       }
     });
   }
@@ -61,7 +62,7 @@ export class DropdownDirective implements AfterContentInit {
   toggle(): void {
     this._justToggle = true;
 
-    if (!this._dropdownMenu.show) {
+    if (!this._dropdownMenu().show) {
       this.open();
       return;
     }
@@ -70,19 +71,21 @@ export class DropdownDirective implements AfterContentInit {
   }
 
   open(): void {
-    if (this._dropdownMenu.direction && this._dropdownMenu.direction.indexOf('auto') === 0) {
-      this._dropdownMenu.setDirectionClass(`${this.openDropdownUpOrDown()}${this._dropdownMenu.direction.substring(4)}`);
+    const _dropdownMenu = this._dropdownMenu();
+    const direction = _dropdownMenu.direction();
+    if (direction && direction.indexOf('auto') === 0) {
+      _dropdownMenu.setDirectionClass(`${this.openDropdownUpOrDown()}${direction.substring(4)}`);
     }
 
-    this._dropdownMenu.show = true;
+    _dropdownMenu.show = true;
   }
 
   close(): void {
-    this._dropdownMenu.show = false;
+    this._dropdownMenu().show = false;
   }
 
   openDropdownUpOrDown(): string {
-    const menuElement = this._dropdownMenu._elementRef.nativeElement;
+    const menuElement = this._dropdownMenu()._elementRef.nativeElement;
     const dropdownElement = this._elementRef.nativeElement;
     const rect = dropdownElement.getBoundingClientRect() as DOMRect;
     const styles = getComputedStyle(menuElement);

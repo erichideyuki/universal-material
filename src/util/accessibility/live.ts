@@ -1,4 +1,4 @@
-import {Injectable, Inject, InjectionToken, OnDestroy} from '@angular/core';
+import { Injectable, InjectionToken, OnDestroy, inject } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 
 
@@ -35,7 +35,13 @@ function getLiveElement(document: any, lazyCreate = false): HTMLElement | null {
 
 @Injectable({providedIn: 'root'})
 export class Live implements OnDestroy {
-  constructor(@Inject(DOCUMENT) private _document: any, @Inject(ARIA_LIVE_DELAY) private _delay: any) {}
+  private _document = inject(DOCUMENT);
+  private _delay = inject(ARIA_LIVE_DELAY);
+
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() {}
 
   ngOnDestroy() {
     const element = getLiveElement(this._document);

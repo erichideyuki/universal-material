@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ConfirmDialogConfig } from './confirm-dialog-config.model';
-import { ConfirmDialogBuilder, UmButtonColor, UmButtonVariant } from '@universal-material/web';
+import { ConfirmDialogBuilder, ButtonColor, ButtonVariant } from '@universal-material/web';
 import { ConfirmDialogRef } from './confirm-dialog-ref';
 import { fromPromise } from 'rxjs/internal/observable/innerFrom';
 import { filter } from 'rxjs/operators';
@@ -18,16 +18,16 @@ export class ConfirmDialogService {
     if (config.confirmButton) {
       builder.confirmButton({
         label: config.confirmButton.text,
-        variant: config.confirmButton.variant as UmButtonVariant ?? 'text',
-        color: config.confirmButton.color as UmButtonColor
+        variant: config.confirmButton.variant as ButtonVariant ?? 'text',
+        color: config.confirmButton.color as ButtonColor
       })
     }
 
     if (config.cancelButton) {
       builder.cancelButton({
         label: config.cancelButton.text,
-        variant: config.cancelButton.variant as UmButtonVariant ?? 'text',
-        color: config.cancelButton.color as UmButtonColor
+        variant: config.cancelButton.variant as ButtonVariant ?? 'text',
+        color: config.cancelButton.color as ButtonColor
       })
     }
 

@@ -1,16 +1,7 @@
-<app-example [title]="'Slider'" [htmlCode]="htmlCode" [cssCode]="cssCode" [tsCode]="tsCode" dashName="slider-example">
-  <app-slider-example></app-slider-example>
-</app-example>
+<docs-title title="Slider" tag="u-slider">Select a numeric value from a range. Bound with Angular [(ngModel)] via the slider ControlValueAccessor.</docs-title>
 
-
-<u-text-field
-  label="Message"
-  [(ngModel)]="message"
-  ngDefaultControl
-></u-text-field>
-<u-text-field
-  label="Action"
-  [(ngModel)]="action"
-  ngDefaultControl
-></u-text-field>
-<u-button (click)="showSnackbar()">Show snackbar</u-button>
+<docs-example [html]="htmlCode" [renderExample]="false" sectionTitle="Usage">
+  <div example>
+    <app-slider-example></app-slider-example>
+  </div>
+</docs-example>

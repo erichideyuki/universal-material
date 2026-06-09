@@ -1,6 +1,6 @@
-import { Directive, effect, ElementRef, model } from '@angular/core';
+import { Directive, effect, ElementRef, model, inject } from '@angular/core';
 
-import { UmTabBar } from '@universal-material/web';
+import { TabBar } from '@universal-material/web';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
@@ -10,7 +10,7 @@ import { debounceTime } from 'rxjs/operators';
 export class TabBarDirective {
 
   #activeTabIndex = 0;
-  readonly #tabBar: UmTabBar;
+  readonly #tabBar: TabBar;
   readonly #mutationObserver: MutationObserver;
 
   #justSetTabIndex = false;
@@ -19,7 +19,12 @@ export class TabBarDirective {
 
   #tabChangedSubject = new Subject<void>();
 
-  constructor(elementRef: ElementRef<UmTabBar>) {
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const elementRef = inject<ElementRef<TabBar>>(ElementRef);
+
     this.#tabBar = elementRef.nativeElement;
 
     effect(() => {

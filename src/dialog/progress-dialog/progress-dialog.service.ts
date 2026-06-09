@@ -1,11 +1,16 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 
 import { ProgressDialogComponent } from './progress-dialog.component';
 import { DialogService } from '../dialog.service';
 
 @Injectable({providedIn: 'root'})
 export class ProgressDialogService {
-  constructor(private readonly _dialogService: DialogService) {
+  private readonly _dialogService = inject(DialogService);
+
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() {
 
   }
 

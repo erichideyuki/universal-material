@@ -1,4 +1,4 @@
-import { Component, Inject, Optional, SecurityContext } from '@angular/core';
+import { Component, SecurityContext, inject } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Subject } from 'rxjs';
 
@@ -13,6 +13,8 @@ import {
   template: '',
 })
 export abstract class ConfirmDialogComponent extends DialogComponent {
+  private readonly sanitizer = inject(DomSanitizer);
+
   safeMessage: string | null = null;
 
   set message(value: string) {
@@ -26,9 +28,13 @@ export abstract class ConfirmDialogComponent extends DialogComponent {
   onConfirm = new Subject<void>();
   confirmed = false;
 
-  constructor(private readonly sanitizer: DomSanitizer,
-              @Optional() confirmDialogConfig: ConfirmDialogConfig,
-              @Optional() @Inject(CONFIRM_DIALOG_DEFAULT_OPTIONS) defaultOptions: ConfirmDialogConfig) {
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const confirmDialogConfig = inject(ConfirmDialogConfig, { optional: true })!;
+    const defaultOptions = inject<ConfirmDialogConfig>(CONFIRM_DIALOG_DEFAULT_OPTIONS, { optional: true })!;
+
     super();
     this._confirmDialogConfig = DefaultConfirmDialogConfig;
     this._confirmDialogConfig = this._assignConfig(this._confirmDialogConfig, defaultOptions);

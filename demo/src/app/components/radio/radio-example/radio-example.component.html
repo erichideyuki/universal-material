@@ -1,0 +1,13 @@
+<label>
+  <u-radio name="contact" [value]="'email'" [(ngModel)]="choice"></u-radio>
+  Email
+</label>
+<label>
+  <u-radio name="contact" [value]="'sms'" [(ngModel)]="choice"></u-radio>
+  SMS
+</label>
+<label>
+  <u-radio name="contact" [value]="'none'" [(ngModel)]="choice"></u-radio>
+  None
+</label>
+<p class="u-text-low-contrast">Choice: {{ choice }}</p>

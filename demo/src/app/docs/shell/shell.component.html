@@ -1,0 +1,162 @@
+<u-navigation-rail #navigation>
+  <u-top-app-bar
+    size="small"
+    [scrollContainer]="pageLayout"
+  >
+    <u-icon-button
+      slot="leading-icon"
+      type="button"
+      (click)="navigation.toggleDrawer = !navigation.toggleDrawer"
+    >
+      <span class="material-symbols-outlined">menu</span>
+    </u-icon-button>
+    <a
+      class="brand-mark"
+      routerLink="/"
+      aria-label="Universal Material — home"
+    >
+      <span class="brand-logo" aria-hidden="true">
+        <svg class="brand-logo-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5 5L5 17C5 19.7614 7.23858 22 10 22L14 22C16.7614 22 19 19.7614 19 17L19 5" stroke="white" stroke-opacity="0.4" stroke-width="3" stroke-linecap="round"/>
+          <path d="M4 4V16C4 18.7614 6.23858 21 9 21L15 21C17.7614 21 20 18.7614 20 16V6L17 4V16C17 17.1046 16.1046 18 15 18L9 18C7.89543 18 7 17.1046 7 16V4H4Z" fill="white"/>
+          <path d="M17 4L20 6L17 8V4Z" fill="white" fill-opacity="0.5"/>
+        </svg>
+      </span>
+      <span class="brand-text">
+        <span class="brand-name">Universal</span>
+        <span class="brand-name brand-name-accent">Material</span>
+      </span>
+    </a>
+    <div class="position-relative" slot="trailing-icon">
+      <u-icon-button class="color-picker-trigger" aria-label="Theme color" (click)="colorMenu.toggle()">
+        <span class="color-picker-swatch" [style.background]="theme.themeColor"></span>
+      </u-icon-button>
+      <u-menu #colorMenu anchor-corner="end-end" class="color-picker-menu">
+        <div class="color-picker-header">Theme color</div>
+        <div class="color-picker-grid">
+          @for (preset of theme.themeColorPresets; track preset.value) {
+            <button
+              type="button"
+              class="color-picker-chip"
+              [class.active]="theme.isPresetActive(preset.value)"
+              [style.--swatch]="preset.value"
+              [attr.aria-label]="preset.name"
+              [title]="preset.name"
+              (click)="theme.setThemeColor(preset.value); colorMenu.close()"
+            >
+              <span class="color-picker-chip-dot"></span>
+            </button>
+          }
+        </div>
+        <label class="color-picker-custom">
+          <input
+            type="color"
+            #colorInput
+            [ngModel]="theme.themeColor"
+            (ngModelChange)="theme.$themeColorChange.next($event)"
+            aria-label="Custom theme color"
+          />
+          <span class="color-picker-custom-swatch" [style.background]="theme.themeColor"></span>
+          <span class="color-picker-custom-label">
+            <span class="color-picker-custom-title">Custom</span>
+            <span class="color-picker-custom-value">{{ theme.themeColor }}</span>
+          </span>
+          <span class="material-symbols-outlined">colorize</span>
+        </label>
+      </u-menu>
+    </div>
+    <div class="position-relative" slot="trailing-icon">
+      <u-icon-button aria-label="Theme" (click)="themeMenu.toggle()">
+        <span class="material-symbols-outlined">palette</span>
+      </u-icon-button>
+      <u-menu #themeMenu anchor-corner="end-end">
+        <u-menu-item (click)="theme.setThemeMode(ThemeMode.Auto)">
+          <span class="material-symbols-outlined" slot="leading-icon">brightness_4</span>
+          <span>System</span>
+        </u-menu-item>
+        <u-menu-item (click)="theme.setThemeMode(ThemeMode.Light)">
+          <span class="material-symbols-outlined" slot="leading-icon">light_mode</span>
+          <span>Light Mode</span>
+        </u-menu-item>
+        <u-menu-item (click)="theme.setThemeMode(ThemeMode.Dark)">
+          <span class="material-symbols-outlined" slot="leading-icon">dark_mode</span>
+          <span>Dark Mode</span>
+        </u-menu-item>
+      </u-menu>
+    </div>
+    <u-icon-button slot="trailing-icon" type="button" title="Rtl" (click)="theme.toggleRtl()">
+      <span class="material-symbols-outlined">format_align_right</span>
+    </u-icon-button>
+    <a
+      class="top-bar-github"
+      slot="trailing-icon"
+      href="https://github.com/universal-material/universal-material-angular"
+      target="_blank"
+      rel="noopener"
+      title="View on GitHub"
+      aria-label="View on GitHub"
+    >
+      <u-ripple></u-ripple>
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+        <path fill="currentColor" d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.55v-1.93c-3.2.7-3.87-1.54-3.87-1.54-.52-1.32-1.28-1.67-1.28-1.67-1.04-.72.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.05 0 0 .96-.31 3.15 1.18a10.97 10.97 0 0 1 5.74 0c2.19-1.49 3.15-1.18 3.15-1.18.62 1.59.23 2.76.11 3.05.73.8 1.18 1.82 1.18 3.08 0 4.42-2.7 5.39-5.27 5.68.41.35.78 1.04.78 2.11v3.13c0 .31.21.67.8.55C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5Z"/>
+      </svg>
+    </a>
+  </u-top-app-bar>
+
+  <u-navigation-rail-headline slot="expanded">Forms controls</u-navigation-rail-headline>
+  <u-navigation-rail-item slot="expanded" routerLink="checkbox" docsLinkActive>Checkbox
+    <span class="material-symbols-outlined" slot="icon">select_check_box</span>
+  </u-navigation-rail-item>
+  <u-navigation-rail-item slot="expanded" routerLink="chip-field" docsLinkActive>Chip field
+    <span class="material-symbols-outlined" slot="icon">local_offer</span>
+  </u-navigation-rail-item>
+  <u-navigation-rail-item slot="expanded" routerLink="datepicker" docsLinkActive>Datepicker
+    <span class="material-symbols-outlined" slot="icon">calendar_month</span>
+  </u-navigation-rail-item>
+  <u-navigation-rail-item slot="expanded" routerLink="radio" docsLinkActive>Radio
+    <span class="material-symbols-outlined" slot="icon">radio_button_checked</span>
+  </u-navigation-rail-item>
+  <u-navigation-rail-item slot="expanded" routerLink="search" docsLinkActive>Search
+    <span class="material-symbols-outlined" slot="icon">search</span>
+  </u-navigation-rail-item>
+  <u-navigation-rail-item slot="expanded" routerLink="select" docsLinkActive>Select
+    <span class="material-symbols-outlined" slot="icon">arrow_drop_down_circle</span>
+  </u-navigation-rail-item>
+  <u-navigation-rail-item slot="expanded" routerLink="slider" docsLinkActive>Slider
+    <span class="material-symbols-outlined" slot="icon">tune</span>
+  </u-navigation-rail-item>
+  <u-navigation-rail-item slot="expanded" routerLink="text-field" docsLinkActive>Text fields
+    <span class="material-symbols-outlined" slot="icon">text_fields</span>
+  </u-navigation-rail-item>
+  <u-navigation-rail-item slot="expanded" routerLink="typeahead" docsLinkActive>Typeahead
+    <span class="material-symbols-outlined" slot="icon">manage_search</span>
+  </u-navigation-rail-item>
+
+  <u-navigation-rail-headline slot="expanded">Components</u-navigation-rail-headline>
+  <u-navigation-rail-item slot="expanded" routerLink="tab-bar" docsLinkActive>Tab bar
+    <span class="material-symbols-outlined" slot="icon">tab</span>
+  </u-navigation-rail-item>
+
+  <div slot="expanded" class="u-divider"></div>
+  <a
+    slot="expanded"
+    class="drawer-footer-link"
+    href="https://github.com/universal-material/universal-material-angular"
+    target="_blank"
+    rel="noopener"
+    aria-label="GitHub repository"
+  >
+    <span class="material-symbols-outlined">code</span>
+    <span class="drawer-footer-text">
+      <span class="drawer-footer-title">universal-material/angular</span>
+      <span class="drawer-footer-sub">v{{ version }} · MIT</span>
+    </span>
+    <span class="material-symbols-outlined drawer-footer-arrow">arrow_outward</span>
+  </a>
+  <div class="page-layout" #pageLayout>
+    <div class="u-container chapter">
+      <router-outlet></router-outlet>
+    </div>
+    <docs-toc class="page-toc"></docs-toc>
+  </div>
+</u-navigation-rail>

@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostBinding, HostListener, Input } from '@angular/core';
+import { Directive, ElementRef, HostBinding, HostListener, Input, inject } from '@angular/core';
 import { NgControl } from '@angular/forms';
 
 import { FormFieldComponent } from '../form-field/form-field.component';
@@ -6,6 +6,8 @@ import { coerceBooleanProperty } from '../coercion/boolean.coercion';
 
 @Directive()
 export abstract class TextInputBase {
+  protected readonly _elementRef = inject(ElementRef);
+
   focused = false;
 
   @Input()
@@ -45,8 +47,7 @@ export abstract class TextInputBase {
   }
 
   protected constructor(readonly ngControl: NgControl | null,
-              formField: FormFieldComponent | null,
-              protected readonly _elementRef: ElementRef) {
+                        formField: FormFieldComponent | null) {
 
     if (formField) {
       formField._input = this;

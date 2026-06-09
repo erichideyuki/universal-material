@@ -1,4 +1,4 @@
-import { afterNextRender, Directive, ElementRef, forwardRef, Host, Optional, Provider, Renderer2 } from '@angular/core';
+import { afterNextRender, Directive, ElementRef, forwardRef, Provider, Renderer2, inject } from '@angular/core';
 import { NG_VALUE_ACCESSOR, NgSelectOption, SelectControlValueAccessor } from '@angular/forms';
 
 const SELECT_VALUE_ACCESSOR: Provider = {
@@ -14,8 +14,14 @@ const SELECT_VALUE_ACCESSOR: Provider = {
 })
 export class UmSelectControlValueAccessor extends SelectControlValueAccessor {
 
-  constructor(_element: ElementRef,
-              _renderer: Renderer2) {
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+
+  constructor() {
+    const _element = inject(ElementRef);
+    const _renderer = inject(Renderer2);
+
     super(_renderer, _element);
   }
 
@@ -30,9 +36,15 @@ export class UmSelectControlValueAccessor extends SelectControlValueAccessor {
   standalone: false,
 })
 export class UmSelectOption extends NgSelectOption {
-  constructor(_element: ElementRef,
-              _renderer: Renderer2,
-              @Optional() @Host() _select: UmSelectControlValueAccessor) {
+
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const _element = inject(ElementRef);
+    const _renderer = inject(Renderer2);
+    const _select = inject(UmSelectControlValueAccessor, { optional: true, host: true })!;
+
     super(_element, _renderer, _select);
   }
 

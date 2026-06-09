@@ -67,8 +67,8 @@ describe('triggers', () => {
     });
 
     it('should ignore empty inputs', () => {
-      expect(parseTriggers(null).length).toBe(0);
-      expect(parseTriggers(undefined).length).toBe(0);
+      expect(parseTriggers(null as any).length).toBe(0);
+      expect(parseTriggers(undefined as any).length).toBe(0);
       expect(parseTriggers('').length).toBe(0);
     });
 

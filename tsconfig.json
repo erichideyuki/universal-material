@@ -20,6 +20,15 @@
       ],
       "@universal-material/angular/*": [
         "src/*"
+      ],
+      "@universal-material/web": [
+        "universal-material-web/dist/index"
+      ],
+      "@universal-material/web/*": [
+        "universal-material-web/dist/*"
+      ],
+      "@docs/*": [
+        "demo/src/app/*"
       ]
     }
   },

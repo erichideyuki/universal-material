@@ -1,4 +1,4 @@
-import { Directive, ElementRef, forwardRef, Inject, Optional } from '@angular/core';
+import { Directive, ElementRef, inject } from '@angular/core';
 
 import { FormFieldComponent } from './form-field.component';
 
@@ -7,8 +7,14 @@ import { FormFieldComponent } from './form-field.component';
   standalone: false,
 })
 export class LabelDirective {
-  constructor(elementRef: ElementRef<HTMLElement>,
-              @Optional() @Inject(forwardRef(() => FormFieldComponent)) formField: FormFieldComponent) {
+
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    const formField = inject(FormFieldComponent, { optional: true })!;
+
     if (formField) {
       elementRef.nativeElement.classList.add('u-text-field-label');
       formField._hasLabel = true;

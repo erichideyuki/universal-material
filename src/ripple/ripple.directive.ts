@@ -1,4 +1,4 @@
-import { AfterViewInit, Directive, ElementRef, HostListener, Inject, Input } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, HostListener, input, inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 
 import { RippleConfig } from './ripple-config.model';
@@ -8,14 +8,19 @@ import { RippleConfig } from './ripple-config.model';
   standalone: false,
 })
 export class RippleDirective implements AfterViewInit {
+  protected readonly _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private document = inject(DOCUMENT);
 
-  @Input() rippleConfig: RippleConfig = {};
-  @Input('rippleDisabled') disabled = false;
+
+  readonly rippleConfig = input<RippleConfig>({});
+  readonly disabled = input(false, { alias: "rippleDisabled" });
 
   isTouching = false;
 
-  constructor(protected readonly _elementRef: ElementRef<HTMLElement>,
-              @Inject(DOCUMENT) private document: any) {
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() {
   }
 
   private static _setElementSquareSizeAndCenter(element: HTMLElement, size: number) {
@@ -28,7 +33,7 @@ export class RippleDirective implements AfterViewInit {
   }
 
   @HostListener('mousedown', ['$event']) _mousedown = (e: MouseEvent) => {
-    if (this.disabled ||
+    if (this.disabled() ||
       this._elementRef.nativeElement.hasAttribute('disabled') ||
       this._elementRef.nativeElement.classList.contains('disabled')) {
       return;
@@ -40,7 +45,7 @@ export class RippleDirective implements AfterViewInit {
   }
 
   @HostListener('touchstart', ['$event']) _touchstart = (e: TouchEvent) => {
-    if (this.disabled ||
+    if (this.disabled() ||
       this._elementRef.nativeElement.hasAttribute('disabled') ||
       this._elementRef.nativeElement.classList.contains('disabled')) {
       return;
@@ -55,15 +60,16 @@ export class RippleDirective implements AfterViewInit {
   ngAfterViewInit(): void {
     const {position} = document.defaultView!.getComputedStyle(this._elementRef.nativeElement);
 
+    const rippleConfig = this.rippleConfig();
     if (position !== 'absolute' &&
       position !== 'fixed' &&
-      (!this.rippleConfig || !this.rippleConfig.dontChangePositioning)) {
+      (!rippleConfig || !rippleConfig.dontChangePositioning)) {
       this._elementRef.nativeElement.style.position = 'relative';
     }
   }
 
   createRipple(releaseEventName: string, releaseCallback: Function | null, pageX: number, pageY: number) {
-    if (this.disabled ||
+    if (this.disabled() ||
       this._elementRef.nativeElement.hasAttribute('disabled') ||
       this._elementRef.nativeElement.classList.contains('disabled')) {
       return;
@@ -92,12 +98,13 @@ export class RippleDirective implements AfterViewInit {
     rippleWrapper.appendChild(ripple);
     this._elementRef.nativeElement.insertAdjacentElement('afterbegin', rippleWrapper);
 
-    if (this.rippleConfig.size) {
-      RippleDirective._setElementSquareSizeAndCenter(rippleWrapper, this.rippleConfig.size);
+    const rippleConfig = this.rippleConfig();
+    if (rippleConfig.size) {
+      RippleDirective._setElementSquareSizeAndCenter(rippleWrapper, rippleConfig.size);
     }
 
-    if (this.rippleConfig.borderRadius) {
-      rippleWrapper.style.borderRadius = this.rippleConfig.borderRadius;
+    if (rippleConfig.borderRadius) {
+      rippleWrapper.style.borderRadius = rippleConfig.borderRadius;
     }
 
     release = () => {
@@ -128,7 +135,7 @@ export class RippleDirective implements AfterViewInit {
     requestAnimationFrame(() => {
       const clientRect = this._elementRef.nativeElement.getBoundingClientRect();
       const largestDimensionSize = Math.max(rippleWrapper.clientWidth, rippleWrapper.clientHeight);
-      const rippleSize = this.rippleConfig.size || largestDimensionSize * 2;
+      const rippleSize = this.rippleConfig().size || largestDimensionSize * 2;
       RippleDirective._setElementSquareSizeAndCenter(ripple, rippleSize);
       ripple.style.transitionDuration = `${1080 * Math.pow(rippleSize, 0.3)}ms, 750ms`;
 
