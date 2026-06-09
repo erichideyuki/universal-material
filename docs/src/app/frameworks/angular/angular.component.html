@@ -1,0 +1,89 @@
+<docs-title
+  kind="foundation"
+  title="Using with Angular"
+>
+  Angular consumes the <code>&lt;u-*&gt;</code> elements through the
+  <code>&#64;universal-material/angular</code> wrapper, which provides the
+  <code>ControlValueAccessor</code>s that make every form element work with
+  <code>[(ngModel)]</code> and reactive forms. The raw elements also render in
+  any Angular template once you allow custom tags with
+  <code>CUSTOM_ELEMENTS_SCHEMA</code>.
+</docs-title>
+
+<docs-example
+  sectionTitle="Install"
+  [renderExample]="false"
+  [html]="installHtml"
+>
+  Install the element library and the Angular wrapper side by side.
+  <code>&#64;universal-material/web</code> ships the custom elements;
+  <code>&#64;universal-material/angular</code> adds the Angular form bindings.
+</docs-example>
+
+<docs-example
+  sectionTitle="Register the module"
+  [renderExample]="false"
+  [html]="moduleHtml"
+>
+  Import <code>UniversalMaterialModule</code> wherever you use the elements (a
+  standalone component's <code>imports</code>, or a shared
+  <code>NgModule</code>), import <code>&#64;universal-material/web</code> once
+  for its side effect so the <code>&lt;u-*&gt;</code> tags are registered, and
+  add <code>CUSTOM_ELEMENTS_SCHEMA</code> so Angular accepts the custom tags.
+  Add <code>FormsModule</code> for <code>ngModel</code> or
+  <code>ReactiveFormsModule</code> for reactive forms.
+</docs-example>
+
+<docs-example
+  sectionTitle="Template-driven forms (ngModel)"
+  [renderExample]="false"
+  [html]="ngModelHtml"
+>
+  The wrapper registers a <code>ControlValueAccessor</code> for each form
+  element, so <code>[(ngModel)]</code> binds them just like native controls:
+  text fields, areas and search bind a <code>string</code>; checkbox and switch
+  bind a <code>boolean</code>; radios contribute their <code>value</code> to the
+  named group; <code>u-select</code> binds the option value; the slider binds a
+  <code>number</code>; the datepicker binds an ISO date string; the chip field
+  binds a <code>string[]</code>; and typeahead binds its current value.
+</docs-example>
+
+<docs-example
+  sectionTitle="Reactive forms"
+  [renderExample]="false"
+  [html]="reactiveHtml"
+>
+  The same accessors power <code>ReactiveFormsModule</code>. Build a
+  <code>FormGroup</code> and bind each element with
+  <code>formControlName</code> — value, validation state and
+  <code>disabled</code> all flow through the control.
+</docs-example>
+
+<docs-example
+  sectionTitle="Reactive forms template"
+  [renderExample]="false"
+  [html]="reactiveTemplateHtml"
+>
+  The template binds each <code>&lt;u-*&gt;</code> element with
+  <code>formControlName</code> inside the <code>[formGroup]</code>.
+</docs-example>
+
+<docs-example
+  sectionTitle="Notes"
+  [renderExample]="false"
+  [html]="installHtml"
+>
+  These snippets are distilled from the standalone Angular demo
+  (<code>checkbox</code>, <code>radio</code>, <code>select</code>,
+  <code>text-field</code>, <code>search</code>, <code>slider</code>,
+  <code>datepicker</code>, <code>chip-field</code> and <code>typeahead</code>
+  example pages) that the wrapper package was developed against. For the full
+  set of components and live examples, see the
+  <a
+    href="https://github.com/universal-material/universal-material-angular"
+    target="_blank"
+    rel="noopener"
+    >universal-material-angular</a
+  >
+  repository on GitHub.
+</docs-example>

@@ -1,0 +1,31 @@
+<script setup lang="ts">
+import { ref } from 'vue'
+const name   = ref('Ada')   // text field — follows native value/input contract
+const agreed = ref(false)   // checkbox  — native `change` + target.checked
+const choice = ref('a')     // select    — native input/change; value on target.value
+</script>
+
+<template>
+  <!-- 1. Native-contract input: v-model "just works" (-> :value + @input) -->
+  <u-text-field v-model="name" label="Name" />
+
+  <!-- 2. The equivalent explicit form of what (1) compiles to -->
+  <u-text-field :value="name" @input="name = ($event.target as any).value" />
+
+  <!-- 3. Checkbox has no native value/input contract -> explicit :prop + @event.
+       Read e.target.CHECKED, not .value -->
+  <u-checkbox
+    :checked="agreed"
+    @change="agreed = ($event.target as any).checked"
+  >I agree</u-checkbox>
+
+  <!-- 4. Select: native input/change (change is NOT composed); value on
+       $event.target.value (NOT $event.detail) -->
+  <u-select
+    :value="choice"
+    @change="choice = ($event.target as any).value"
+  >
+    <u-option value="a">A</u-option>
+    <u-option value="b">B</u-option>
+  </u-select>
+</template>

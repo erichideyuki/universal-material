@@ -1,0 +1,158 @@
+<docs-title
+  kind="foundation"
+  title="Using with SolidJS"
+>
+  SolidJS consumes the <code>&lt;u-*&gt;</code> elements natively — it scores a
+  perfect 16/16 on Custom Elements Everywhere. There is <strong>no runtime
+  wrapper</strong> (<code>solid-element</code> is for <em>authoring</em> web
+  components, not consuming them). Two gotchas matter: camelCase prop keys get
+  lowercased, and genuine custom events need <code>on:exact-name</code>.
+</docs-title>
+
+<docs-example
+  sectionTitle="Register the components"
+  [renderExample]="false"
+  [html]="mainImportHtml"
+>
+  The bare side-effecting <code>import</code> runs every
+  <code>customElements.define</code>. It has side effects, so it won't be
+  tree-shaken away.
+</docs-example>
+
+<docs-example
+  sectionTitle="Props vs. attributes (and the camelCase gotcha)"
+  [renderExample]="false"
+  [html]="propsVsAttrsHtml"
+>
+  On a custom element, <code>foo={{ '{' }}x{{ '}' }}</code> sets a JS
+  <strong>property</strong> by default — exactly right for Lit. But Solid
+  lowercases the bare prop key, so <strong>use <code>prop:camelCaseName</code></strong>
+  for any camelCase or non-string property; bare <code>kebab-case</code> is fine
+  for plain string attributes.
+
+  <table class="u-table">
+    <thead>
+      <tr>
+        <th>Directive</th>
+        <th>Effect</th>
+        <th>Use for</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>prop:foo</code> or <code>.foo</code></td>
+        <td>force a JS property</td>
+        <td>camelCase props, complex values</td>
+      </tr>
+      <tr>
+        <td><code>attr:foo</code></td>
+        <td>force an HTML attribute (<code>null</code>/<code>undefined</code> removes it)</td>
+        <td>reflected string attrs, SSR-visible attrs</td>
+      </tr>
+      <tr>
+        <td><code>bool:foo</code> or <code>?foo</code></td>
+        <td>boolean attribute (present when truthy)</td>
+        <td>presence-style boolean attrs</td>
+      </tr>
+    </tbody>
+  </table>
+</docs-example>
+
+<docs-example
+  sectionTitle="Listening to events"
+  [renderExample]="false"
+  [html]="eventsHtml"
+>
+  Native <code>input</code>/<code>change</code> are in Solid's delegated set, so
+  <code>onInput</code>/<code>onChange</code> work (value on
+  <code>e.currentTarget.value</code>). Genuine <code>CustomEvent</code>s are NOT
+  delegated and the delegated handlers lowercase names — so use <code>on:</code>
+  with the <strong>exact, case-sensitive</strong> event name. Shadow-DOM events
+  must be <code>composed: true</code> to escape (ours are).
+</docs-example>
+
+<docs-example
+  sectionTitle="Two-way value binding"
+  [renderExample]="false"
+  [html]="twoWayHtml"
+>
+  Solid has no <code>v-model</code> sugar — binding is explicit.
+  <strong>Mental model:</strong> two-way <code>value</code> ≡
+  <code>prop:value={{ '{' }}x(){{ '}' }}</code> in +
+  <code>on:input</code>/<code>on:change</code> reading
+  <code>e.currentTarget.value</code> out.
+
+  <table class="u-table">
+    <thead>
+      <tr>
+        <th>Component(s)</th>
+        <th>Write in (with <code>prop:</code>)</th>
+        <th>Read value out from</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>u-text-field</code>, <code>u-text-area</code>, <code>u-search</code></td>
+        <td><code>value: string</code></td>
+        <td><code>input</code> → <code>e.target.value</code></td>
+      </tr>
+      <tr>
+        <td><code>u-datepicker</code>, <code>u-range-datepicker</code></td>
+        <td><code>value: string</code></td>
+        <td><code>input</code> + <code>change</code> → <code>e.target.value</code></td>
+      </tr>
+      <tr>
+        <td><code>u-select</code></td>
+        <td><code>value: string</code> (+ <code>selectedIndex</code>)</td>
+        <td><code>change</code> (not composed) → <code>e.target.value</code></td>
+      </tr>
+      <tr>
+        <td><code>u-checkbox</code>, <code>u-switch</code>, <code>u-radio</code></td>
+        <td><code>checked: boolean</code></td>
+        <td><code>input</code> + <code>change</code> → <code>e.target.checked</code></td>
+      </tr>
+      <tr>
+        <td><code>u-slider</code></td>
+        <td><code>value: number</code> (or <code>valueStart</code>/<code>valueEnd</code>)</td>
+        <td><code>input</code> + <code>change</code> → <code>e.target.value</code></td>
+      </tr>
+      <tr>
+        <td><code>u-chip-field</code></td>
+        <td><code>value: any[]</code></td>
+        <td><code>change</code> → <code>e.target.value</code>; <code>remove</code> is a <code>CustomEvent</code></td>
+      </tr>
+      <tr>
+        <td><code>u-typeahead</code></td>
+        <td><code>value: any</code></td>
+        <td><code>input</code>/<code>change</code> → <code>e.target.value</code>; <code>selected</code> is a <code>CustomEvent</code></td>
+      </tr>
+      <tr>
+        <td><code>u-button-field</code></td>
+        <td><code>value: string</code> (display-only)</td>
+        <td>none — set programmatically</td>
+      </tr>
+    </tbody>
+  </table>
+</docs-example>
+
+<docs-example
+  sectionTitle="TypeScript typing (optional)"
+  [renderExample]="false"
+  [html]="typescriptHtml"
+>
+  Augment <code>solid-js</code>' <code>JSX.IntrinsicElements</code> with one entry
+  per <code>u-*</code> element. The augmentation can be hand-written or
+  code-generated from <code>dist/custom-elements.json</code>. Type the genuine
+  <code>CustomEvent</code> handlers (<code>on:selected</code> on typeahead,
+  <code>on:remove</code> on chip field).
+</docs-example>
+
+<docs-example
+  sectionTitle="SSR / Solid Start"
+  [renderExample]="false"
+  [html]="mainImportHtml"
+>
+  <code>customElements</code> is undefined on the server, so register
+  client-side only — import in a client-only entry or guard the registration
+  import behind an <code>isServer</code> check in Solid Start.
+</docs-example>

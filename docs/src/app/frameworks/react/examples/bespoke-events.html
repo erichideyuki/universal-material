@@ -1,0 +1,9 @@
+import { UTypeahead, UChipField } from '@universal-material/react';
+
+// UTypeahead emits `onSelected` and UChipField emits `onRemove` as CustomEvents.
+// The payload lives on e.detail (the VALUE itself still comes from e.target.value).
+<UTypeahead onSelected={(e) => console.log(e.detail)} />
+<UChipField onRemove={(e) => console.log(e.detail)} />
+
+// The EventName helper is re-exported for typing your own bespoke listeners:
+import type { EventName } from '@universal-material/react';

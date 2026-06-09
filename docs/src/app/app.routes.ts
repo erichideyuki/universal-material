@@ -231,6 +231,26 @@ export const routes: Routes = [
         loadComponent: () => import('@docs/utilities/text-emphasis/text-emphasis.component').then(m => m.TextEmphasisComponent)
       },
       {
+        path: 'frameworks/angular',
+        loadComponent: () => import('@docs/frameworks/angular/angular.component').then(m => m.AngularComponent)
+      },
+      {
+        path: 'frameworks/react',
+        loadComponent: () => import('@docs/frameworks/react/react.component').then(m => m.ReactComponent)
+      },
+      {
+        path: 'frameworks/solid',
+        loadComponent: () => import('@docs/frameworks/solid/solid.component').then(m => m.SolidComponent)
+      },
+      {
+        path: 'frameworks/svelte',
+        loadComponent: () => import('@docs/frameworks/svelte/svelte.component').then(m => m.SvelteComponent)
+      },
+      {
+        path: 'frameworks/vue',
+        loadComponent: () => import('@docs/frameworks/vue/vue.component').then(m => m.VueComponent)
+      },
+      {
         path: '',
         loadComponent: () => import('@docs/introduction/introduction.component').then(m => m.IntroductionComponent)
       }

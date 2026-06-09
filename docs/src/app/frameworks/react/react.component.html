@@ -1,0 +1,156 @@
+<docs-title
+  kind="foundation"
+  title="Using with React"
+>
+  <code>&#64;universal-material/react</code> ships one typed wrapper per
+  <code>&lt;u-*&gt;</code> element (<code>UButton</code>, <code>USelect</code>,
+  <code>UTextField</code>, <code>UCheckbox</code>, …), generated with
+  <a
+    href="https://lit.dev/docs/frameworks/react/"
+    target="_blank"
+    rel="noopener"
+    >&#64;lit/react</a
+  >'s <code>createComponent</code>. The wrappers set known props as DOM
+  properties (so the IDL setters and form participation work), wire the
+  elements' events as typed <code>on*</code> handlers, and work on React 17, 18
+  and 19.
+</docs-title>
+
+<docs-example
+  sectionTitle="Install"
+  [renderExample]="false"
+  [html]="installHtml"
+>
+  <code>&#64;universal-material/web</code> and <code>react</code>/<code
+    >react-dom</code
+  >
+  are <strong>peer dependencies</strong> — install them alongside the wrapper
+  package.
+</docs-example>
+
+<docs-example
+  sectionTitle="Import the wrappers"
+  [renderExample]="false"
+  [html]="importHtml"
+>
+  Importing anything from <code>&#64;universal-material/react</code> also imports
+  <code>&#64;universal-material/web</code> once for its side effect, which
+  registers every <code>&lt;u-*&gt;</code> custom element — so you do not need a
+  separate registration import.
+</docs-example>
+
+<docs-example
+  sectionTitle="Controlled usage"
+  [renderExample]="false"
+  [html]="controlledHtml"
+>
+  The value goes <strong>in</strong> as a DOM property (<code>value</code> /
+  <code>checked</code>) and comes <strong>out</strong> by listening to
+  <code>input</code> (live) / <code>change</code> (committed) and reading
+  <code>e.target.value</code> (or <code>e.target.checked</code>). The per-element
+  contract:
+
+  <table class="u-table">
+    <thead>
+      <tr>
+        <th>Component(s)</th>
+        <th>Two-way prop</th>
+        <th>Events to map</th>
+        <th>Read value from</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>UTextField</code>, <code>UTextArea</code>, <code>USearch</code></td>
+        <td><code>value: string</code></td>
+        <td><code>onInput</code> + <code>onChange</code></td>
+        <td><code>e.target.value</code></td>
+      </tr>
+      <tr>
+        <td><code>UDatepicker</code>, <code>URangeDatepicker</code></td>
+        <td><code>value: string</code></td>
+        <td><code>onInput</code> + <code>onChange</code></td>
+        <td><code>e.target.value</code></td>
+      </tr>
+      <tr>
+        <td><code>USelect</code></td>
+        <td><code>value: string</code> (+ <code>selectedIndex</code>)</td>
+        <td><code>onInput</code> + <code>onChange</code></td>
+        <td><code>e.target.value</code> (IDL prop only — no <code>value</code> attribute)</td>
+      </tr>
+      <tr>
+        <td><code>UCheckbox</code>, <code>URadio</code>, <code>USwitch</code> (+ <code>*ListItem</code>)</td>
+        <td><code>checked: boolean</code></td>
+        <td><code>onChange</code></td>
+        <td><code>e.target.checked</code></td>
+      </tr>
+      <tr>
+        <td><code>USlider</code></td>
+        <td><code>value: number</code> or <code>valueStart</code>/<code>valueEnd</code></td>
+        <td><code>onInput</code> + <code>onChange</code></td>
+        <td><code>e.target.value</code></td>
+      </tr>
+      <tr>
+        <td><code>UChipField</code></td>
+        <td><code>value: any[]</code></td>
+        <td><code>onChange</code> + <code>onRemove</code> (<code>CustomEvent</code>)</td>
+        <td><code>e.target.value</code></td>
+      </tr>
+      <tr>
+        <td><code>UTypeahead</code></td>
+        <td><code>value: any</code></td>
+        <td><code>onInput</code> + <code>onChange</code> + <code>onSelected</code> (<code>CustomEvent</code>)</td>
+        <td><code>e.target.value</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  Selection controls are not text inputs: bind <code>checked</code>, listen on
+  <code>onChange</code>, and read <code>e.target.checked</code>.
+</docs-example>
+
+<docs-example
+  sectionTitle="Uncontrolled usage (FormData)"
+  [renderExample]="false"
+  [html]="uncontrolledHtml"
+>
+  Because every input is a Form-Associated Custom Element, native
+  <code>&lt;form&gt;</code> / <code>FormData</code> submission and constraint
+  validation are free. Give each element a <code>name</code>, read it on submit,
+  and keep zero React state — the simplest path.
+</docs-example>
+
+<docs-example
+  sectionTitle="react-hook-form"
+  [renderExample]="false"
+  [html]="reactHookFormHtml"
+>
+  Prefer <code>register</code> (uncontrolled) — the FACE value is already on the
+  form. Use <code>Controller</code> when RHF must own the value, bridging
+  <code>field.value</code> → <code>value</code> and
+  <code>onChange</code>/<code>onInput</code> →
+  <code>field.onChange(e.target.value)</code>.
+</docs-example>
+
+<docs-example
+  sectionTitle="Bespoke events"
+  [renderExample]="false"
+  [html]="bespokeEventsHtml"
+>
+  <code>UTypeahead</code>'s <code>onSelected</code> and
+  <code>UChipField</code>'s <code>onRemove</code> are <code>CustomEvent</code>s —
+  read the payload from <code>e.detail</code> (the value itself still comes from
+  <code>e.target.value</code>).
+</docs-example>
+
+<docs-example
+  sectionTitle="Next.js / SSR"
+  [renderExample]="false"
+  [html]="ssrHtml"
+>
+  Custom elements are client-only — they call <code>attachInternals()</code> in
+  their constructor, which throws during server rendering. Render the wrappers
+  from a <code>'use client'</code> component, and fall back to
+  <code>next/dynamic</code> with <code>{{ '{' }} ssr: false {{ '}' }}</code> if the constructor
+  is evaluated eagerly.
+</docs-example>

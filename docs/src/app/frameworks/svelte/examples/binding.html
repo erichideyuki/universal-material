@@ -1,0 +1,26 @@
+<script lang="ts">
+  // Svelte 5 runes (Svelte 4: `let name = ''` / `let agreed = false`)
+  let name = $state('')
+  let agreed = $state(false)
+</script>
+
+<!-- WRITE: value flows in as a property; READ: e.target.value (NOT e.detail) -->
+<u-text-field
+  value={name}
+  on:input={(e) => (name = (e.target as HTMLInputElement).value)}
+/>
+
+<!-- checkbox/switch/radio read e.target.CHECKED, not .value -->
+<u-checkbox
+  checked={agreed}
+  on:change={(e) => (agreed = (e.target as HTMLInputElement).checked)}
+/>
+
+<!-- u-select: value lives on e.target.value; change is not composed, so bind on the element -->
+<u-select value={name} on:input={(e) => (name = (e.target as HTMLSelectElement).value)}>
+  <u-option value="a">A</u-option>
+  <u-option value="b">B</u-option>
+</u-select>
+
+<!-- genuine CustomEvent payloads DO live on e.detail -->
+<u-typeahead value={name} on:selected={(e) => (name = e.detail)} />

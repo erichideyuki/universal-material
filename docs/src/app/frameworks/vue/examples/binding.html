@@ -1,0 +1,16 @@
+<template>
+  <!-- Vue checks `key in element` and sets a DOM PROPERTY when it exists,
+       else an ATTRIBUTE. Lit reflects @property declarations as real
+       properties, so :prop binding works for strings, numbers, booleans
+       AND objects/arrays. -->
+  <u-button :disabled="isDisabled">Save</u-button>
+  <u-typeahead :source="rows"></u-typeahead> <!-- array passed as a property -->
+
+  <!-- Override the heuristic when it guesses wrong: -->
+  <u-element .user="{ name: 'jack' }"></u-element>      <!-- .prop forces a property -->
+  <u-element :aria-label.attr="label"></u-element>      <!-- .attr forces an attribute -->
+
+  <!-- Listen to events with @event; read the payload off the native event -->
+  <u-select @change="onChange($event)"></u-select>
+  <u-text-field @input="text = $event.target.value"></u-text-field>
+</template>

@@ -1,0 +1,13 @@
+// Custom elements are client-only — they call attachInternals() in their
+// constructor, which throws during server rendering. Render the wrappers from a
+// client component:
+'use client';
+import { UTextField } from '@universal-material/react';
+
+// If ElementInternals still throws during SSR (some runtimes evaluate the
+// constructor eagerly), defer the wrapper to the client with next/dynamic:
+import dynamic from 'next/dynamic';
+const UTextFieldClient = dynamic(
+  () => import('@universal-material/react').then((m) => m.UTextField),
+  { ssr: false },
+);

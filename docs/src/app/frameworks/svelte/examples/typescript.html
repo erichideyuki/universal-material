@@ -1,0 +1,24 @@
+// src/universal-material-web.d.ts (in the consumer app)
+import type { HTMLAttributes } from 'svelte/elements'
+
+declare module 'svelte/elements' {
+  export interface SvelteHTMLElements {
+    'u-button': HTMLAttributes<HTMLElement> & {
+      variant?: 'filled' | 'tonal' | 'outlined' | 'text' | 'elevated'
+      disabled?: boolean
+    }
+    'u-text-field': HTMLAttributes<HTMLElement> & {
+      value?: string
+      label?: string
+      'on:input'?: (e: InputEvent) => void
+      'on:change'?: (e: Event) => void
+    }
+    'u-checkbox': HTMLAttributes<HTMLElement> & {
+      checked?: boolean
+      'on:change'?: (e: Event) => void
+    }
+    // … one entry per u-* element
+  }
+}
+
+export {}

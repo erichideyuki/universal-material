@@ -1,0 +1,12 @@
+// Native input/change ARE in Solid's delegated set — onInput/onChange work, with
+// the value on currentTarget.value:
+<u-text-field onInput={e => setText((e.currentTarget as HTMLInputElement).value)} />
+
+// u-select user-pick value is on target.value; change is not composed, so bind on
+// the element. on:change is a native, non-delegated, case-sensitive listener:
+<u-select on:change={e => setChoice((e.currentTarget as HTMLSelectElement).value)} />
+
+// GOTCHA #2 — genuine CustomEvents are NOT delegated. Use on: with the EXACT,
+// case-sensitive event name (on:selectionChange ≠ on:selection-change):
+<u-typeahead on:selected={e => pick(e.detail)} />
+<u-chip-field on:remove={e => removeRow(e.detail)} />

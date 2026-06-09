@@ -1,0 +1,21 @@
+// component.ts — the same CVAs power reactive forms via formControlName
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+
+import { UniversalMaterialModule } from '@universal-material/angular';
+import '@universal-material/web';
+
+@Component({
+  selector: 'app-reactive-example',
+  standalone: true,
+  imports: [ReactiveFormsModule, UniversalMaterialModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  templateUrl: './reactive-example.component.html',
+})
+export class ReactiveExampleComponent {
+  form = new FormGroup({
+    name: new FormControl(''),
+    agree: new FormControl(false),
+    country: new FormControl(''),
+  });
+}

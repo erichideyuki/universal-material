@@ -1,0 +1,12 @@
+<!-- bind:value does NOT work on u-* custom elements; wrap once to recover it -->
+
+<!-- UField.svelte (in the consumer app) -->
+<script lang="ts">
+  export let value = ''
+</script>
+<u-field {value} on:input={(e) => (value = (e.target as HTMLInputElement).value)} {...$$restProps}>
+  <slot />
+</u-field>
+
+<!-- App.svelte — bind: works because UField is a Svelte component -->
+<UField bind:value={name} />

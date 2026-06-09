@@ -1,0 +1,150 @@
+<docs-title
+  kind="foundation"
+  title="Using with Vue 3"
+>
+  Vue 3 consumes the <code>&lt;u-*&gt;</code> elements natively — there is
+  <strong>no runtime wrapper</strong> to install. The one mandatory step is
+  telling the template compiler that <code>u-*</code> tags are custom elements
+  via <code>isCustomElement</code>; prop binding, event listening and
+  <code>v-model</code> then work out of the box.
+</docs-title>
+
+<docs-example
+  sectionTitle="Configure the compiler (isCustomElement)"
+  [renderExample]="false"
+  [html]="viteConfigHtml"
+>
+  Without this, Vue logs <code>Failed to resolve component: u-button</code>.
+  <code>isCustomElement</code> is a <strong>compile-time</strong> option, so it
+  must go in the build config (Vite / Vue CLI), not
+  <code>app.config.compilerOptions</code>. Prefer the precise
+  <code>tag.startsWith('u-')</code> predicate over the broad
+  <code>tag.includes('-')</code>.
+</docs-example>
+
+<docs-example
+  sectionTitle="Register the components"
+  [renderExample]="false"
+  [html]="mainImportHtml"
+>
+  Import <code>&#64;universal-material/web</code> once for its side effect — that
+  runs every <code>&#64;customElement('u-…')</code> registration.
+</docs-example>
+
+<docs-example
+  sectionTitle="Binding props and listening to events"
+  [renderExample]="false"
+  [html]="bindingHtml"
+>
+  Vue checks whether a binding key exists as a DOM property on the element (an
+  <code>in</code> check) and sets it as a property when it does, else an
+  attribute. Use <code>.prop</code> to force a property and <code>.attr</code> to
+  force an attribute when the heuristic guesses wrong. Listen with
+  <code>&#64;event</code> and read the payload off the native event.
+</docs-example>
+
+<docs-example
+  sectionTitle="The v-model story"
+  [renderExample]="false"
+  [html]="vModelHtml"
+>
+  Because a tag matched by <code>isCustomElement</code> is a plain element, Vue
+  uses the <strong>native</strong> <code>v-model</code> expansion (<code>:value</code>
+  + <code>@input</code>), not the component
+  <code>modelValue</code>/<code>update:modelValue</code> expansion.
+
+  <p>
+    <strong>Mental model:</strong> on a <code>u-*</code> element,
+    <code>v-model="x"</code> ≡
+    <code>:value="x" &#64;input="x = $event.target.value"</code>. When the
+    component doesn't expose <code>value</code> + <code>input</code>, bind
+    <code>:prop</code> and <code>@event</code> explicitly.
+  </p>
+
+  <table class="u-table">
+    <thead>
+      <tr>
+        <th>Component(s)</th>
+        <th>Two-way prop</th>
+        <th>Live event (where value lives)</th>
+        <th>Recommended binding</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>u-text-field</code>, <code>u-text-area</code>, <code>u-search</code></td>
+        <td><code>value: string</code></td>
+        <td><code>input</code>; value on <code>$event.target.value</code></td>
+        <td><code>v-model="text"</code></td>
+      </tr>
+      <tr>
+        <td><code>u-datepicker</code>, <code>u-range-datepicker</code></td>
+        <td><code>value: string</code></td>
+        <td><code>input</code> + <code>change</code>; <code>$event.target.value</code></td>
+        <td><code>v-model="date"</code></td>
+      </tr>
+      <tr>
+        <td><code>u-select</code></td>
+        <td><code>value: string</code></td>
+        <td><code>input</code> + <code>change</code> (not composed); <code>$event.target.value</code></td>
+        <td><code>v-model="choice"</code> or <code>:value</code> + <code>@change</code></td>
+      </tr>
+      <tr>
+        <td><code>u-checkbox</code>, <code>u-switch</code>, <code>u-radio</code></td>
+        <td><code>checked: boolean</code></td>
+        <td><code>change</code>; value on <code>$event.target.checked</code></td>
+        <td><code>:checked</code> + <code>@change="x = $event.target.checked"</code></td>
+      </tr>
+      <tr>
+        <td><code>u-slider</code></td>
+        <td><code>value: number</code> (or <code>valueStart</code>/<code>valueEnd</code>)</td>
+        <td><code>input</code> + <code>change</code>; <code>$event.target.value</code></td>
+        <td><code>v-model.number="n"</code> (single)</td>
+      </tr>
+      <tr>
+        <td><code>u-chip-field</code></td>
+        <td><code>value: any[]</code></td>
+        <td><code>change</code> (array, not at <code>target.value</code>… read <code>$event.target.value</code>)</td>
+        <td><code>:value</code> + <code>@change="rows = $event.target.value"</code></td>
+      </tr>
+      <tr>
+        <td><code>u-typeahead</code></td>
+        <td><code>value: any</code></td>
+        <td><code>input</code> + <code>change</code> + <code>selected</code> (<code>CustomEvent</code>)</td>
+        <td><code>:value</code> + <code>@input</code>; <code>@selected</code> reads <code>$event.detail</code></td>
+      </tr>
+      <tr>
+        <td><code>u-button-field</code></td>
+        <td><code>value: string</code> (display-only)</td>
+        <td>none</td>
+        <td>one-way <code>:value</code> only</td>
+      </tr>
+    </tbody>
+  </table>
+</docs-example>
+
+<docs-example
+  sectionTitle="TypeScript typing"
+  [renderExample]="false"
+  [html]="typescriptHtml"
+>
+  Augment Vue's <code>GlobalComponents</code> with the
+  <code>DefineCustomElement&lt;&gt;</code> helper so <code>&lt;u-*&gt;</code>
+  tags get autocomplete and type-checking in templates. Pass the element class
+  (the Lit <code>Button</code>, <code>Select</code>, …) so its
+  <code>&#64;property</code> fields become typed template props. Without it the
+  tags still render — you just lose IntelliSense.
+</docs-example>
+
+<docs-example
+  sectionTitle="SSR / Nuxt"
+  [renderExample]="false"
+  [html]="mainImportHtml"
+>
+  Custom elements aren't defined on the server (<code>customElements</code> is
+  undefined in Node). Import the library and render <code>u-*</code> tags
+  <strong>client-side only</strong> — a Nuxt <code>.client.ts</code> plugin with
+  <code>&lt;ClientOnly&gt;</code> or an <code>import.meta.client</code> guard —
+  or you'll hit <code>customElements is not defined</code> / hydration
+  mismatches.
+</docs-example>

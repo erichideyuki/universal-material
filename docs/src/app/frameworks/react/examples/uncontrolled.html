@@ -1,0 +1,21 @@
+import { UTextField, UCheckbox, UButton } from '@universal-material/react';
+
+// Every input u-* element is a Form-Associated Custom Element (FACE): it calls
+// attachInternals() and pushes its value via ElementInternals.setFormValue. So
+// native <form> / FormData submission is free — give each element a `name`,
+// read it on submit, and keep ZERO React state.
+function Signup() {
+  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const data = new FormData(e.currentTarget);
+    console.log(data.get('email'), data.get('agree'));
+  }
+
+  return (
+    <form onSubmit={onSubmit}>
+      <UTextField name="email" />
+      <UCheckbox name="agree" value="yes" />
+      <UButton type="submit">Sign up</UButton>
+    </form>
+  );
+}

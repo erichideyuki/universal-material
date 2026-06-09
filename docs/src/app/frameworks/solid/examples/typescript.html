@@ -1,0 +1,28 @@
+// solid-shims.d.ts — augment Solid's JSX.IntrinsicElements
+import type { JSX } from 'solid-js'
+
+type SolidProps<T> = Partial<{ [K in keyof T as `prop:${string & K}`]: T[K] }> &
+  JSX.HTMLAttributes<T> & {
+    // u-* value inputs fire native input/change (value on target.value);
+    // add on:<exact-name> ONLY for genuine CustomEvents (e.g. u-typeahead `selected`).
+    'on:input'?: (e: Event) => void
+    'on:change'?: (e: Event) => void
+  }
+
+declare module 'solid-js' {
+  namespace JSX {
+    interface IntrinsicElements {
+      'u-button': SolidProps<import('@universal-material/web').Button>
+      'u-select': SolidProps<import('@universal-material/web').Select>
+      'u-typeahead': SolidProps<import('@universal-material/web').Typeahead> & {
+        'on:selected'?: (e: CustomEvent) => void
+      }
+      'u-chip-field': SolidProps<import('@universal-material/web').ChipField> & {
+        'on:remove'?: (e: CustomEvent) => void
+      }
+      // …one entry per <u-*> element, ideally code-generated from the manifest
+    }
+  }
+}
+
+export {}

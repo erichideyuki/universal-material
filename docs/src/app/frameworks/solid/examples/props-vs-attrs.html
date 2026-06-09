@@ -1,0 +1,14 @@
+// On a custom element (any tag with a `-`), Solid sets foo={x} as a JS PROPERTY
+// by default — perfect for Lit reactive properties (objects/arrays survive).
+
+// GOTCHA #1 — Solid lowercases the bare prop key, even on custom elements:
+<u-some-thing someProp={obj} />        // WRONG → writes el.someprop, never reaches someProp
+<u-some-thing prop:someProp={obj} />   // RIGHT → exact casing preserved
+
+// plain string attribute — bare kebab-case is fine (Lit maps it to the property)
+<u-button variant="filled" />
+
+// Force the intent explicitly when the heuristic is ambiguous:
+//   prop:foo={x} or .foo={x}  → JS property
+//   attr:foo={x}              → HTML attribute (null/undefined removes it)
+//   bool:foo={x} or ?foo={x}  → boolean attribute (present when truthy)

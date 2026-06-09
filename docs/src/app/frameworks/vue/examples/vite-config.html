@@ -1,0 +1,18 @@
+// vite.config.ts
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+
+export default defineConfig({
+  plugins: [
+    vue({
+      template: {
+        compilerOptions: {
+          // Treat every <u-*> tag as a custom element (skip Vue resolution).
+          // isCustomElement is COMPILE-TIME — it must live in the build config,
+          // not app.config.compilerOptions, when you use a build step.
+          isCustomElement: (tag) => tag.startsWith('u-'),
+        },
+      },
+    }),
+  ],
+})

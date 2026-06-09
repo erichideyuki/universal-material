@@ -1,0 +1,34 @@
+import { useState } from 'react';
+import { UTextField, UCheckbox, USelect } from '@universal-material/react';
+
+function Form() {
+  const [name, setName] = useState('');
+  const [agree, setAgree] = useState(false);
+  const [country, setCountry] = useState('');
+
+  return (
+    <>
+      {/* value goes IN as a DOM property; read it OUT from e.target.value */}
+      <UTextField
+        label="Name"
+        value={name}
+        onInput={(e) => setName((e.target as HTMLInputElement).value)}
+      />
+
+      {/* checkbox/switch/radio: bind `checked`, read e.target.checked on change */}
+      <UCheckbox
+        checked={agree}
+        onChange={(e) => setAgree((e.target as HTMLInputElement).checked)}
+      />
+
+      {/* select binds the option value (IDL property, no `value` attribute) */}
+      <USelect
+        value={country}
+        onChange={(e) => setCountry((e.target as HTMLInputElement).value)}
+      >
+        <u-option value="br">Brazil</u-option>
+        <u-option value="us">United States</u-option>
+      </USelect>
+    </>
+  );
+}

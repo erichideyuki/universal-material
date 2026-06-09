@@ -1,0 +1,16 @@
+import { createSignal } from 'solid-js'
+
+export default function App() {
+  const [value, setValue] = createSignal('a')
+
+  // Two-way value ≡ prop:value in + on:change/on:input reading currentTarget.value out.
+  return (
+    <u-select
+      prop:value={value()}
+      on:change={e => setValue((e.currentTarget as HTMLSelectElement).value)}
+    >
+      <u-option value="a">A</u-option>
+      <u-option value="b">B</u-option>
+    </u-select>
+  )
+}

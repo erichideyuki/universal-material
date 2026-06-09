@@ -1,0 +1,136 @@
+<docs-title
+  kind="foundation"
+  title="Using with Svelte"
+>
+  Svelte 4 and Svelte 5 consume the <code>&lt;u-*&gt;</code> elements natively —
+  it has the best out-of-the-box custom-element support of any target framework.
+  There is <strong>no runtime wrapper, no Vite plugin and no build config</strong>
+  to add. (The <code>customElement: true</code> compiler option is for
+  <em>authoring</em> custom elements and must not be enabled.)
+</docs-title>
+
+<docs-example
+  sectionTitle="Register the components (eager, client-only in SvelteKit)"
+  [renderExample]="false"
+  [html]="registerHtml"
+>
+  Register the library <strong>eagerly</strong> so the elements are defined
+  before first render — Svelte's <code>prop in node</code> heuristic reads the
+  live instance, so an unupgraded element falls back to attribute-setting. In
+  SvelteKit, guard the import to the client (<code>browser</code> /
+  <code>onMount</code>); a plain Vite SPA can import at the top level.
+</docs-example>
+
+<docs-example
+  sectionTitle="Binding props and listening to events"
+  [renderExample]="false"
+  [html]="bindingHtml"
+>
+  Write the value in as a normal prop and read changes back with
+  <code>on:input</code> / <code>on:change</code>.
+  <strong>Read <code>e.target.value</code> / <code>e.target.checked</code>, NOT
+  <code>e.detail</code></strong> — <code>e.detail</code> is reserved for genuine
+  <code>CustomEvent</code>s like <code>u-typeahead</code>'s <code>selected</code>
+  and <code>u-chip</code>'s <code>remove</code>.
+
+  <table class="u-table">
+    <thead>
+      <tr>
+        <th>Component(s)</th>
+        <th>Two-way prop</th>
+        <th>Live event</th>
+        <th>Read-back</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>u-text-field</code>, <code>u-text-area</code>, <code>u-search</code></td>
+        <td><code>value: string</code></td>
+        <td><code>input</code> (+ <code>change</code>)</td>
+        <td><code>on:input</code> → <code>e.target.value</code></td>
+      </tr>
+      <tr>
+        <td><code>u-datepicker</code>, <code>u-range-datepicker</code></td>
+        <td><code>value: string</code></td>
+        <td><code>input</code> + <code>change</code></td>
+        <td><code>on:change</code> → <code>e.target.value</code></td>
+      </tr>
+      <tr>
+        <td><code>u-select</code></td>
+        <td><code>value: string</code></td>
+        <td><code>input</code> + <code>change</code> (not composed)</td>
+        <td><code>on:input</code> → <code>e.target.value</code></td>
+      </tr>
+      <tr>
+        <td><code>u-checkbox</code>, <code>u-switch</code>, <code>u-radio</code></td>
+        <td><code>checked: boolean</code></td>
+        <td><code>change</code></td>
+        <td><code>on:change</code> → <code>e.target.checked</code></td>
+      </tr>
+      <tr>
+        <td><code>u-slider</code></td>
+        <td><code>value: number</code></td>
+        <td><code>input</code> + <code>change</code></td>
+        <td><code>on:input</code> → <code>e.target.value</code></td>
+      </tr>
+      <tr>
+        <td><code>u-chip-field</code></td>
+        <td><code>value: any[]</code></td>
+        <td><code>change</code></td>
+        <td><code>on:change</code> → <code>e.target.value</code></td>
+      </tr>
+      <tr>
+        <td><code>u-typeahead</code></td>
+        <td><code>value: any</code></td>
+        <td><code>input</code>/<code>change</code> + <code>selected</code> (<code>CustomEvent</code>)</td>
+        <td>value via <code>e.target.value</code>; pick via <code>on:selected</code> → <code>e.detail</code></td>
+      </tr>
+    </tbody>
+  </table>
+</docs-example>
+
+<docs-example
+  sectionTitle="The bind:value story"
+  [renderExample]="false"
+  [html]="bindValueHtml"
+>
+  <strong><code>bind:value</code> does NOT work on third-party custom
+  elements</strong> — it is reserved for native form elements and Svelte
+  components. Use prop-in + <code>on:input</code>/<code>on:change</code>, or wrap
+  the element once in a thin <code>.svelte</code> component to recover a real
+  <code>bind:value</code> (<code>bind:</code> works on Svelte components).
+</docs-example>
+
+<docs-example
+  sectionTitle="Objects, arrays & upgrade timing"
+  [renderExample]="false"
+  [html]="objectsHtml"
+>
+  Svelte's <code>prop in node</code> heuristic sets a property when one exists on
+  the live instance, else an attribute. If the element isn't upgraded yet, an
+  object becomes <code>[object Object]</code>. Register the library eagerly, or
+  assign properties imperatively with a <code>use:setProperties</code> action /
+  <code>bind:this</code> + <code>$effect</code>.
+</docs-example>
+
+<docs-example
+  sectionTitle="TypeScript typing"
+  [renderExample]="false"
+  [html]="typescriptHtml"
+>
+  Augment <code>svelte/elements</code>' <code>SvelteHTMLElements</code> interface
+  with one entry per <code>u-*</code> tag for attribute/event autocompletion.
+  This is DX sugar — the tags render and work without it.
+</docs-example>
+
+<docs-example
+  sectionTitle="SSR / SvelteKit"
+  [renderExample]="false"
+  [html]="registerHtml"
+>
+  <code>customElements</code> / <code>HTMLElement</code> are browser-only — a
+  top-level server import throws <code>HTMLElement is not defined</code>. Import
+  client-side only (inside <code>onMount</code>, behind the
+  <code>browser</code> flag, or <code>export const ssr = false</code> as a last
+  resort).
+</docs-example>

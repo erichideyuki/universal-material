@@ -1,0 +1,29 @@
+<!-- Text fields, text areas and search bind a string value -->
+<u-text-field label="Name" placeholder="Your full name" [(ngModel)]="name"></u-text-field>
+<u-text-area variant="outlined" label="Bio" [(ngModel)]="bio"></u-text-area>
+<u-search position="static" placeholder="Search" [(ngModel)]="query"></u-search>
+
+<!-- Checkbox and switch bind a boolean -->
+<label><u-checkbox [(ngModel)]="agree"></u-checkbox> Agree to terms</label>
+<label><u-switch [(ngModel)]="notifications"></u-switch> Notifications</label>
+
+<!-- Radios share a name and contribute their value to the group -->
+<label><u-radio name="contact" [value]="'email'" [(ngModel)]="choice"></u-radio> Email</label>
+<label><u-radio name="contact" [value]="'sms'" [(ngModel)]="choice"></u-radio> SMS</label>
+
+<!-- Select binds the option value -->
+<u-select label="Country" [(ngModel)]="country">
+  <u-option value="br">Brazil</u-option>
+  <u-option value="ca">Canada</u-option>
+  <u-option value="us">United States</u-option>
+</u-select>
+
+<!-- Slider binds a number; datepicker binds an ISO string -->
+<u-slider min="10" max="200" step="0.5" [(ngModel)]="amount"></u-slider>
+<u-datepicker label="Date" placeholder="Choose a date" [(ngModel)]="date"></u-datepicker>
+
+<!-- Chip field binds a string[]; typeahead binds its value -->
+<u-chip-field label="Tags" [(ngModel)]="tags"></u-chip-field>
+
+<u-text-field id="states-field" label="States"></u-text-field>
+<u-typeahead target-id="states-field" [source]="states" [(ngModel)]="state"></u-typeahead>

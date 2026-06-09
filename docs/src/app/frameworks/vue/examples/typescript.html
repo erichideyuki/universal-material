@@ -1,0 +1,26 @@
+// vue-shims.d.ts — augment Vue's GlobalComponents so <u-*> tags are typed
+import type { HTMLAttributes, PublicProps, EmitFn } from 'vue'
+import type { Button, Select, Checkbox } from '@universal-material/web'
+
+type EventMap = { [event: string]: Event }
+type VueEmit<T extends EventMap> = EmitFn<{ [K in keyof T]: (event: T[K]) => void }>
+
+type DefineCustomElement<
+  ElementType extends HTMLElement,
+  Events extends EventMap = {},
+  SelectedAttributes extends keyof ElementType = keyof ElementType,
+> = new () => ElementType & {
+  $props: HTMLAttributes & Partial<Pick<ElementType, SelectedAttributes>> & PublicProps
+  $emit: VueEmit<Events>
+}
+
+declare module 'vue' {
+  interface GlobalComponents {
+    'u-button': DefineCustomElement<Button, { click: MouseEvent }>
+    'u-select': DefineCustomElement<Select, { input: Event; change: Event }>
+    'u-checkbox': DefineCustomElement<Checkbox, { change: Event }>
+    // …one entry per <u-*> element
+  }
+}
+
+export {}

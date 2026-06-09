@@ -1,0 +1,10 @@
+// src/routes/+layout.ts (SvelteKit) — register once, client-only
+import { browser } from '$app/environment'
+
+if (browser) {
+  // registers every <u-*> custom element
+  await import('@universal-material/web')
+}
+
+// src/main.ts (plain Vite SPA — no SSR, a top-level import is safe)
+import '@universal-material/web'

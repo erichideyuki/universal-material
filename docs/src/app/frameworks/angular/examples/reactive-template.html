@@ -1,0 +1,12 @@
+<!-- reactive-example.component.html -->
+<form [formGroup]="form">
+  <u-text-field label="Name" formControlName="name"></u-text-field>
+
+  <label><u-checkbox formControlName="agree"></u-checkbox> Agree to terms</label>
+
+  <u-select label="Country" formControlName="country">
+    <u-option value="br">Brazil</u-option>
+    <u-option value="ca">Canada</u-option>
+    <u-option value="us">United States</u-option>
+  </u-select>
+</form>

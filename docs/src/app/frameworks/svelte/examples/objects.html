@@ -1,0 +1,15 @@
+<script>
+  // The `prop in node` heuristic reads the LIVE element instance, so the element
+  // must already be defined when Svelte sets data. If it isn't upgraded yet,
+  // `prop in node` is false and Svelte silently sets an ATTRIBUTE — mangling an
+  // object into `[object Object]`. Register the library eagerly to avoid this.
+
+  // Always assign as a JS property, bypassing the heuristic:
+  function setProperties(node, props) {
+    const apply = () => Object.entries(props).forEach(([k, v]) => (node[k] = v))
+    apply()
+    return { update(next) { props = next; apply() } }
+  }
+</script>
+
+<u-typeahead use:setProperties={{ source: ['Amy', 'Bill'], value: selected }} />
