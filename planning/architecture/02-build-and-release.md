@@ -19,10 +19,14 @@ per-package publish flow, and the M3-major version policy. Decisions are in
    vue/svelte/solid (optional, types-only — depend on web for types, no runtime)
 ```
 
-- No cycles. **web builds first**; every wrapper consumes web's built `dist/` (resolved
-  via the workspace symlink `node_modules/@universal-material/web` → repo root).
-- The docs app is **not** a workspace member; it consumes `../dist` directly and is built
-  only as a CI sanity check / for deployment, never published.
+- No cycles. **web builds first**; every wrapper consumes web's built `dist/` by mapping the
+  bare specifier `@universal-material/web` to `../../dist/index` via a tsconfig `paths` entry
+  (tsc/ng) or a build alias (tsup/esbuild). **npm does NOT symlink the workspace-ROOT package**
+  into `node_modules` — only `packages/*` members — so there is no
+  `node_modules/@universal-material/web`; the relative dist path (the docs-app pattern) is the
+  resolution mechanism. Verified at execution — commit `d6157ae`.
+- The docs app is **not** a workspace member; it consumes `../dist` directly (the same
+  pattern) and is built only as a CI sanity check / for deployment, never published.
 
 ---
 
@@ -66,8 +70,8 @@ ordering lives entirely inside the web `build` script — the monorepo never reo
   developer keeps this running. After a web change, the docs watcher picks up the new
   `dist/` within a few seconds.
 - **Angular wrapper dev:** `npm run build:watch -w @universal-material/angular`
-  (`ng-packagr --watch`). It consumes the web symlink; a web change requires the web watch
-  (or a one-off `npm run build`) to refresh `dist/` first.
+  (`ng-packagr --watch`). It resolves web via the tsconfig path to `../../dist/index`; a web
+  change requires the web watch (or a one-off `npm run build`) to refresh `dist/` first.
 - **React wrapper dev:** `npm run build:watch -w @universal-material/react`
   (`tsup --watch`).
 - **Everything at once:** `npm-run-all -p "build:watch" "build:watch -w @universal-material/angular" …`
@@ -103,10 +107,12 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: 24, cache: npm }
-      - run: npm ci                       # single root install; symlinks workspace deps
+      - run: npm ci --legacy-peer-deps    # single root install (symlinks packages/* members,
+                                           #   hoists deps; NOT the root web package). --legacy-peer-deps
+                                           #   required for the @angular/elements vs @angular/core skew.
       # postinstall patch runs once here, mutating the hoisted @angular/compiler (dev-only)
       - run: npm run lint:all
-      - run: npm run build:all            # web → angular → react
+      - run: npm run build:all            # web → angular → react  (web FIRST so ../../dist exists)
       - run: npm run test:all             # wtr (web) + ng test (angular) + vitest (react)
       - run: npm run docs:build           # docs app sanity build (not published)
   changeset-check:
@@ -117,9 +123,16 @@ jobs:
         with: { fetch-depth: 0 }
       - uses: actions/setup-node@v4
         with: { node-version: 24, cache: npm }
-      - run: npm ci
+      - run: npm ci --legacy-peer-deps
       - run: npx changeset status --since=origin/main   # fails if PR has no changeset
 ```
+
+> **Install requires `--legacy-peer-deps`** (or `legacy-peer-deps=true` in a committed root
+> `.npmrc`, which `npm ci` honors): the web repo's `@angular/elements@20.0.5` peer-pins
+> `@angular/core@20.0.5`, while `packages/angular` pulls `@angular/core@^20.3.0` — a strict
+> peer-resolution error without the flag. **Follow-up:** align the web repo's `@angular/*`
+> devDeps to `^20.3.x` so the flag (and the `.npmrc`) can be dropped. Verified at execution —
+> commit `d6157ae`.
 
 Notes:
 - **`npm test:all` runs the web tests headfully** via `@web/test-runner-playwright`; CI
@@ -147,8 +160,8 @@ jobs:
         with: { fetch-depth: 0 }
       - uses: actions/setup-node@v4
         with: { node-version: 24, cache: npm, registry-url: https://registry.npmjs.org }
-      - run: npm ci
-      - run: npm run build:all
+      - run: npm ci --legacy-peer-deps     # see §3.1 install note (@angular/* peer skew)
+      - run: npm run build:all             # web FIRST — wrappers resolve ../../dist
       - uses: changesets/action@v1
         with:
           # `version` opens/updates a "Version Packages" PR; merging it triggers `publish`
@@ -200,19 +213,22 @@ each package's responsibility (run by `build:all` before publish):
 
 | Package | Build to publish root | Publish root | Notes |
 | --- | --- | --- | --- |
-| **web** | `npm run build` | **`dist/`** | `copy` includes `skills/` + `.claude-plugin/`; `remove-scripts-from-package.js` strips `postinstall`+`publish` from `dist/package.json` so consumers never run the Angular-compiler patch. The `dist/package.json` `"@universal-material/web": "*"` does not apply (web has no self-dep); web's deps are concrete ranges already. |
-| **angular** | `ng-packagr` | `packages/angular/dist/` | ng-packagr emits fesm2022/esm/types. Its `dependencies."@universal-material/web": "*"` is rewritten by Changesets to the published range (e.g. `^3.10.0`) at publish. `animated-scroll-to` carried via `allowedNonPeerDependencies`. |
-| **react** | `tsup` | `packages/react/dist/` | esm+cjs+dts; `react`/`react-dom`/`@universal-material/web` are `external` (peers); `@lit/react` bundled or external+dep. |
+| **web** | `npm run build` | **`dist/`** | `copy` includes `skills/` + `.claude-plugin/`; `remove-scripts-from-package.js` strips `postinstall`+`publish` from `dist/package.json` so consumers never run the Angular-compiler patch. Web has no self-dep; its `dependencies` are already concrete published ranges (no `"*"` substitution needed). |
+| **angular** | `ng-packagr` | `packages/angular/dist/` | ng-packagr emits fesm2022/esm/types from `src/package.json`, whose `peerDependencies."@universal-material/web"` is already the concrete `^3.10.0` (the only web declaration — the workspace manifest names no web dep, avoiding npm `ETARGET`). **Nothing to rewrite** — no `"*"` exists. `animated-scroll-to` carried via `allowedNonPeerDependencies`. |
+| **react** | `tsup` | `packages/react/dist/` | esm+cjs+dts; `react`/`react-dom`/`@universal-material/web` are `external` (peers; web is a `^3.10.0` peer); `@lit/react` bundled or external+dep. Web is resolved at build time from the root `dist/` via the tsconfig `paths` + tsup `alias`, not a node_modules symlink. |
 | **vue/svelte/solid** | none / `tsc -d` | package root (`src/*.d.ts`) | types + README only; nothing to compile if hand-authored `.d.ts`. |
 
 **npm publish provenance / 2FA:** set the npm token as `NODE_AUTH_TOKEN`; consider
 `--provenance` (requires `id-token: write`, already in the release job perms). Confirm
 org-level 2FA-on-publish policy with the maintainer.
 
-**`workspace`-spec rewriting under npm:** npm workspaces uses `"*"` (not pnpm's
-`workspace:*` literal) for the internal dep; Changesets + `npm publish` substitute the
-concrete version. Verify with a dry run (`npm publish --dry-run` / `npm pack`) that the
-published `packages/angular/dist/package.json` carries a real range, not `"*"`.
+**No internal `"*"` to rewrite.** Because no wrapper's workspace manifest names
+`@universal-material/web` (a workspace-manifest entry for the unpublished root package
+triggers npm `ETARGET`), the web dependency is declared **only** as a concrete published peer
+range (`^3.10.0`) in each package's published manifest — Angular's `src/package.json`, React's
+`package.json`. There is therefore **no `"*"`/`workspace:*` literal anywhere** for Changesets
+to substitute. Still verify with a dry run (`npm publish --dry-run` / `npm pack`) that the
+published `packages/angular/dist/package.json` carries the real `^3.10.0` peer and no `"*"`.
 
 ---
 
@@ -239,9 +255,15 @@ published `packages/angular/dist/package.json` carries a real range, not `"*"`.
 2. In the web repo root: add `"workspaces"`, root scripts, `@changesets/cli`,
    `.changeset/config.json`, `tsconfig.base.json`; have web `tsconfig.json` extend it.
 3. `git subtree add --prefix=packages/angular <angular-url> feature/m3`.
-4. In `packages/angular`: delete submodule/`build-web.mjs`/path-hack/duplicated deps; set
-   identity (01-package-layout §3.2); point `tsconfig.lib.json` at `../../tsconfig.base.json`.
-5. `npm install` at root; verify `node_modules/@universal-material/web` is a symlink.
+4. In `packages/angular`: delete submodule/`build-web.mjs`/duplicated deps; **repoint** the
+   tsconfig `@universal-material/web` path to `../../dist/index` (do NOT remove it — there is no
+   workspace-root symlink); ensure the workspace `package.json` names NO `@universal-material/web`
+   dep/peer (avoids npm `ETARGET`); keep the web peer only in `src/package.json`; set identity
+   (01-package-layout §3.2); point `tsconfig.lib.json` at `../../tsconfig.base.json`.
+5. `npm install --legacy-peer-deps` at root (the `@angular/*` peer skew needs the flag). Verify
+   `node_modules/@universal-material/web` does **NOT** exist (npm doesn't symlink the
+   workspace-root package) and that `packages/*` members ARE symlinked. **Build web first** so
+   `dist/index` exists for the wrappers' `../../dist` path.
 6. `npm run build:all` + `npm run test:all` + `npm run docs:build` green.
 7. Add `.github/workflows/{ci,release}.yml`.
 8. Create the first changesets: web `minor` (→ 3.10.0), angular `minor` (→ 3.7.0).

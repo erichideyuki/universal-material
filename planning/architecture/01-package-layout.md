@@ -63,10 +63,10 @@ universal-material-web/                       # repo root == @universal-material
 └── packages/
     │
     ├── angular/                               # @universal-material/angular  (subtree of feature/m3)
-    │   ├── package.json                       # §3.2
+    │   ├── package.json                       # §3.2 — NO @universal-material/web entry (avoids ETARGET)
     │   ├── ng-package.json                    # dest: ./dist, entryFile src/index.ts
-    │   ├── tsconfig.json                      # extends ../../tsconfig.base.json
-    │   ├── tsconfig.lib.json                  # ng-packagr lib config; NO @universal-material/web path hack
+    │   ├── tsconfig.json                      # extends ../../tsconfig.base.json; @universal-material/web -> ../../dist/index
+    │   ├── tsconfig.lib.json                  # ng-packagr lib config
     │   ├── tsconfig.spec.json                 # karma/jasmine
     │   ├── README.md
     │   ├── dist/                              # ng-packagr output (publish root), gitignored
@@ -175,21 +175,26 @@ Notes:
 ### 3.2 `packages/angular/package.json` — `@universal-material/angular`
 
 ```jsonc
+// packages/angular/package.json — the WORKSPACE manifest (NOT published as-is; ng-packagr
+// publishes src/package.json). It declares NO @universal-material/web entry: naming the
+// unpublished workspace-ROOT web package here (as dep OR peer) triggers npm ETARGET at install.
 {
   "name": "@universal-material/angular",
   "version": "3.6.2",                  // → 3.7.0 on first monorepo publish (open decision; see 00-decision §11.5)
   "license": "MIT",
   "sideEffects": false,
   "peerDependencies": {
-    "@universal-material/web": "^3.10.0",
     "@angular/common": "^20",
     "@angular/core": "^20",
     "@angular/forms": "^20"
+    // NO "@universal-material/web" here — the web peer lives in the PUBLISHED src/package.json.
   },
   "dependencies": {
-    "@universal-material/web": "*",   // workspace-linked; rewritten to published range on publish
     "animated-scroll-to": "^2.3.0",   // the only genuine extra runtime dep
     "tslib": "^2.6.2"
+    // NO "@universal-material/web" — it is NOT a node_modules-resolvable dep here. Web is
+    // resolved at build time via the tsconfig path @universal-material/web -> ../../dist/index
+    // (the docs-app pattern), because npm does not symlink the workspace-root package.
   },
   "scripts": {
     "build": "ng-packagr -p ng-package.json",
@@ -197,14 +202,19 @@ Notes:
     "test": "ng test",
     "lint": "eslint src/**/*.ts"
   }
-  // REMOVED vs old src/package.json: nothing material; the old one already declared
-  //   @universal-material/web as a peer. The 7 duplicated web runtime deps that lived in
-  //   the Angular *root* package.json are NOT carried here — they hoist from the web pkg.
 }
 ```
 
-`ng-package.json` keeps `allowedNonPeerDependencies: ["@universal-material/web",
-"animated-scroll-to"]` so ng-packagr accepts the workspace dep.
+The PUBLISHED library manifest `packages/angular/src/package.json` carries the web peer
+(`"@universal-material/web": "^3.10.0"`) — that is the only place web is declared. The 7
+duplicated web runtime deps that lived in the Angular *root* package.json are NOT carried here —
+they hoist from the web pkg. `ng-package.json` keeps `allowedNonPeerDependencies:
+["@universal-material/web", "animated-scroll-to"]` so ng-packagr accepts the peer.
+
+> **Install:** `npm install` at the monorepo root needs **`--legacy-peer-deps`** (web's
+> `@angular/elements@20.0.5` peer-pins `@angular/core@20.0.5` vs `packages/angular`'s
+> `@angular/core@^20.3.0`). Follow-up: align web's `@angular/*` devDeps to `^20.3.x`. Verified
+> at execution — commit `d6157ae`.
 
 ### 3.3 `packages/react/package.json` — `@universal-material/react` (NEW)
 
@@ -230,8 +240,10 @@ Notes:
   },
   "devDependencies": {
     "tsup": "^8", "typescript": "~5.8.2",
-    "react": "^19", "react-dom": "^19",
-    "@universal-material/web": "*"    // workspace dep for build-time types
+    "react": "^19", "react-dom": "^19"
+    // NO "@universal-material/web" devDep — it is the workspace-ROOT package, which npm does
+    // not symlink and cannot resolve from the registry (-> ETARGET). Build-time types come from
+    // the built root dist/ via the tsconfig `paths` + tsup `alias` -> ../../dist/index.
   },
   "scripts": {
     "build": "tsup",
@@ -243,8 +255,10 @@ Notes:
 ```
 
 Rationale for peers: React + react-dom are the consumer's framework; web is the underlying
-elements. `@lit/react` is a **dependency** (not a peer) because it is the wrapper's own
-engine and is tiny.
+elements (a **peerDependency** at `^3.10.0`, and the *only* manifest entry naming web).
+`@lit/react` is a **dependency** (not a peer) because it is the wrapper's own engine and is
+tiny. Web is resolved at build time from the root `dist/` via the tsconfig `paths` + tsup
+`alias` (§4), not a `node_modules` symlink — there is none for the workspace-root package.
 
 ### 3.4 Optional types-only packages — `vue` / `svelte` / `solid`
 
@@ -287,9 +301,9 @@ tsconfig.base.json            # NEW — shared compilerOptions only (no include/
         ├── tsconfig.json (web)            # adds: lib es2021+DOM, rootDir src, outDir dist,
         │                                  #   experimentalDecorators, useDefineForClassFields:false,
         │                                  #   ts-lit-plugin, angularCompilerOptions (UNCHANGED)
-        ├── packages/angular/tsconfig.json # adds: Angular options, experimentalDecorators
-        │      └── tsconfig.lib.json        # ng-packagr lib; NO @universal-material/web path alias
-        ├── packages/react/tsconfig.json    # adds: jsx: react-jsx, lib DOM, standard decorators
+        ├── packages/angular/tsconfig.json # adds: Angular options + paths @universal-material/web -> ../../dist/index
+        │      └── tsconfig.lib.json        # ng-packagr lib (inherits the path)
+        ├── packages/react/tsconfig.json    # adds: jsx + paths @universal-material/web -> ../../dist/index
         └── packages/{vue,svelte,solid}/    # minimal; declaration-only if they emit .d.ts
 ```
 
@@ -297,11 +311,17 @@ Key points:
 - The **web `tsconfig.json` keeps its current shape** (00-decision §4); we only lift the
   framework-neutral options into `tsconfig.base.json` and have web `extends` it. This is a
   near-zero-risk refactor (override-compatible).
-- **No project references / `paths` aliases for cross-package resolution.** npm workspace
-  symlinks make `@universal-material/web` resolve as a real installed package from every
-  consumer. This is the central simplification over the old path-hack.
+- **Each internal consumer keeps a `paths` alias `@universal-material/web` → `../../dist/index`
+  (+ `/*`).** npm does **not** symlink the workspace-**root** package into `node_modules` (it
+  only symlinks `packages/*` members), so the bare specifier has nothing to resolve through —
+  it resolves via this tsconfig `paths` entry to the built root `dist/`, with **web built
+  first**. This is the **same docs-app pattern** the web docs app uses, *not* the old
+  submodule path-hack (which pointed at the vendored `universal-material-web/dist`). Build tools
+  that don't read tsconfig `paths` (tsup/esbuild/vite) get an equivalent build alias to
+  `../../dist/index`. Verified at execution — commit `d6157ae`.
 - The web docs app's `docs/tsconfig.app.json` keeps its `@universal-material/web` →
-  `../dist/index` path (it deliberately consumes the *built* `dist/`, not source).
+  `../dist/index` path (it deliberately consumes the *built* `dist/`, not source) — the model
+  every internal consumer follows.
 
 ---
 

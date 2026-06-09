@@ -48,21 +48,27 @@ Declared by canonical task **filename** (see the task index in `planning/tasks/`
 
 - **Hard dependency — `02-monorepo-scaffold.md`:** adds `"workspaces": ["packages/*"]` to the
   root `package.json`, creates `tsconfig.base.json`, and `.changeset/config.json`. Without it,
-  `packages/react` is not a workspace member and `@universal-material/web` will not resolve via
-  symlink. **The `packages/` directory does not exist yet** (verified: `packages/` is absent at
-  authoring time) — task 02 creates it.
+  `packages/react` is not a workspace member and its own devDeps (`@lit/react`, `tsup`, `vitest`)
+  do not install. **The `packages/` directory does not exist yet** (verified: `packages/` is
+  absent at authoring time) — task 02 creates it.
 - **Hard dependency — `03-relocate-web-package.md`:** confirms the root package stays
   `@universal-material/web` as both the web manifest and the workspace coordinator, and that its
-  `dist/` (with `index.d.ts` re-exporting every component class + `custom-elements.json`) is the
-  build-time type source this package consumes. The web library is NOT moved to `packages/web`.
+  built `dist/` (with `index.d.ts` re-exporting every component class + `custom-elements.json`) is
+  the build-time type source this package consumes. The web library is NOT moved to `packages/web`.
+  **`@universal-material/web` is the workspace-ROOT package, which npm does NOT symlink into
+  `node_modules`** (npm only symlinks `packages/*` members) — so this package resolves the bare
+  `@universal-material/web` specifier via a **tsconfig path / tsup alias → the built `../../dist/index`**
+  (the docs-app pattern: `docs/tsconfig.app.json` maps it to `../dist/index`), with **web built
+  first**. The generator likewise reads `../../dist/custom-elements.json` directly by relative path.
 - **No dependency** on Angular (`04`), Vue (`08`), Svelte (`09`), Solid (`10`), or docs (`11`).
   Nothing here references their code. Task `14-ci-pipeline.md` depends on **this** task (it adds
   `npm run build -w @universal-material/react` to `build:all`), not vice-versa.
 
 If you run this task before `02` has merged, you can still author every file under
-`packages/react/`, but `npm install` will not symlink `@universal-material/web` and the build
-will fail to resolve types — so **`02` must land first**. This task is otherwise
-worktree-parallelizable with all sibling wrapper tasks (see the final section).
+`packages/react/`, but `npm install` will not install this package's devDeps and the build
+will fail to resolve `@universal-material/web` (which comes from the built root `dist/`, not a
+node_modules symlink) — so **`02` must land first** and **web must be built first**. This task is
+otherwise worktree-parallelizable with all sibling wrapper tasks (see the final section).
 
 ---
 
@@ -263,7 +269,6 @@ own engine, tiny), while `react`/`react-dom`/`@universal-material/web` are **pee
     "@lit/react": "^1.0.0"
   },
   "devDependencies": {
-    "@universal-material/web": "*",
     "@testing-library/react": "^16",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -277,10 +282,15 @@ own engine, tiny), while `react`/`react-dom`/`@universal-material/web` are **pee
   }
 }
 ```
-> Notes: `"@universal-material/web": "*"` in devDeps is the **workspace** dep used for build-time
-> types (resolved by the root symlink); the published peer range is `^3.10.0`. `prebuild` runs the
-> generator so a clean `npm run build` always regenerates from the current web manifest, while the
-> committed `src/components/*.ts` keeps the package buildable without re-running it.
+> Notes: **Do NOT add `"@universal-material/web"` to `dependencies` or `devDependencies`.** It is
+> the workspace-**ROOT** package, which npm does not symlink into `node_modules`; naming it in a
+> workspace manifest with a `"*"` (or any) range makes npm try to resolve it against the registry
+> and fail with **`ETARGET`** (the same failure mode the Angular task `04` hit — commit `d6157ae`).
+> Build-time types come from the built root **`dist/`**, resolved via a tsconfig `paths` entry +
+> tsup `alias` → `../../dist/index` (S2/S3 below), with web built first. The published web contract
+> is the `^3.10.0` **peerDependency** only. `prebuild` runs the generator so a clean `npm run build`
+> always regenerates from the current web manifest, while the committed `src/components/*.ts` keeps
+> the package buildable without re-running it.
 
 ### S2. Create the tsconfig (extends shared base; standard decorators + jsx)
 `D:/Projects/universal-material-web/packages/react/tsconfig.json` (`01-package-layout.md` §4 —
@@ -297,15 +307,24 @@ decorators and `jsx: react-jsx`, NOT web's `experimentalDecorators`/`useDefineFo
     "rootDir": "src",
     "outDir": "dist",
     "declaration": true,
-    "noEmit": true
+    "noEmit": true,
+    // Resolve the bare web specifier to the built root dist (the docs-app pattern),
+    // because npm does NOT symlink the workspace-root @universal-material/web into
+    // node_modules. Web must be built first so ../../dist/index.d.ts exists.
+    "paths": {
+      "@universal-material/web":   ["../../dist/index"],
+      "@universal-material/web/*": ["../../dist/*"]
+    }
   },
   "include": ["src"]
 }
 ```
-> If `02-monorepo-scaffold.md` has not yet created `tsconfig.base.json`, temporarily inline the
-> base compilerOptions and flag it in the PR — but `02` is a hard precondition, so it should exist.
+> The `paths` entry is what makes `npx tsc --noEmit` (and the IDE) resolve `@universal-material/web`
+> for the generated wrappers — there is no `node_modules/@universal-material/web` symlink for the
+> root package. If `02-monorepo-scaffold.md` has not yet created `tsconfig.base.json`, temporarily
+> inline the base compilerOptions and flag it in the PR — but `02` is a hard precondition.
 
-### S3. Create the tsup config (esm + cjs + dts; external peers)
+### S3. Create the tsup config (esm + cjs + dts; external peers, web resolved from root dist)
 `D:/Projects/universal-material-web/packages/react/tsup.config.ts` (`01-package-layout.md` §3.3,
 §5 — externalize peers so they are not bundled twice; `react.md` §"Build tooling"):
 ```ts
@@ -318,9 +337,25 @@ export default defineConfig({
   clean: true,
   sourcemap: true,
   target: 'es2022',
+  // @universal-material/web stays EXTERNAL at runtime (it is a peer — never bundled).
+  // Its IDENTIFIER must still resolve at build/dts time. There is no
+  // node_modules/@universal-material/web symlink (it is the workspace-ROOT package, which
+  // npm does not symlink), so point the bare specifier at the built root dist — the same
+  // ../../dist mapping the tsconfig `paths` uses. tsup's dts pass reads tsconfig `paths`,
+  // so the tsconfig entry from S2 covers types; this alias covers esbuild's own resolution.
+  esbuildOptions(options) {
+    options.alias = {
+      ...(options.alias ?? {}),
+      '@universal-material/web': '../../dist/index',
+    };
+  },
   external: ['react', 'react-dom', '@universal-material/web', '@lit/react'],
 });
 ```
+> **Web must be built first** so `../../dist/index` exists. The `alias` + `external` combination
+> means esbuild can *resolve* the specifier (for type/dts and import-rewriting) while still leaving
+> it as an external `import '@universal-material/web'` in the emitted ESM/CJS (the consumer's peer
+> provides it). Do **not** rely on a node_modules symlink — there is none for the root package.
 
 ### S4. Write the generator `scripts/gen.mjs`
 `D:/Projects/universal-material-web/packages/react/scripts/gen.mjs`. It implements the algorithm
@@ -402,10 +437,13 @@ export type { EventName } from '@lit/react';
 
 ### S6. Run the generator and commit its output
 ```powershell
-npm install                                   # symlinks @universal-material/web, installs @lit/react/tsup/vitest
-npm run generate -w @universal-material/react # writes src/components/*.ts + src/index.ts
+# --legacy-peer-deps may be required at the monorepo root (Angular devDep skew — see task 04).
+npm install --legacy-peer-deps                # installs @lit/react/tsup/vitest (does NOT symlink web — it's the root package)
+npm run generate -w @universal-material/react # reads ../../src tagNameMap (+ ../../dist/custom-elements.json); writes src/components/*.ts + src/index.ts
 ```
-Commit `src/components/*.ts` and `src/index.ts` (they are part of the package, not `dist/`).
+Commit `src/components/*.ts` and `src/index.ts` (they are part of the package, not `dist/`). The
+generator reads the web library by **relative path** (`../../src`, `../../dist/custom-elements.json`),
+not through a node_modules symlink — there is none for the workspace-root web package.
 
 ### S7. Write the tests (`test/*.test.tsx`)
 Use `@testing-library/react` + `vitest` (happy-dom env). Create
@@ -477,7 +515,11 @@ Tests (each imports the **generated** wrappers from `../src/index.js`):
 7. **No web `src/`, `dist/`, `skills/`, or `.claude-plugin/` files changed** (the generator reads
    web; running `npm run analyze` regenerates `dist/custom-elements.json`, which is gitignored, so
    `git status` stays clean under tracked web paths).
-8. `npm install` at root symlinks `node_modules/@universal-material/react` to `packages/react`.
+8. `npm install` at root symlinks `node_modules/@universal-material/react` to `packages/react` (it
+   is a `packages/*` **member**). Note `@universal-material/web` is **not** symlinked — it is the
+   workspace-ROOT package; this package resolves it from the built root `dist/` via the tsconfig
+   `paths` + tsup `alias` (S2/S3), and web carries **no** `dependencies`/`devDependencies` entry on
+   this package's manifest (only the `^3.10.0` peer), avoiding npm `ETARGET`.
 
 ---
 
@@ -487,8 +529,9 @@ Tests (each imports the **generated** wrappers from `../src/index.js`):
 
 **V1 — workspace + deps resolve:**
 ```powershell
-npm install
-Test-Path node_modules/@universal-material/react   # expect True (workspace symlink)
+npm install --legacy-peer-deps                     # --legacy-peer-deps: Angular devDep skew at the root (task 04)
+Test-Path node_modules/@universal-material/react   # expect True (workspace MEMBER symlink)
+Test-Path node_modules/@universal-material/web     # expect False (root package — NOT symlinked; resolved from ../../dist)
 Test-Path node_modules/@lit/react                  # expect True (installed dependency)
 ```
 
@@ -501,9 +544,11 @@ node -e "const fs=require('fs');const s=fs.readFileSync('packages/react/src/inde
 
 **V3 — generated class names are real exports of the web library (no transcription error):**
 ```powershell
+# Web must be BUILT FIRST so ../../dist/index.d.ts exists (the tsconfig `paths` target).
+npm run build   # builds the root web package -> dist/
 # Every imported class in the generated wrappers must exist in @universal-material/web's types.
 npx tsc --noEmit -p packages/react/tsconfig.json
-# expect: no "has no exported member" errors
+# expect: no "has no exported member" / "cannot find module '@universal-material/web'" errors
 ```
 
 **V4 — build emits esm + cjs + dts with peers external:**

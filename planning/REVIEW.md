@@ -33,6 +33,46 @@ default. **No open P0 or P1 remains.**
 
 ---
 
+## Resolved during execution (task 04 — Angular fold)
+
+> Integration finding surfaced and fixed while *executing* task 04 (commit `d6157ae`), then folded
+> back into the harness. This corrects a wrong premise that ran through `04`/`07` and the three
+> architecture ADRs.
+
+- **The harness originally assumed internal packages resolve `@universal-material/web` through an
+  npm-workspaces symlink at `node_modules/@universal-material/web` (and that the tsconfig path
+  could simply be *deleted*). That premise is WRONG for a root-hosted package.** The web library
+  lives at the **repo root** (it *is* `@universal-material/web`, the dual-role coordinator), and
+  **npm does NOT symlink the workspace-ROOT package** — npm only symlinks `packages/*` members.
+  So sibling packages cannot resolve the bare `@universal-material/web` specifier through
+  `node_modules`.
+- **Fix (the repo-proven docs-app pattern):** internal monorepo consumers resolve web by mapping
+  the bare specifier to the **built `../../dist/index`** via a tsconfig `paths` entry (tsc/ng) or a
+  build-tool alias (tsup/esbuild), with **web built first** — exactly what the web docs app already
+  does (`docs/tsconfig.app.json` → `../dist/index`). The published contract stays a
+  `peerDependency` range in each package's *published* manifest only.
+- **What was actually implemented for `packages/angular` (commit `d6157ae`, `ng build` green):**
+  `packages/angular/tsconfig.json` `paths` maps `@universal-material/web` → `../../dist/index` and
+  `@universal-material/web/*` → `../../dist/*` (repointed from the submodule's
+  `universal-material-web/dist/index`, **not** removed); the workspace `packages/angular/package.json`
+  has **NO** `@universal-material/web` entry (a workspace-manifest dep/peer naming the unpublished
+  root package triggered an npm **`ETARGET`** against the registry); the published
+  `packages/angular/src/package.json` keeps `peerDependencies["@universal-material/web"]: ^3.10.0`.
+- **`npm install` at the monorepo root requires `--legacy-peer-deps`:** the web repo's
+  `@angular/elements@20.0.5` peer-pins `@angular/core@20.0.5`, while `packages/angular` pulls
+  `@angular/core@^20.3.0` (an Angular devDep version skew). **Follow-up:** align the web repo's
+  `@angular/*` devDeps to `^20.3.x` so the flag (and any `.npmrc legacy-peer-deps=true`) can be
+  dropped.
+- **Harness files updated to match:** `tasks/04-relocate-angular-package.md` (Step 5 path repoint,
+  Step 6 no workspace web entry, the RESOLVE/P1-4 block, acceptance criteria, V3–V8);
+  `tasks/07-wrapper-react.md` (web resolved via tsconfig path + tsup alias to `../../dist`, no
+  web dep/devDep on the manifest, peer-only published contract); `architecture/00-decision.md`
+  §2/§4/§5/§6/§8, `architecture/01-package-layout.md` §1/§3/§4, and
+  `architecture/02-build-and-release.md` §1/§3/§5/§7 (+ the `--legacy-peer-deps` install
+  requirement and the `@angular/*` devDep-alignment follow-up).
+
+---
+
 ## PASS-1 issues — status
 
 | ID | Title | Status |

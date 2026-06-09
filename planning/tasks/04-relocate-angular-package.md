@@ -2,7 +2,7 @@
 
 > **Status:** ready to implement — **HIGHEST RISK in the migration** (foreign-root git graft + submodule dissolution). Serial; do **not** run in a worktree.
 > **Architecture authority:** `planning/architecture/00-decision.md` §2.4–§2.5, §6, §7, §8 (the fold + git-history + dependency-rewrite sections); `planning/current/05-angular-consumption-wiring.md` (the full "before" wiring); `planning/current/07-git-and-release-state.md` §2, §3, §4 (git baseline + foreign-root constraint).
-> **One-line scope:** Graft the standalone Angular repo's pushed `feature/m3` branch into `packages/angular/` via **history-preserving `git subtree add`**, **dissolve** the inner `universal-material-web` git submodule, **delete** `scripts/build-web.mjs` + its `pre*` hooks + the tsconfig `@universal-material/web` path hack, and replace all three with a **real workspace dependency** on the root `@universal-material/web` package — deduping the 7 hand-mirrored runtime deps.
+> **One-line scope:** Graft the standalone Angular repo's pushed `feature/m3` branch into `packages/angular/` via **history-preserving `git subtree add`**, **dissolve** the inner `universal-material-web` git submodule, **delete** `scripts/build-web.mjs` + its `pre*` hooks, **repoint** the tsconfig `@universal-material/web` path from the submodule's `universal-material-web/dist/index` to the monorepo root's `../../dist/index` (the docs-app pattern), and dedupe the 7 hand-mirrored runtime deps. The published web contract stays a `peerDependency` in `src/package.json` only.
 
 ---
 
@@ -16,9 +16,9 @@ This is the single, central, highest-risk unit of the monorepo migration: **movi
 2. **Dissolve the inner submodule** that rides along inside the grafted tree: `universal-material-web/` (the web repo vendored as a git submodule inside the Angular repo). Remove `packages/angular/.gitmodules`, deindex the gitlink, delete the directory, and purge `.git/modules/...`.
 3. **Strip the retired demo app (and any e2e) from the grafted tree** so `packages/angular` is library-only: `git rm -r packages/angular/demo` (+ any e2e dir), drop the `demo` (and any e2e) project entries from `packages/angular/angular.json`, remove demo-only configs, and commit. The demo's migrated example pages are preserved as source material for task 11 (see Step 4b note) — they are read from the standalone Angular repo / git history, not kept here.
 4. **Delete the build-before-serve shim:** `packages/angular/scripts/build-web.mjs` plus the `prestart` / `prebuild` / `prebuild:demo` / `pretest` npm hooks in `packages/angular/package.json`.
-5. **Remove the tsconfig path hack** (`@universal-material/web` → `universal-material-web/dist/index`) in `packages/angular/tsconfig.json` and replace it with a real workspace dependency `"@universal-material/web"` resolved through the npm-workspaces symlink at `node_modules/@universal-material/web`.
+5. **Repoint the tsconfig path** in `packages/angular/tsconfig.json` — change `@universal-material/web` from the submodule's `universal-material-web/dist/index` to the monorepo root's `../../dist/index` (and `@universal-material/web/*` → `../../dist/*`). **Do NOT remove it.** npm does **not** create a `node_modules/@universal-material/web` symlink for the workspace-**root** package (npm only symlinks `packages/*` members), so the bare specifier cannot resolve via node_modules — it resolves via this tsconfig path to the built `dist/`, exactly as the web docs app already does (`docs/tsconfig.app.json` maps `@universal-material/web` → `../dist/index`).
 6. **Dedupe the 7 runtime deps** (`lit`, `@lit/context`, `@lit-labs/virtualizer`, `@material/material-color-utilities`, `@bart-krakowski/get-week-info-polyfill`, `dompurify`, `swiper`) — they hoist from the root web package; drop them from `packages/angular/package.json`.
-7. **Set `@universal-material/web` as a `peerDependency`** of `packages/angular` (the published contract) AND wire the **dev-time** workspace link with a **concrete, verified publish-range strategy** (resolve REVIEW P1-4 below — do not leave "verify later").
+7. **Keep `@universal-material/web` as a `peerDependency`** in the PUBLISHED library manifest `src/package.json` only (the published contract, bumped to `^3.10.0`). **Do NOT add `@universal-material/web` to the workspace `packages/angular/package.json`** — neither as a `dependency` nor as a `peerDependency` (a workspace-manifest peer triggers an npm `ETARGET` against the registry, since the root web package is unpublished/local). Dev-time resolution is the tsconfig path from Step 5.
 8. **Re-point the `angular.json` SCSS coupling** from `universal-material-web/scss/universal-material.scss` to the workspace package's SCSS.
 
 **This task does NOT:**
@@ -34,8 +34,8 @@ This is the single, central, highest-risk unit of the monorepo migration: **movi
 
 Hard dependencies, by canonical task **filename** (both must have landed on the integration branch before this task runs):
 
-- **`02-monorepo-scaffold.md`** — adds `"workspaces": ["packages/*"]` to the root `package.json`, creates the `packages/` directory, adds `.changeset/config.json` and `tsconfig.base.json`. Without `"workspaces"`, the grafted `packages/angular` is not a workspace member and `node_modules/@universal-material/web` is never symlinked. **The subtree graft in Step 2 below must target `packages/angular`, which only becomes a workspace member once 02 has added the glob.**
-- **`03-relocate-web-package.md`** — configures the root `package.json` as the workspace **coordinator** while leaving web at root (the deliberate dual role from `00-decision.md` §4). This task assumes the root package name is `@universal-material/web` (it already is — `D:/Projects/universal-material-web/package.json` line 2) and that it is resolvable by name as a workspace dependency.
+- **`02-monorepo-scaffold.md`** — adds `"workspaces": ["packages/*"]` to the root `package.json`, creates the `packages/` directory, adds `.changeset/config.json` and `tsconfig.base.json`. Without `"workspaces"`, the grafted `packages/angular` is not a workspace member and its own deps/devDeps do not install. (Note: npm symlinks `packages/*` *members* into `node_modules`, but never the workspace-**root** package, so `node_modules/@universal-material/web` is **not** created — `packages/angular` resolves web via a tsconfig path to `../../dist`, see Step 5.) **The subtree graft in Step 2 below must target `packages/angular`, which only becomes a workspace member once 02 has added the glob.**
+- **`03-relocate-web-package.md`** — configures the root `package.json` as the workspace **coordinator** while leaving web at root (the deliberate dual role from `00-decision.md` §4). This task assumes the root package name is `@universal-material/web` (it already is — `D:/Projects/universal-material-web/package.json` line 2) and that its built `dist/` is the type/SCSS surface `packages/angular` consumes via relative tsconfig/build paths (npm does not expose the root package by name in `node_modules`).
 
 Also required (verified baseline facts, from `planning/current/07-git-and-release-state.md`):
 
@@ -103,7 +103,7 @@ All three are documented in `planning/current/05-angular-consumption-wiring.md` 
 
 ### What consumes `@universal-material/web` in the Angular source (verified — 20 files)
 
-`@universal-material/web` is imported across `D:/Projects/universal-material-angular/src/**` — `src/index.ts` (re-exports e.g. `SnackbarDuration`), the `src/value-accessors/*` CVAs (+ specs), `src/tab-bar/tab-bar.directive.ts`, `src/dialog/confirm-dialog/*`, `src/snackbar/snackbar.service.ts`. All resolve today via the tsconfig path map; after the rewrite they resolve via the workspace symlink with **no source change** (bare specifier is identical).
+`@universal-material/web` is imported across `D:/Projects/universal-material-angular/src/**` — `src/index.ts` (re-exports e.g. `SnackbarDuration`), the `src/value-accessors/*` CVAs (+ specs), `src/tab-bar/tab-bar.directive.ts`, `src/dialog/confirm-dialog/*`, `src/snackbar/snackbar.service.ts`. All resolve today via the tsconfig path map; after the rewrite they still resolve via a tsconfig path — **repointed** from the submodule's `dist` to the monorepo root's `../../dist` (Step 5) — with **no source change** (bare specifier is identical).
 
 ### Versioning constraints (from `00-decision.md` §8, §9)
 
@@ -111,20 +111,23 @@ All three are documented in `planning/current/05-angular-consumption-wiring.md` 
 - **Web `3.9.0` → `3.10.0`** is the web side, owned by 03/13; referenced here only because the Angular peer range targets it (`^3.10.0`).
 - **M3-major policy preserved:** major == Material generation; in-library breaks bump the minor.
 
-### npm-workspaces dependency mechanics (the replacement for all three couplings)
+### Web-resolution mechanics (the replacement for all three couplings)
 
-Under npm workspaces (chosen tool, `00-decision.md` §2.1), `npm install` at `D:/Projects/universal-material-web` symlinks `node_modules/@universal-material/web` → the root web package. The bare specifier `@universal-material/web` then resolves through normal Node resolution — the tsconfig `paths` alias is **deleted**, not repointed. The 7 runtime deps hoist from the root web package's `dependencies` to the shared root `node_modules`, so the Angular demo/app resolves a **single** copy of `lit` et al. (killing the two-`lit` divergence risk). The web library's published contract is **unchanged** — `@universal-material/web@3.10.0` from npm is byte-for-byte what it would have been pre-monorepo.
+**Why (npm doesn't symlink the workspace root).** npm workspaces symlinks each `packages/*` *member* into `node_modules/<name>`, but it does **NOT** create a `node_modules/@universal-material/web` symlink for the workspace-**root** package. The root `package.json` *is* `@universal-material/web` (the deliberate dual role — `00-decision.md` §4); npm never self-symlinks the coordinator. So sibling packages under `packages/*` **cannot** resolve the bare `@universal-material/web` specifier through node_modules. This is the repo-proven reality verified during task 04 execution (commit `d6157ae`).
+
+The correct, repo-proven pattern is the one the **web docs app already uses**: an internal monorepo consumer resolves web by mapping the bare specifier to the **built `dist/`** via a tsconfig `paths` entry (`docs/tsconfig.app.json` maps `@universal-material/web` → `../dist/index`). For `packages/angular`, the equivalent path is `../../dist/index` (relative to the consumer), with **web BUILT FIRST**. The 7 runtime deps still hoist from the root web package's `dependencies` to the shared root `node_modules`, so the Angular library resolves a **single** copy of `lit` et al. (killing the two-`lit` divergence risk). The web library's published contract is **unchanged** — `@universal-material/web@3.10.0` from npm is byte-for-byte what it would have been pre-monorepo.
+
+> **Install note:** `npm install` at the monorepo root requires **`--legacy-peer-deps`** — the web repo's `@angular/elements@20.0.5` pins peer `@angular/core@20.0.5`, while `packages/angular` pulls `@angular/core@^20.3.0` (an Angular devDep version skew). Follow-up: align the web repo's `@angular/*` devDeps to `^20.3.x` so the flag can be dropped.
 
 ### RESOLVE — REVIEW P1-4: the internal web dependency version for publish (CONCRETE handling)
 
-The Angular package needs `@universal-material/web` two ways: **dev-time** (the workspace symlink) and **publish-time** (a concrete semver range npm consumers can resolve from the registry). Resolution for this monorepo (npm workspaces, **not** pnpm — so there is no literal `workspace:*` protocol):
+The Angular package needs `@universal-material/web` two ways: **dev-time** (build resolution) and **publish-time** (a concrete semver range npm consumers can resolve from the registry). Resolution for this monorepo (npm workspaces, **not** pnpm — so there is no literal `workspace:*` protocol), as actually implemented in commit `d6157ae`:
 
-- **Primary (recommended):** declare `@universal-material/web` ONLY as a **`peerDependency`** with the concrete published range, and do **NOT** add a `dependencies` entry at all. The library is published by `ng-packagr` (which reads `src/package.json`), and `src/package.json` already lists `"peerDependencies": { "@universal-material/web": "^3.9.0" }` — bump it to **`"^3.10.0"`**. The dev-time link is provided by the **root** workspace install (the web package is hoisted into the shared `node_modules`, satisfying the peer during `ng build`/`ng test`). This is the cleanest path and matches the existing publish mechanism (peer + `allowedNonPeerDependencies`). **No `"*"` or `workspace:*` string ever reaches the published tarball**, because ng-packagr publishes `src/package.json`, whose peer range is an explicit `^3.10.0`.
-- **VERIFIED FALLBACK (if a non-peer `dependencies` entry on the *workspace* `package.json` is needed for dev resolution — e.g. tooling that doesn't honor hoisted peers):** add `"@universal-material/web": "*"` to the **workspace** `packages/angular/package.json` `dependencies` (npm workspaces links it via the symlink at install; `"*"` is the npm-workspaces idiom, since `workspace:*` is a pnpm/yarn-berry literal that npm does **not** understand). Then guarantee the published artifact carries a **real** range, NOT `"*"`, by one of:
-  1. **(preferred fallback)** Keep the published range in `src/package.json`'s `peerDependencies` as `^3.10.0` (ng-packagr publishes that file, not the workspace `package.json`), so the `"*"` on the workspace manifest never ships. The `"*"` exists only to satisfy dev resolution and is invisible to consumers. **This is the concrete answer: dev `"*"` on the workspace manifest, published `^3.10.0` peer on `src/package.json`.**
-  2. **(belt-and-braces, only if the publish pipeline ever flips to publishing the workspace `package.json` directly)** add a `prepublishOnly`/`version` rewrite that replaces `"*"` with the resolved `^3.10.0` range before pack, OR rely on Changesets' publish-time substitution (`00-decision.md` §8: "the `"@universal-material/web": "*"` entry is dev-time-linked; on `changeset publish` Changesets rewrites it to the concrete published range"). **Do not ship a `"*"` web range to npm under any path.**
+- **Dev-time resolution is the tsconfig path, NOT a node_modules symlink.** `packages/angular/tsconfig.json` `paths` maps `@universal-material/web` → `../../dist/index` and `@universal-material/web/*` → `../../dist/*` (the docs-app pattern). There is **no `node_modules/@universal-material/web` symlink** for a workspace-root package, so this path is what makes the bare specifier resolve under `ng build`. Web must be **built first** so `../../dist/index` exists.
+- **Publish-time contract is a peer on `src/package.json` ONLY.** The library is published by `ng-packagr` (which reads `src/package.json`), and `src/package.json` already lists `"peerDependencies": { "@universal-material/web": "^3.9.0" }` — bump it to **`"^3.10.0"`**. `ng-package.json` `allowedNonPeerDependencies` still whitelists it.
+- **Do NOT add `@universal-material/web` to the workspace `packages/angular/package.json`** — neither `dependencies` nor `peerDependencies`. A workspace-manifest peer (or dep) entry naming the unpublished root web package triggers an npm **`ETARGET`** at install time (npm tries to resolve the range against the registry and finds no matching published version). The workspace manifest stays web-free; dev resolution comes from the tsconfig path, the published peer lives only in `src/package.json`. **No `"*"` or `workspace:*` string ever reaches any manifest.**
 
-  **Decision for THIS task:** use the **Primary** (peer-only, range `^3.10.0`, no workspace `dependencies` entry for web). The fallback `"*" + src/package.json peer ^3.10.0` is documented and verified above so a later reviewer who hits a dev-resolution gap has a known-good path that still never ships `"*"`.
+  **Decision for THIS task (matches commit `d6157ae`):** tsconfig path → `../../dist`, no web entry on the workspace manifest, published `^3.10.0` peer on `src/package.json`. `ng build` is green with web built first.
 
 ---
 
@@ -271,23 +274,28 @@ Then edit `D:/Projects/universal-material-web/packages/angular/package.json` scr
 ```
 (Deleted: `"build:web"`, `"prestart"`, `"prebuild"`, `"prebuild:demo"`, `"pretest"`, plus the demo-only `"start"` and `"build:demo"` whose `demo` project no longer exists. Build order — web before angular — is enforced by the root orchestration script in `05-build-orchestration.md`, not these hooks.)
 
-### Step 5 — Remove the tsconfig path hack
+### Step 5 — Repoint the tsconfig path (NOT remove it)
 
-Edit `D:/Projects/universal-material-web/packages/angular/tsconfig.json` `compilerOptions.paths` (grafted from `D:/Projects/universal-material-angular/tsconfig.json` lines 17–33). **Delete only the two `@universal-material/web` entries**; KEEP the `@universal-material/angular`, `@universal-material/angular/*`, and `@docs/*` entries:
+Edit `D:/Projects/universal-material-web/packages/angular/tsconfig.json` `compilerOptions.paths` (grafted from `D:/Projects/universal-material-angular/tsconfig.json` lines 17–33). **Repoint the two `@universal-material/web` entries** from the submodule path to the monorepo root's built `dist/`; KEEP the `@universal-material/angular`, `@universal-material/angular/*`, and `@docs/*` entries:
 ```jsonc
-// REMOVE these two lines:
+// BEFORE (submodule-era):
 "@universal-material/web":   ["universal-material-web/dist/index"],
 "@universal-material/web/*": ["universal-material-web/dist/*"],
+// AFTER (monorepo root dist, relative to packages/angular — the docs-app pattern):
+"@universal-material/web":   ["../../dist/index"],
+"@universal-material/web/*": ["../../dist/*"],
 ```
-Result (the surviving `paths`):
+Result (the full `paths`):
 ```jsonc
 "paths": {
+  "@universal-material/web":       ["../../dist/index"],
+  "@universal-material/web/*":     ["../../dist/*"],
   "@universal-material/angular":   ["src"],
   "@universal-material/angular/*": ["src/*"],
   "@docs/*": ["demo/src/app/*"]
 }
 ```
-The bare `@universal-material/web` specifier now resolves via `node_modules/@universal-material/web` (the workspace symlink). No source import changes — the specifier string is identical in all 20 consuming files.
+**Do NOT delete these entries.** npm does not symlink the workspace-**root** package into `node_modules`, so there is no `node_modules/@universal-material/web` to resolve through — the bare specifier resolves via this tsconfig path to the built `../../dist/index` (the same mechanism the web docs app uses via `docs/tsconfig.app.json`). Web must be **built first**. No source import changes — the specifier string is identical in all 20 consuming files.
 
 ### Step 6 — Dedupe the 7 runtime deps + set the web peer (resolve P1-4)
 
@@ -305,46 +313,46 @@ Edit `D:/Projects/universal-material-web/packages/angular/package.json`:
 ```
 **Keep** the Angular-only deps (`@angular/*`, `@universal-material/core`, `@mdi/font`, `@stackblitz/sdk`, `animated-scroll-to`, `highlight.js`, `ngx-highlight-js`, `rxjs`, `tslib`) and all `devDependencies`.
 
-**6b. Add `@universal-material/web` as a `peerDependency`** of the **workspace** `packages/angular/package.json` (this mirrors the published `src/package.json` peer and documents the consumer contract at the workspace level):
-```jsonc
-// packages/angular/package.json
-"peerDependencies": {
-  "@universal-material/web": "^3.10.0"
-}
-```
-Per the **Primary** resolution in P1-4 above: **do NOT add a `"@universal-material/web"` entry to `dependencies`.** The dev-time link is satisfied by the root workspace install hoisting the web package into the shared `node_modules`, which fulfills this peer during `ng build`/`ng test`.
+**6b. Do NOT add `@universal-material/web` to the workspace `packages/angular/package.json` at all** — neither `dependencies` nor `peerDependencies`. A workspace-manifest entry naming the unpublished root web package triggers an npm **`ETARGET`** at install (npm resolves the range against the registry and finds no published version that satisfies it). Dev-time resolution is provided by the **tsconfig path** (`../../dist`, Step 5), not a workspace-manifest entry. The consumer contract is documented by the **published** peer on `src/package.json` (Step 6c).
 
-> Fallback (only if dev resolution fails): add `"@universal-material/web": "*"` under `dependencies` of the **workspace** manifest — npm links it via the symlink — and rely on the published `src/package.json` peer (`^3.10.0`, Step 6c) so `"*"` never ships. See P1-4 fallback.
+> This is the actual implemented state (commit `d6157ae`): the workspace `packages/angular/package.json` has **no** `@universal-material/web` entry; `ng build` is green because the tsconfig path resolves the specifier to the built `../../dist/index`.
 
-**6c. Bump the PUBLISHED peer range** in the library manifest `D:/Projects/universal-material-web/packages/angular/src/package.json` (grafted from Angular `src/package.json`): change `"@universal-material/web": "^3.9.0"` → `"^3.10.0"`. Leave `version` for `13-versioning-and-release.md`/Changesets to bump to `3.7.0`; leave `dependencies.animated-scroll-to` and `sideEffects` untouched. The `ng-package.json` `allowedNonPeerDependencies` (`["@universal-material/web", "animated-scroll-to"]`) stays as-is — it correctly whitelists the peer.
+**6c. Bump the PUBLISHED peer range** in the library manifest `D:/Projects/universal-material-web/packages/angular/src/package.json` (grafted from Angular `src/package.json`): change `"@universal-material/web": "^3.9.0"` → `"^3.10.0"`. This is the **only** place the web dependency is declared. Leave `version` for `13-versioning-and-release.md`/Changesets to bump to `3.7.0`; leave `dependencies.animated-scroll-to` and `sideEffects` untouched. The `ng-package.json` `allowedNonPeerDependencies` (`["@universal-material/web", "animated-scroll-to"]`) stays as-is — it correctly whitelists the peer.
 
 ### Step 7 — Re-point the `angular.json` SCSS coupling
 
-Edit `D:/Projects/universal-material-web/packages/angular/angular.json` (grafted; verified line 34). Replace the submodule working-tree SCSS path with the workspace package's SCSS (the web package exposes it — root `package.json` line 19 `"sass": "scss/universal-material.scss"`, and `copy` ships `scss/` into `dist/scss`):
+Edit `D:/Projects/universal-material-web/packages/angular/angular.json` (grafted; verified line 34). Replace the submodule working-tree SCSS path with a path to the monorepo root's SCSS. **Because there is no `node_modules/@universal-material/web` symlink for the root package**, point at the root `scss/` via a relative path (the web package exposes it — root `package.json` line 19 `"sass": "scss/universal-material.scss"`):
 ```jsonc
-// BEFORE:
+// BEFORE (submodule working tree):
 "universal-material-web/scss/universal-material.scss",
-// AFTER (resolved via the workspace symlink in the shared node_modules):
-"node_modules/@universal-material/web/scss/universal-material.scss",
+// AFTER (monorepo root scss, relative to packages/angular):
+"../../scss/universal-material.scss",
 ```
+> Do **not** use `node_modules/@universal-material/web/scss/...` here — that symlink does not exist for the workspace-root web package. The relative `../../scss/...` (mirroring the `../../dist` tsconfig path and the docs app's `../scss/...`) is the resolvable path.
 
 ### Step 8 — Install, link, and stage everything
 
 ```powershell
-# 8a. Re-run the workspace install at the ROOT so the symlink + hoist happen.
-npm install
-#   This creates node_modules/@universal-material/web -> the root web package (symlink),
-#   and hoists lit/@lit/context/etc. into the shared node_modules.
+# 8a. Re-run the workspace install at the ROOT so the hoist happens.
+#     --legacy-peer-deps is REQUIRED: web's @angular/elements@20.0.5 pins peer
+#     @angular/core@20.0.5, while packages/angular pulls @angular/core@^20.3.0.
+npm install --legacy-peer-deps
+#   This hoists lit/@lit/context/etc. into the shared node_modules. It does NOT
+#   create node_modules/@universal-material/web — npm does not symlink the
+#   workspace-ROOT package. Web is resolved by the tsconfig path (../../dist), so
+#   web must be BUILT FIRST for ng build to see ../../dist/index.
 
 # 8b. Stage the dissolution + edits (the subtree add already committed the graft; these are follow-ups).
 git add -A
 git commit -m @'
-Dissolve Angular submodule; consume web as a workspace dependency
+Dissolve Angular submodule; resolve web via tsconfig path to the monorepo dist
 
-Replace the universal-material-web git submodule, scripts/build-web.mjs
-build-before-serve shim, and the tsconfig @universal-material/web path hack
-with a normal npm-workspaces dependency. Dedupe the 7 runtime deps (they hoist
-from the root web package) and bump the published web peer to ^3.10.0.
+Replace the universal-material-web git submodule and scripts/build-web.mjs
+build-before-serve shim. Repoint the tsconfig @universal-material/web path from
+the submodule's dist to the monorepo root's ../../dist (the web docs-app
+pattern), since npm does not symlink the workspace-root web package. Dedupe the
+7 runtime deps (they hoist from the root web package) and bump the published web
+peer to ^3.10.0 in src/package.json (the only manifest that declares web).
 
 Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
 '@
@@ -358,12 +366,12 @@ Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
 2. **Submodule fully dissolved.** No `packages/angular/.gitmodules`; no gitlink under `packages/angular` (`git ls-files -s packages/angular` shows no `160000` mode); no `.git/modules/packages/angular/...` directory; no `submodule.*` section in `.git/config`. `packages/angular/universal-material-web/` does not exist as a tracked path.
 3. **Library-only fold (demo retired).** `packages/angular/demo/` does not exist (nor any `e2e/`); `packages/angular/angular.json` `projects` lists **only** `universal-material-angular` (no `demo`/`e2e`); the removal is its own commit; and the standalone Angular repo + `pre-monorepo-archive` tag remain intact so the demo's example pages stay recoverable for task 11.
 4. **Shim deleted.** `packages/angular/scripts/build-web.mjs` is gone; `packages/angular/package.json` has **no** `build:web` / `prestart` / `prebuild` / `prebuild:demo` / `pretest` scripts, and **no** demo-only `start` / `build:demo` scripts (the `demo` project was removed).
-4. **Path hack removed.** `packages/angular/tsconfig.json` `paths` has **no** `@universal-material/web` entries (only `@universal-material/angular`, `@universal-material/angular/*`, `@docs/*` survive).
-5. **Deps deduped.** `packages/angular/package.json` `dependencies` no longer lists any of the 7 web runtime deps; `@universal-material/web` appears as a `peerDependency` at `^3.10.0`.
-6. **Workspace link real.** After `npm install` at root, `node_modules/@universal-material/web` is a symlink to the root web package, and `npm ls @universal-material/web` shows it resolved from the workspace (not a registry download). A single hoisted `lit` is shared (no nested `packages/angular/node_modules/lit`).
-7. **Published peer bumped.** `packages/angular/src/package.json` declares `"peerDependencies": { "@universal-material/web": "^3.10.0" }`; `ng-package.json` still whitelists it. **No `"*"` or `workspace:*` string is present in the published manifest** (`src/package.json`).
-8. **SCSS repointed.** `packages/angular/angular.json` `styles[]` references `node_modules/@universal-material/web/scss/universal-material.scss` (not the old `universal-material-web/scss/...`).
-9. **Angular builds against the workspace web package.** `packages/angular` type-checks/builds with web resolved via the symlink and no `build:web` pre-hook (full build-order verification is `05-build-orchestration.md`; at minimum the bare `@universal-material/web` imports in the 20 consuming files resolve).
+4. **Path repointed (not removed).** `packages/angular/tsconfig.json` `paths` maps `@universal-material/web` → `../../dist/index` and `@universal-material/web/*` → `../../dist/*` (the monorepo root's built dist, the docs-app pattern); the `@universal-material/angular`, `@universal-material/angular/*`, `@docs/*` entries survive. The old submodule path `universal-material-web/dist/index` is gone.
+5. **Deps deduped, no web entry on the workspace manifest.** `packages/angular/package.json` `dependencies` no longer lists any of the 7 web runtime deps, and `@universal-material/web` is **absent** from the workspace manifest entirely (neither `dependencies` nor `peerDependencies` — a workspace-manifest web entry triggers npm `ETARGET`).
+6. **No workspace symlink for web (by design).** After `npm install --legacy-peer-deps` at root, `node_modules/@universal-material/web` does **not** exist (npm does not symlink the workspace-root package); web is resolved by the tsconfig path to `../../dist`. A single hoisted `lit` is shared (no nested `packages/angular/node_modules/lit`).
+7. **Published peer bumped (the sole web declaration).** `packages/angular/src/package.json` declares `"peerDependencies": { "@universal-material/web": "^3.10.0" }`; `ng-package.json` still whitelists it. This is the only manifest naming web. **No `"*"` or `workspace:*` string is present anywhere.**
+8. **SCSS repointed.** `packages/angular/angular.json` `styles[]` references `../../scss/universal-material.scss` (the monorepo root scss; not the old `universal-material-web/scss/...`, and not a non-existent `node_modules/@universal-material/web/scss/...`).
+9. **Angular builds against the monorepo dist (web built first).** With web built into `../../dist/`, `packages/angular` type-checks/builds with web resolved via the tsconfig path and no `build:web` pre-hook — `ng build` is green (commit `d6157ae`). Full build-order verification is `05-build-orchestration.md`; at minimum the bare `@universal-material/web` imports in the 20 consuming files resolve.
 10. **Web library untouched.** No changes under web `src/`, `dist/`, `scss/`, `skills/`, `.claude-plugin/`, `gulpfile.js`, the postinstall patch, or `docs/`.
 11. **Standalone Angular backup preserved.** `D:/Projects/_backup-universal-material-angular.git` mirror exists and the `pre-monorepo-archive` tag is pushed to the Angular origin.
 
@@ -411,33 +419,33 @@ Test-Path D:/Projects/universal-material-angular/demo/src/app/components   # exp
 Test-Path packages/angular/scripts/build-web.mjs                        # expect: False
 node -e "const s=require('./packages/angular/package.json').scripts; console.log(['build:web','prestart','prebuild','prebuild:demo','pretest','start','build:demo'].filter(k=>k in s))"
 # expect: []   (none present — pre* hooks AND demo-only scripts removed)
-node -e "const p=require('./packages/angular/tsconfig.json').compilerOptions.paths; console.log(Object.keys(p))"
-# expect: ['@universal-material/angular','@universal-material/angular/*','@docs/*']  (NO @universal-material/web)
+node -e "const p=require('./packages/angular/tsconfig.json').compilerOptions.paths; console.log(p['@universal-material/web'])"
+# expect: [ '../../dist/index' ]   (repointed to the monorepo root dist, NOT removed, NOT the submodule path)
 ```
 
-**V4 — deps deduped + peer set + no "*" shipped:**
+**V4 — deps deduped + no web entry on the workspace manifest + published peer set:**
 ```powershell
 node -e "const d=require('./packages/angular/package.json').dependencies||{}; const dup=['@bart-krakowski/get-week-info-polyfill','@lit-labs/virtualizer','@lit/context','@material/material-color-utilities','dompurify','lit','swiper']; console.log('leaked dup deps:', dup.filter(k=>k in d))"
 # expect: leaked dup deps: []
-node -e "const p=require('./packages/angular/package.json'); console.log('ws peer:', (p.peerDependencies||{})['@universal-material/web'])"
-# expect: ws peer: ^3.10.0
+node -e "const p=require('./packages/angular/package.json'); console.log('ws dep:', (p.dependencies||{})['@universal-material/web']); console.log('ws peer:', (p.peerDependencies||{})['@universal-material/web'])"
+# expect: ws dep: undefined ; ws peer: undefined  (web is ABSENT from the workspace manifest — avoids npm ETARGET)
 node -e "const s=require('./packages/angular/src/package.json'); console.log('published peer:', s.peerDependencies['@universal-material/web']); console.log('has dep:', '@universal-material/web' in (s.dependencies||{}))"
 # expect: published peer: ^3.10.0 ; has dep: false  (no '*' web range in the published manifest)
 ```
 
-**V5 — workspace symlink + single hoisted lit:**
+**V5 — NO web symlink (by design) + single hoisted lit:**
 ```powershell
-npm install
-npm ls @universal-material/web        # shows it resolved from the workspace (deduped at root)
-# Confirm the symlink and that there is NO nested copy inside packages/angular:
-(Get-Item node_modules/@universal-material/web).LinkType   # expect: SymbolicLink (or Junction on Windows)
+npm install --legacy-peer-deps   # --legacy-peer-deps required (web @angular/elements 20.0.5 vs angular @angular/core ^20.3.0)
+Test-Path node_modules/@universal-material/web             # expect: False (npm does NOT symlink the workspace-root package)
 Test-Path packages/angular/node_modules/lit                # expect: False (hoisted to root)
+# Web resolves via the tsconfig path, not node_modules — confirm dist exists once web is built:
+Test-Path dist/index.d.ts                                  # expect: True (after web build; the ../../dist tsconfig path target)
 ```
 
 **V6 — SCSS repointed:**
 ```powershell
-node -e "const a=require('./packages/angular/angular.json'); const s=JSON.stringify(a); console.log('old path present:', s.includes('universal-material-web/scss')); console.log('new path present:', s.includes('@universal-material/web/scss'))"
-# expect: old path present: false ; new path present: true
+node -e "const a=require('./packages/angular/angular.json'); const s=JSON.stringify(a); console.log('old submodule path present:', s.includes('universal-material-web/scss')); console.log('new root path present:', s.includes('../../scss/universal-material.scss'))"
+# expect: old submodule path present: false ; new root path present: true
 ```
 
 **V7 — web library untouched:**
@@ -446,10 +454,11 @@ git status --porcelain src dist scss skills .claude-plugin gulpfile.js docs chan
 # expect: no output (nothing changed under web's own files)
 ```
 
-**V8 — Angular consumes web via the symlink (smoke build).** With web already built into `dist/` (its `index.d.ts` present) so the symlink target resolves:
+**V8 — Angular consumes web via the tsconfig path (smoke build).** With web already built into `dist/` (its `index.d.ts` present) so the `../../dist/index` tsconfig path resolves — web MUST be built first:
 ```powershell
 cd packages/angular ; npx ng build --project universal-material-angular --configuration development
-# expect: resolves '@universal-material/web' from node_modules (no build:web pre-hook), no "cannot find module" errors.
+# expect: resolves '@universal-material/web' via the ../../dist tsconfig path (NOT node_modules — there is no
+#         workspace-root symlink), no "cannot find module" errors. ng build is green (commit d6157ae).
 # (Full cross-package build ordering — web before angular — is 05-build-orchestration.md.)
 ```
 
@@ -485,7 +494,7 @@ This is the highest-risk unit; abort cleanly with these escalating options.
 
 - **If the submodule dissolution (Step 3) left residue** but the graft is otherwise fine: re-run Step 3's purge commands (they are idempotent), then `git status` to confirm no `160000` gitlink and no `.gitmodules` remain. If `.git/modules/packages/angular/...` is stubborn, delete it manually with `Remove-Item -Recurse -Force`.
 
-- **If `npm install` (Step 8) fails to symlink** `node_modules/@universal-material/web`: confirm 02 added `"workspaces": ["packages/*"]` (V via Step 0a) and that the root package name is `@universal-material/web`. Delete `node_modules` and the lockfile, re-run `npm install`. The symlink is created by the workspace resolver keying on the root package name matching the Angular `peerDependency`/`dependency` specifier.
+- **If `npm install` (Step 8) fails** with an `ETARGET` for `@universal-material/web`: confirm the workspace `packages/angular/package.json` does **not** name web in `dependencies` or `peerDependencies` (it must not — the root web package is unpublished, so npm cannot resolve a range against the registry). The web dependency is declared **only** as a peer in `src/package.json`, and dev resolution comes from the tsconfig `../../dist` path, not a node_modules symlink (npm never symlinks the workspace-root package). If install fails on the Angular devDep skew instead, use `npm install --legacy-peer-deps` (web's `@angular/elements@20.0.5` peer-pins `@angular/core@20.0.5` vs `packages/angular`'s `@angular/core@^20.3.0`). If `ng build` then can't find `@universal-material/web`, ensure web was **built first** so `dist/index.d.ts` (the `../../dist/index` path target) exists.
 
 - **Nuclear restart of the whole fold:** `git reset --hard pre-angular-fold`, `git remote remove angular`, `Remove-Item -Recurse -Force packages/angular` (if any stray files), then start again from Step 1. The standalone Angular repo and its mirror are untouched, so an unlimited number of restarts is safe.
 
@@ -496,7 +505,7 @@ This is the highest-risk unit; abort cleanly with these escalating options.
 This task is **serial and must NOT run in a worktree**, for three compounding reasons:
 
 1. **It rewrites the monorepo's git history at the DAG level** — a `git subtree add` foreign-root graft plus a submodule dissolution that edits `.git/modules`, `.git/config`, and the index. Worktrees share the same `.git` object/ref store; running this in a worktree while other tasks operate on the same repo risks corrupting refs, the index, or the module store mid-graft. The operation is inherently single-writer to the repository's history.
-2. **It is the trunk every downstream wrapper/build task forks from.** `05-build-orchestration.md` and `14-ci-pipeline.md` depend on `packages/angular` existing with the workspace dep wired; the React task (`07`) and others assume the `packages/` layout and the `node_modules/@universal-material/web` symlink that this task's `npm install` establishes. Parallelizing it would mean other worktrees branch off a moving, half-grafted target.
-3. **It mutates shared root state** — the root lockfile and `node_modules` (via the Step 8 `npm install` that creates the symlink and hoists the 7 deps). Concurrent installs from sibling worktrees would race on the same `node_modules`/lockfile.
+2. **It is the trunk every downstream wrapper/build task forks from.** `05-build-orchestration.md` and `14-ci-pipeline.md` depend on `packages/angular` existing with web-resolution wired; the React task (`07`) and others assume the `packages/` layout and that web is consumed from the built root `dist/` (via a relative tsconfig/build path, since npm does not symlink the workspace-root package). Parallelizing it would mean other worktrees branch off a moving, half-grafted target.
+3. **It mutates shared root state** — the root lockfile and `node_modules` (via the Step 8 `npm install --legacy-peer-deps` that hoists the 7 deps). Concurrent installs from sibling worktrees would race on the same `node_modules`/lockfile.
 
 It depends on (canonical filenames): **02-monorepo-scaffold.md** and **03-relocate-web-package.md** (and, as a Wave-0 data precondition, **01-integrate-and-commit-angular.md** must have committed+pushed the Angular migration). Run it on the shared integration branch, serially, after those have landed.
