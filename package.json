@@ -93,6 +93,7 @@
     "@open-wc/testing": "^3.1.5",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-replace": "^5.0.5",
+    "@stackblitz/sdk": "^1.11.0",
     "@stylistic/eslint-plugin": "^3.1.0",
     "@types/mocha": "^10.0.6",
     "@typescript-eslint/eslint-plugin": "8.35.0",

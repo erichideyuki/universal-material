@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
@@ -7,6 +7,20 @@ import { Highlight } from 'ngx-highlightjs';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { titleToHash } from '@docs/docs/shared/title-to-hash';
 import { AnchorScrollDirective } from '@docs/docs/shared/anchor-scroll.directive';
+import { Framework, StackBlitzService } from '@docs/docs/stackblitz/stackblitz.service';
+
+/**
+ * Passed to `docs-example` via `[stackblitz]` to enable the
+ * "Open in StackBlitz" affordance for a framework-specific example.
+ *
+ * - `framework` picks which runnable starter the service generates.
+ * - `source` (optional) overrides the entry source dropped into the project;
+ *   when omitted, `docs-example` falls back to the example's `html` string.
+ */
+export interface StackBlitzExample {
+  framework: Framework;
+  source?: string;
+}
 
 @Component({
   selector: 'docs-example',
@@ -18,7 +32,8 @@ import { AnchorScrollDirective } from '@docs/docs/shared/anchor-scroll.directive
     AnchorScrollDirective,
   ],
   templateUrl: './example.component.html',
-  styleUrl: './example.component.scss'
+  styleUrl: './example.component.scss',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class ExampleComponent implements OnChanges {
   htmlSafe: SafeHtml | null = null;
@@ -51,6 +66,12 @@ export class ExampleComponent implements OnChanges {
    * attribute, which browsers map to `text-align`.
    */
   @Input() alignment: 'start' | 'center' | 'end' | 'stretch' | 'between' = 'start';
+  /**
+   * When set, renders an "Open in StackBlitz" button that opens a runnable
+   * starter for `framework`, using `source` (or the example's `html`) as the
+   * entry. Use this on the framework usage pages so readers can run a snippet.
+   */
+  @Input() stackblitz?: StackBlitzExample;
   anchorHash: string | null = null;
 
   @Input()
@@ -59,10 +80,34 @@ export class ExampleComponent implements OnChanges {
     this._html = html;
   };
 
-  constructor(private readonly sanitizer: DomSanitizer) {
+  constructor(
+    private readonly sanitizer: DomSanitizer,
+    private readonly stackblitzService: StackBlitzService,
+  ) {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.anchorHash = titleToHash(this.sectionTitle);
+  }
+
+  /**
+   * Open the example in a new StackBlitz tab. Called synchronously from the
+   * click handler so the popup is not blocked.
+   */
+  openInStackBlitz(): void {
+    if (!this.stackblitz) {
+      return;
+    }
+
+    const slug = (this.sectionTitle ?? 'example')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+
+    this.stackblitzService.open(this.stackblitz.framework, {
+      name: slug || 'example',
+      title: this.sectionTitle ?? 'Universal Material example',
+      source: this.stackblitz.source ?? this._html,
+    });
   }
 }

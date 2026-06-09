@@ -1,3 +1,23 @@
+.example-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  .article-title {
+    margin-block: 0;
+  }
+}
+
+.stackblitz-button {
+  flex-shrink: 0;
+
+  .material-symbols-outlined {
+    font-size: 18px;
+  }
+}
+
 .description {
   font-size: 1.125rem;
   color: var(--u-color-on-surface-variant);

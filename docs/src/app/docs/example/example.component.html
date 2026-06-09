@@ -1,10 +1,27 @@
-<h5 class="u-headline-m article-title">
-  <a
-    [href]="anchorHash"
-    docsAnchorScroll
-    >{{ sectionTitle }}</a
-  >
-</h5>
+<div class="example-header">
+  <h5 class="u-headline-m article-title">
+    <a
+      [href]="anchorHash"
+      docsAnchorScroll
+      >{{ sectionTitle }}</a
+    >
+  </h5>
+  @if (stackblitz) {
+    <u-button
+      class="stackblitz-button"
+      variant="tonal"
+      aria-label="Open in StackBlitz"
+      (click)="openInStackBlitz()"
+    >
+      <span
+        class="material-symbols-outlined"
+        slot="leading-icon"
+        >bolt</span
+      >
+      Open in StackBlitz
+    </u-button>
+  }
+</div>
 <div class="description">
   <ng-content></ng-content>
 </div>
