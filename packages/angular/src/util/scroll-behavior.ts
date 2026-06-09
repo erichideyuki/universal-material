@@ -1,0 +1,29 @@
+import { AfterContentInit, Directive, OnChanges, SimpleChanges, input } from '@angular/core';
+
+import { ScrollableContainerWrapper } from './scrollable-container-wrapper';
+
+@Directive()
+export abstract class ScrollBehavior implements AfterContentInit, OnChanges {
+  readonly scrollContainer = input<HTMLElement | null>(null);
+  protected _scrollableWrapper: ScrollableContainerWrapper | null = null;
+
+  protected abstract _processBehavior: (scrollTop: number | null) => void;
+  protected defaultTarget: EventTarget | any;
+
+  protected _setScrollWrapper() {
+    this._scrollableWrapper = new ScrollableContainerWrapper();
+    this._scrollableWrapper.defaultTarget = this.defaultTarget;
+    this._scrollableWrapper.container = this.scrollContainer();
+    this._scrollableWrapper.scrollTop$.subscribe(this._processBehavior.bind(this));
+  }
+
+  ngAfterContentInit(): void {
+    this._setScrollWrapper();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['scrollContainer'] && this._scrollableWrapper) {
+      this._scrollableWrapper.container = this.scrollContainer();
+    }
+  }
+}

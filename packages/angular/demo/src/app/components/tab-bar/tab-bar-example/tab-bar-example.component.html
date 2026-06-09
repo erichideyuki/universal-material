@@ -1,0 +1,16 @@
+<u-tab-bar [(activeTabIndex)]="activeTab">
+  <u-tab>Overview</u-tab>
+  <u-tab>Activity</u-tab>
+  <u-tab>Files</u-tab>
+</u-tab-bar>
+
+@switch (activeTab) {
+  @case (0) { <p>Overview content</p> }
+  @case (1) { <p>Activity content</p> }
+  @case (2) { <p>Files content</p> }
+}
+
+<div>
+  <u-button (click)="activeTab = (activeTab + 1) % 3">Next tab</u-button>
+  <span class="u-text-low-contrast">Active tab index: {{ activeTab }}</span>
+</div>

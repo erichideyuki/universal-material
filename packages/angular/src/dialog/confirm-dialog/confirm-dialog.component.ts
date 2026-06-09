@@ -1,0 +1,81 @@
+import { Component, SecurityContext, inject } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { Subject } from 'rxjs';
+
+import { DialogComponent } from '../dialog.component';
+import {
+  CONFIRM_DIALOG_DEFAULT_OPTIONS,
+  ConfirmDialogConfig,
+  DefaultConfirmDialogConfig
+} from './confirm-dialog-config.model';
+
+@Component({
+  template: '',
+})
+export abstract class ConfirmDialogComponent extends DialogComponent {
+  private readonly sanitizer = inject(DomSanitizer);
+
+  safeMessage: string | null = null;
+
+  set message(value: string) {
+    this.safeMessage = this.sanitizer.sanitize(SecurityContext.HTML, value);
+  }
+
+  private _closed = false;
+  readonly _confirmDialogConfig: ConfirmDialogConfig;
+
+  onCancel = new Subject<void>();
+  onConfirm = new Subject<void>();
+  confirmed = false;
+
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const confirmDialogConfig = inject(ConfirmDialogConfig, { optional: true })!;
+    const defaultOptions = inject<ConfirmDialogConfig>(CONFIRM_DIALOG_DEFAULT_OPTIONS, { optional: true })!;
+
+    super();
+    this._confirmDialogConfig = DefaultConfirmDialogConfig;
+    this._confirmDialogConfig = this._assignConfig(this._confirmDialogConfig, defaultOptions);
+    this._confirmDialogConfig = this._assignConfig(this._confirmDialogConfig, confirmDialogConfig);
+
+    this._dialogConfig = this._confirmDialogConfig;
+  }
+
+  private _assignConfig(baseConfig: ConfirmDialogConfig, partialConfig: ConfirmDialogConfig): ConfirmDialogConfig {
+
+    if (partialConfig) {
+      baseConfig.confirmButton = {...baseConfig.confirmButton, ...partialConfig.confirmButton};
+      baseConfig.cancelButton = {...baseConfig.cancelButton, ...partialConfig.cancelButton};
+      delete partialConfig.confirmButton;
+      delete partialConfig.cancelButton;
+    }
+
+    return {...baseConfig, ...partialConfig};
+  }
+
+  override close() {
+    super.close();
+    this._closed = true;
+  }
+
+  _cancelClick() {
+    if (this._closed) {
+      return;
+    }
+
+    this.close();
+    this.onCancel.next();
+  }
+
+  _confirmClick() {
+    if (this._closed) {
+      return;
+    }
+
+    this.close();
+    this.confirmed = true;
+    this.onConfirm.next();
+  }
+}

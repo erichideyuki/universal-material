@@ -1,0 +1,18 @@
+{
+  "name": "@universal-material/angular",
+  "version": "3.6.2",
+  "author": "https://github.com/universal-material/universal-material-angular/graphs/contributors",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/universal-material/universal-material-angular.git"
+  },
+  "license": "MIT",
+  "homepage": "https://universal-material.github.io/angular",
+  "dependencies": {
+    "animated-scroll-to": "^2.3.0"
+  },
+  "peerDependencies": {
+    "@universal-material/web": "^3.9.0"
+  },
+  "sideEffects": false
+}

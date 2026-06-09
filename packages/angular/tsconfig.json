@@ -1,0 +1,63 @@
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "strict": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "ES2022",
+    "module": "preserve",
+    "paths": {
+      "@universal-material/angular": [
+        "src"
+      ],
+      "@universal-material/angular/*": [
+        "src/*"
+      ],
+      "@universal-material/web": [
+        "universal-material-web/dist/index"
+      ],
+      "@universal-material/web/*": [
+        "universal-material-web/dist/*"
+      ],
+      "@docs/*": [
+        "demo/src/app/*"
+      ]
+    }
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "typeCheckHostBindings": true,
+    "strictTemplates": true
+  },
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.spec.json"
+    },
+    {
+      "path": "./demo/tsconfig.app.json"
+    },
+    {
+      "path": "./demo/tsconfig.spec.json"
+    },
+    {
+      "path": "./src/tsconfig.lib.json"
+    },
+    {
+      "path": "./src/tsconfig.spec.json"
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+import { Injectable, InjectionToken, OnDestroy, inject } from '@angular/core';
+import {DOCUMENT} from '@angular/common';
+
+
+
+// usefulness (and default value) of delay documented in Material's CDK
+// https://github.com/angular/material2/blob/6405da9b8e8532a7e5c854c920ee1815c275d734/src/cdk/a11y/live-announcer/live-announcer.ts#L50
+export type ARIA_LIVE_DELAY_TYPE = number | null;
+export const ARIA_LIVE_DELAY = new InjectionToken<ARIA_LIVE_DELAY_TYPE>(
+    'live announcer delay', {providedIn: 'root', factory: ARIA_LIVE_DELAY_FACTORY});
+export function ARIA_LIVE_DELAY_FACTORY(): number {
+  return 100;
+}
+
+
+function getLiveElement(document: any, lazyCreate = false): HTMLElement | null {
+  let element = document.body.querySelector('#u-live') as HTMLElement;
+
+  if (element == null && lazyCreate) {
+    element = document.createElement('div');
+
+    element.setAttribute('id', 'u-live');
+    element.setAttribute('aria-live', 'polite');
+    element.setAttribute('aria-atomic', 'true');
+
+    element.classList.add('sr-only');
+
+    document.body.appendChild(element);
+  }
+
+  return element;
+}
+
+
+
+@Injectable({providedIn: 'root'})
+export class Live implements OnDestroy {
+  private _document = inject(DOCUMENT);
+  private _delay = inject(ARIA_LIVE_DELAY);
+
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() {}
+
+  ngOnDestroy() {
+    const element = getLiveElement(this._document);
+    if (element) {
+      element.parentElement!.removeChild(element);
+    }
+  }
+
+  say(message: string) {
+    const element = getLiveElement(this._document, true)!;
+    const delay = this._delay;
+
+    element.textContent = '';
+    const setText = () => element.textContent = message;
+    if (delay === null) {
+      setText();
+    } else {
+      setTimeout(setText, delay);
+    }
+  }
+}

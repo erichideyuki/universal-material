@@ -1,0 +1,44 @@
+<div class="u-card-elevated">
+  <div class="u-toolbar">
+    <div class="u-toolbar-row">
+      <div class="u-toolbar-title">{{title()}}</div>
+      <div class="u-toolbar-end">
+        <div class="u-toolbar-actions">
+          <u-icon-button class="u-toolbar-action" (click)="showCode = !showCode">
+            <i class="mdi mdi-code-tags"></i>
+          </u-icon-button>
+          <u-icon-button class="u-toolbar-action" (click)="createProject()">
+            <i class="mdi mdi-open-in-new"></i>
+          </u-icon-button>
+        </div>
+      </div>
+    </div>
+  </div>
+  @if (showCode) {
+    <div>
+      <u-tab-bar [(activeTabIndex)]="tabIndex">
+        <u-tab>HTML</u-tab>
+        <u-tab>TS</u-tab>
+        <u-tab>SCSS</u-tab>
+      </u-tab-bar>
+      <div class="u-divider"></div>
+      <div class="u-card-content" highlightChildren>
+        @switch (tabIndex) {
+          @case (0) {
+            <pre highlight-js lang="html"><code>{{ htmlCode() }}</code></pre>
+          }
+          @case (1) {
+            <pre highlight-js lang="typescript"><code>{{ tsCode() }}</code></pre>
+          }
+          @case (2) {
+            <pre highlight-js lang="scss"><code>{{ cssCode() }}</code></pre>
+          }
+        }
+      </div>
+      <div class="u-divider"></div>
+    </div>
+  }
+  <div class="u-card-content">
+    <ng-content></ng-content>
+  </div>
+</div>

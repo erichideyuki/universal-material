@@ -1,0 +1,10 @@
+<u-select label="Country" [(ngModel)]="country">
+  <u-option value="br">Brazil</u-option>
+  <u-option value="ca">Canada</u-option>
+  <u-option value="de">Germany</u-option>
+  <u-option value="jp">Japan</u-option>
+  <u-option value="gb">United Kingdom</u-option>
+  <u-option value="us">United States</u-option>
+</u-select>
+
+<p class="u-text-low-contrast">Selected: {{ country || '—' }}</p>

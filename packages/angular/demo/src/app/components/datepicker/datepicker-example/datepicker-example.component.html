@@ -1,0 +1,7 @@
+<u-datepicker label="Date" placeholder="Choose a date" [(ngModel)]="date"></u-datepicker>
+<p class="u-text-low-contrast">Selected: {{ date || '—' }}</p>
+
+<u-datepicker label="Editable date" editable placeholder="YYYY-MM-DD" [(ngModel)]="date"></u-datepicker>
+
+<u-range-datepicker label="Date range" placeholder="Start - End" [(ngModel)]="rangeDate"></u-range-datepicker>
+<p class="u-text-low-contrast">Range: {{ rangeDate || '—' }}</p>

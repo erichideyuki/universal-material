@@ -1,0 +1,12 @@
+<u-text-field
+  id="states-field"
+  label="States"
+  supporting-text="Select a state"
+></u-text-field>
+<u-typeahead
+  target-id="states-field"
+  [(ngModel)]="value"
+  [source]="source"
+></u-typeahead>
+
+<p class="u-text-low-contrast">Value: {{ value | json }}</p>
