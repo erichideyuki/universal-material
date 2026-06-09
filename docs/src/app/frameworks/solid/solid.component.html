@@ -13,6 +13,7 @@
   sectionTitle="Register the components"
   [renderExample]="false"
   [html]="mainImportHtml"
+  [language]="'typescript'"
 >
   The bare side-effecting <code>import</code> runs every
   <code>customElements.define</code>. It has side effects, so it won't be
@@ -23,6 +24,7 @@
   sectionTitle="Props vs. attributes (and the camelCase gotcha)"
   [renderExample]="false"
   [html]="propsVsAttrsHtml"
+  [language]="'typescript'"
 >
   On a custom element, <code>foo={{ '{' }}x{{ '}' }}</code> sets a JS
   <strong>property</strong> by default — exactly right for Lit. But Solid
@@ -62,6 +64,7 @@
   sectionTitle="Listening to events"
   [renderExample]="false"
   [html]="eventsHtml"
+  [language]="'typescript'"
 >
   Native <code>input</code>/<code>change</code> are in Solid's delegated set, so
   <code>onInput</code>/<code>onChange</code> work (value on
@@ -76,6 +79,7 @@
   [renderExample]="false"
   [html]="twoWayHtml"
   [stackblitz]="{ framework: 'solid' }"
+  [language]="'typescript'"
 >
   Solid has no <code>v-model</code> sugar — binding is explicit.
   <strong>Mental model:</strong> two-way <code>value</code> ≡
@@ -140,6 +144,7 @@
   sectionTitle="TypeScript typing (optional)"
   [renderExample]="false"
   [html]="typescriptHtml"
+  [language]="'typescript'"
 >
   Augment <code>solid-js</code>' <code>JSX.IntrinsicElements</code> with one entry
   per <code>u-*</code> element. The augmentation can be hand-written or
@@ -152,6 +157,7 @@
   sectionTitle="SSR / Solid Start"
   [renderExample]="false"
   [html]="mainImportHtml"
+  [language]="'typescript'"
 >
   <code>customElements</code> is undefined on the server, so register
   client-side only — import in a client-only entry or guard the registration

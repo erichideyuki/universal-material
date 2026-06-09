@@ -14,6 +14,7 @@
   sectionTitle="Install"
   [renderExample]="false"
   [html]="installHtml"
+  [language]="'shell'"
 >
   Install the element library and the Angular wrapper side by side.
   <code>&#64;universal-material/web</code> ships the custom elements;
@@ -24,6 +25,7 @@
   sectionTitle="Register the module"
   [renderExample]="false"
   [html]="moduleHtml"
+  [language]="'typescript'"
 >
   Import <code>UniversalMaterialModule</code> wherever you use the elements (a
   standalone component's <code>imports</code>, or a shared
@@ -39,6 +41,7 @@
   [renderExample]="false"
   [html]="ngModelHtml"
   [stackblitz]="{ framework: 'angular' }"
+  [language]="'html'"
 >
   The wrapper registers a <code>ControlValueAccessor</code> for each form
   element, so <code>[(ngModel)]</code> binds them just like native controls:
@@ -53,6 +56,7 @@
   sectionTitle="Reactive forms"
   [renderExample]="false"
   [html]="reactiveHtml"
+  [language]="'typescript'"
 >
   The same accessors power <code>ReactiveFormsModule</code>. Build a
   <code>FormGroup</code> and bind each element with
@@ -64,6 +68,7 @@
   sectionTitle="Reactive forms template"
   [renderExample]="false"
   [html]="reactiveTemplateHtml"
+  [language]="'html'"
 >
   The template binds each <code>&lt;u-*&gt;</code> element with
   <code>formControlName</code> inside the <code>[formGroup]</code>.
@@ -73,6 +78,7 @@
   sectionTitle="Notes"
   [renderExample]="false"
   [html]="installHtml"
+  [language]="'shell'"
 >
   These snippets are distilled from the standalone Angular demo
   (<code>checkbox</code>, <code>radio</code>, <code>select</code>,

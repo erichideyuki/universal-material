@@ -13,6 +13,7 @@
   sectionTitle="Configure the compiler (isCustomElement)"
   [renderExample]="false"
   [html]="viteConfigHtml"
+  [language]="'typescript'"
 >
   Without this, Vue logs <code>Failed to resolve component: u-button</code>.
   <code>isCustomElement</code> is a <strong>compile-time</strong> option, so it
@@ -26,6 +27,7 @@
   sectionTitle="Register the components"
   [renderExample]="false"
   [html]="mainImportHtml"
+  [language]="'typescript'"
 >
   Import <code>&#64;universal-material/web</code> once for its side effect — that
   runs every <code>&#64;customElement('u-…')</code> registration.
@@ -35,6 +37,7 @@
   sectionTitle="Binding props and listening to events"
   [renderExample]="false"
   [html]="bindingHtml"
+  [language]="'html'"
 >
   Vue checks whether a binding key exists as a DOM property on the element (an
   <code>in</code> check) and sets it as a property when it does, else an
@@ -48,6 +51,7 @@
   [renderExample]="false"
   [html]="vModelHtml"
   [stackblitz]="{ framework: 'vue' }"
+  [language]="'html'"
 >
   Because a tag matched by <code>isCustomElement</code> is a plain element, Vue
   uses the <strong>native</strong> <code>v-model</code> expansion (<code>:value</code>
@@ -128,6 +132,7 @@
   sectionTitle="TypeScript typing"
   [renderExample]="false"
   [html]="typescriptHtml"
+  [language]="'typescript'"
 >
   Augment Vue's <code>GlobalComponents</code> with the
   <code>DefineCustomElement&lt;&gt;</code> helper so <code>&lt;u-*&gt;</code>
@@ -141,6 +146,7 @@
   sectionTitle="SSR / Nuxt"
   [renderExample]="false"
   [html]="mainImportHtml"
+  [language]="'typescript'"
 >
   Custom elements aren't defined on the server (<code>customElements</code> is
   undefined in Node). Import the library and render <code>u-*</code> tags

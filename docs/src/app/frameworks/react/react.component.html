@@ -20,6 +20,7 @@
   sectionTitle="Install"
   [renderExample]="false"
   [html]="installHtml"
+  [language]="'shell'"
 >
   <code>&#64;universal-material/web</code> and <code>react</code>/<code
     >react-dom</code
@@ -32,6 +33,7 @@
   sectionTitle="Import the wrappers"
   [renderExample]="false"
   [html]="importHtml"
+  [language]="'typescript'"
 >
   Importing anything from <code>&#64;universal-material/react</code> also imports
   <code>&#64;universal-material/web</code> once for its side effect, which
@@ -44,6 +46,7 @@
   [renderExample]="false"
   [html]="controlledHtml"
   [stackblitz]="{ framework: 'react' }"
+  [language]="'typescript'"
 >
   The value goes <strong>in</strong> as a DOM property (<code>value</code> /
   <code>checked</code>) and comes <strong>out</strong> by listening to
@@ -114,6 +117,7 @@
   sectionTitle="Uncontrolled usage (FormData)"
   [renderExample]="false"
   [html]="uncontrolledHtml"
+  [language]="'typescript'"
 >
   Because every input is a Form-Associated Custom Element, native
   <code>&lt;form&gt;</code> / <code>FormData</code> submission and constraint
@@ -125,6 +129,7 @@
   sectionTitle="react-hook-form"
   [renderExample]="false"
   [html]="reactHookFormHtml"
+  [language]="'typescript'"
 >
   Prefer <code>register</code> (uncontrolled) — the FACE value is already on the
   form. Use <code>Controller</code> when RHF must own the value, bridging
@@ -137,6 +142,7 @@
   sectionTitle="Bespoke events"
   [renderExample]="false"
   [html]="bespokeEventsHtml"
+  [language]="'typescript'"
 >
   <code>UTypeahead</code>'s <code>onSelected</code> and
   <code>UChipField</code>'s <code>onRemove</code> are <code>CustomEvent</code>s —
@@ -148,6 +154,7 @@
   sectionTitle="Next.js / SSR"
   [renderExample]="false"
   [html]="ssrHtml"
+  [language]="'typescript'"
 >
   Custom elements are client-only — they call <code>attachInternals()</code> in
   their constructor, which throws during server rendering. Render the wrappers

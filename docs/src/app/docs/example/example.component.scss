@@ -1,3 +1,12 @@
+:host {
+  display: block;
+}
+
+// Space consecutive example sections apart (they were rendering glued together).
+:host:not(:last-child) {
+  margin-bottom: 3rem;
+}
+
 .example-header {
   display: flex;
   align-items: center;
@@ -66,6 +75,18 @@
   border-bottom: 1px solid var(--u-color-outline-variant);
   align-items: center;
   min-height: 96px;
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+}
+
+// Code-only examples (the framework usage pages) have no live preview and no
+// projected [example] content — hide the empty preview box instead of showing a
+// blank area, and round the code block as the sole content of the card.
+.example-preview:not(:has(*)) {
+  display: none;
+}
+
+.example-block:not(:has(.example-preview *, .example-screen-cta)) .example-code {
   border-top-left-radius: inherit;
   border-top-right-radius: inherit;
 }

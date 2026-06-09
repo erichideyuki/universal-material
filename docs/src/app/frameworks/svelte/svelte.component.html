@@ -13,6 +13,7 @@
   sectionTitle="Register the components (eager, client-only in SvelteKit)"
   [renderExample]="false"
   [html]="registerHtml"
+  [language]="'typescript'"
 >
   Register the library <strong>eagerly</strong> so the elements are defined
   before first render — Svelte's <code>prop in node</code> heuristic reads the
@@ -26,6 +27,7 @@
   [renderExample]="false"
   [html]="bindingHtml"
   [stackblitz]="{ framework: 'svelte' }"
+  [language]="'html'"
 >
   Write the value in as a normal prop and read changes back with
   <code>on:input</code> / <code>on:change</code>.
@@ -94,6 +96,7 @@
   sectionTitle="The bind:value story"
   [renderExample]="false"
   [html]="bindValueHtml"
+  [language]="'html'"
 >
   <strong><code>bind:value</code> does NOT work on third-party custom
   elements</strong> — it is reserved for native form elements and Svelte
@@ -106,6 +109,7 @@
   sectionTitle="Objects, arrays & upgrade timing"
   [renderExample]="false"
   [html]="objectsHtml"
+  [language]="'html'"
 >
   Svelte's <code>prop in node</code> heuristic sets a property when one exists on
   the live instance, else an attribute. If the element isn't upgraded yet, an
@@ -118,6 +122,7 @@
   sectionTitle="TypeScript typing"
   [renderExample]="false"
   [html]="typescriptHtml"
+  [language]="'typescript'"
 >
   Augment <code>svelte/elements</code>' <code>SvelteHTMLElements</code> interface
   with one entry per <code>u-*</code> tag for attribute/event autocompletion.
@@ -128,6 +133,7 @@
   sectionTitle="SSR / SvelteKit"
   [renderExample]="false"
   [html]="registerHtml"
+  [language]="'typescript'"
 >
   <code>customElements</code> / <code>HTMLElement</code> are browser-only — a
   top-level server import throws <code>HTMLElement is not defined</code>. Import

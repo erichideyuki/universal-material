@@ -42,6 +42,13 @@ export class ExampleComponent implements OnChanges {
   @Input() renderExample = true;
   @Input() sectionTitle!: string;
   /**
+   * highlight.js language for the shown code (default `html`). Set it per
+   * example on the framework usage pages (`typescript`, `shell`, …) so non-HTML
+   * snippets are highlighted correctly instead of being forced through the HTML
+   * grammar.
+   */
+  @Input() language = 'html';
+  /**
    * When set, renders a "View as screen" link next to the section title that
    * navigates to a standalone Angular route (no docs shell). Use this for
    * examples where the component needs the full viewport to be evaluated
