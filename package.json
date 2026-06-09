@@ -54,7 +54,8 @@
     "build:all": "npm run build && npm run build -w @universal-material/angular --if-present && npm run build -w @universal-material/react --if-present",
     "test:all": "npm test && npm test -ws --if-present",
     "lint:all": "npm run lint && npm run lint -ws --if-present",
-    "changeset": "changeset"
+    "changeset": "changeset",
+    "dev": "npm run docs"
   },
   "author": "https://github.com/universal-material/universal-material/graphs/contributors",
   "repository": {
