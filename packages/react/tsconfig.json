@@ -1,0 +1,22 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "rootDir": "src",
+    "outDir": "dist",
+    "declaration": true,
+    "noEmit": true,
+    "importHelpers": false,
+    // Resolve the bare web specifier to the built root dist (the docs-app pattern),
+    // because npm does NOT symlink the workspace-root @universal-material/web into
+    // node_modules. Web must be built first so ../../dist/index.d.ts exists.
+    "paths": {
+      "@universal-material/web": ["../../dist/index"],
+      "@universal-material/web/*": ["../../dist/*"]
+    }
+  },
+  "include": ["src"]
+}
