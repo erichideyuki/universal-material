@@ -15,14 +15,17 @@
     "target": "ES2022",
     "module": "preserve",
     "paths": {
+      "@universal-material/web": [
+        "../../dist/index"
+      ],
+      "@universal-material/web/*": [
+        "../../dist/*"
+      ],
       "@universal-material/angular": [
         "src"
       ],
       "@universal-material/angular/*": [
         "src/*"
-      ],
-      "@docs/*": [
-        "demo/src/app/*"
       ]
     }
   },
