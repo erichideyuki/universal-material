@@ -8,7 +8,7 @@ import staticHtml from './examples/static.html';
 
 @Component({
   selector: 'docs-badges',
-  templateUrl: './badge.component.html',
+  templateUrl: './badges.component.html',
   styleUrl: './badges.component.scss',
   standalone: true,
   imports: [
