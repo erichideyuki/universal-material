@@ -12,6 +12,11 @@ import { UmTypeaheadControlValueAccessor } from './value-accessors/typeahead-con
 import { UmSelectControlValueAccessor, UmSelectOption } from './value-accessors/select-control-value-accessor';
 import { UmSliderControlValueAccessor } from './value-accessors/slider-control-value-accessor';
 import { UmDatepickerControlValueAccessor } from './value-accessors/datepicker-control-value-accessor';
+import {
+  UmEndDateControlValueAccessor,
+  UmRangeDatepickerDirective,
+  UmStartDateControlValueAccessor,
+} from './value-accessors/date-range-control-value-accessors';
 import { UmDatepickerMaxValidator, UmDatepickerMinValidator } from './validators/datepicker-validators';
 import { TabBarDirective } from './tab-bar/tab-bar.directive';
 import { FloatingActionBehaviorDirective } from './floating-action-behavior/floating-action-behavior.directive';
@@ -35,6 +40,9 @@ const FormComponents = [
   UmSelectOption,
   UmSliderControlValueAccessor,
   UmDatepickerControlValueAccessor,
+  UmRangeDatepickerDirective,
+  UmStartDateControlValueAccessor,
+  UmEndDateControlValueAccessor,
   UmDatepickerMinValidator,
   UmDatepickerMaxValidator,
 ];
@@ -71,6 +79,7 @@ export * from './value-accessors/typeahead-control-value-accessor';
 export * from './value-accessors/select-control-value-accessor';
 export * from './value-accessors/slider-control-value-accessor';
 export * from './value-accessors/datepicker-control-value-accessor';
+export * from './value-accessors/date-range-control-value-accessors';
 export * from './validators/datepicker-validators';
 
 @NgModule({

@@ -67,6 +67,19 @@
 </docs-example>
 
 <docs-example
+  sectionTitle="Date range with two controls"
+  [renderExample]="false"
+  [html]="dateRangeHtml"
+  [language]="'html'"
+>
+  Besides binding the whole <code>u-range-datepicker</code> value (<code>YYYY-MM-DD - YYYY-MM-DD</code>) to a single
+  control, each end of the range can bind to its own control — mirroring <code>mat-date-range-input</code> with
+  <code>matStartDate</code>/<code>matEndDate</code>. Place two hidden carrier inputs with <code>uStartDate</code> and
+  <code>uEndDate</code> inside the element; each binds an ISO date string. The element is only disabled when both
+  controls are disabled.
+</docs-example>
+
+<docs-example
   sectionTitle="Notes"
   [renderExample]="false"
   [html]="installHtml"

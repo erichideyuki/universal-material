@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ExampleComponent } from '@docs/docs/example/example.component';
 import { TitleComponent } from '@docs/docs/title/title.component';
 
+import dateRangeHtml from './examples/date-range.html';
 import installHtml from './examples/install.html';
 import moduleHtml from './examples/module.html';
 import ngModelHtml from './examples/ngmodel.html';
@@ -16,6 +17,7 @@ import reactiveTemplateHtml from './examples/reactive-template.html';
   imports: [ExampleComponent, TitleComponent]
 })
 export class AngularComponent {
+  dateRangeHtml = dateRangeHtml;
   installHtml = installHtml;
   moduleHtml = moduleHtml;
   ngModelHtml = ngModelHtml;
