@@ -11,9 +11,7 @@ Collapsible surface with a clickable header (with ripple + chevron). Animates vi
 ```html
 <u-expansion-panel>
   <span slot="header">What is Material 3 Expressive?</span>
-  <div style="padding: 0 1rem 1rem;">
-    Material 3 Expressive is the latest iteration of Material Design.
-  </div>
+  <div style="padding: 0 1rem 1rem;">Material 3 Expressive is the latest iteration of Material Design.</div>
 </u-expansion-panel>
 ```
 

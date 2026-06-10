@@ -11,14 +11,17 @@ description: Build an autocomplete / typeahead with u-typeahead — a controller
 ## Simple string suggestions
 
 ```html
-<u-text-field id="country-input" label="Country"></u-text-field>
+<u-text-field
+  id="country-input"
+  label="Country"
+></u-text-field>
 <u-typeahead target-id="country-input"></u-typeahead>
 
 <script>
-  const countries = ['Argentina', 'Brazil', 'Chile', 'Spain', 'United States'];
-  const ta = document.querySelector('u-typeahead');
+  const countries = ["Argentina", "Brazil", "Chile", "Spain", "United States"];
+  const ta = document.querySelector("u-typeahead");
   // `source` = an array, or a (term) => Array | Promise<Array>
-  ta.source = (term) => countries.filter(c => c.toLowerCase().includes(term.toLowerCase()));
+  ta.source = (term) => countries.filter((c) => c.toLowerCase().includes(term.toLowerCase()));
 </script>
 ```
 
@@ -34,7 +37,15 @@ When `source` is a plain array, the component filters it internally by case-inse
 - a plain native `<input>`, or any element from **another library** that exposes a `.value` and fires an `input` event.
 
 ```html
-<u-search id="q" position="static"><span class="material-symbols-outlined" slot="leading-icon">search</span></u-search>
+<u-search
+  id="q"
+  position="static"
+  ><span
+    class="material-symbols-outlined"
+    slot="leading-icon"
+    >search</span
+  ></u-search
+>
 <u-typeahead target-id="q"></u-typeahead>
 
 <!-- a native input (or a non-u-* component) works too -->
@@ -47,11 +58,14 @@ The popover anchors to the target's natural box: the search / text-field's inner
 ## Object results + label mapping
 
 ```html
-<u-text-field id="user-input" label="User"></u-text-field>
+<u-text-field
+  id="user-input"
+  label="User"
+></u-text-field>
 <u-typeahead target-id="user-input"></u-typeahead>
 
 <script>
-  const ta = document.querySelector('u-typeahead');
+  const ta = document.querySelector("u-typeahead");
   ta.source = async (term) => {
     const r = await fetch(`/api/users?q=${encodeURIComponent(term)}`);
     return await r.json(); // [{ id, name, email }]
@@ -66,9 +80,9 @@ The popover anchors to the target's natural box: the search / text-field's inner
 `template` is a **function** returning a string / `HTMLElement` / Lit `TemplateResult` per option (not a `<template>` element):
 
 ```js
-import { html } from 'lit';
-ta.template = (term, user) => html`
-  <div style="display:flex; align-items:center; gap:8px">
+import { html } from "lit";
+ta.template = (term, user) =>
+  html` <div style="display:flex; align-items:center; gap:8px">
     <span>${user.name}</span>
     <span class="u-label-s u-text-low-emphasis">${user.email}</span>
   </div>`;
@@ -79,9 +93,9 @@ ta.template = (term, user) => html`
 ## Selection
 
 ```ts
-const ta = document.querySelector('u-typeahead')!;
-ta.addEventListener('selected', (e: CustomEvent) => {
-  console.log('Selected:', e.detail); // the chosen value (string or object)
+const ta = document.querySelector("u-typeahead")!;
+ta.addEventListener("selected", (e: CustomEvent) => {
+  console.log("Selected:", e.detail); // the chosen value (string or object)
 });
 ```
 
@@ -89,19 +103,19 @@ The event is **`selected`** (cancelable; `e.detail` is the value). There is no `
 
 ## Useful properties / attributes
 
-| Name | Default | Purpose |
-| --- | --- | --- |
-| `target-id` | — | **Required.** Id of the input/field the typeahead drives. |
-| `source` (prop) | — | Array, or `(term) => Array \| Promise<Array>`. |
-| `formatter` (prop) | `String(value)` | Maps an object value to its displayed label. |
-| `template` (prop) | — | `(term, value) => string \| HTMLElement \| TemplateResult` per option. |
-| `minlength` | `2` | Min chars before suggestions show. **Array sources show nothing until 2 chars** unless lowered. |
-| `debounce` | `300` (ms) | Debounce before `source` is called. |
-| `limit` | — | Max options shown. |
-| `open-on-focus` | off | Open the popover on focus (before typing). |
-| `editable` | — | Allow free text alongside suggestions. |
-| `positioning="fixed"` | — | Let the popover escape an `overflow:hidden`/scroll wrapper. |
-| `clear()` (method) | — | Clear the current value. |
+| Name                  | Default         | Purpose                                                                                         |
+| --------------------- | --------------- | ----------------------------------------------------------------------------------------------- |
+| `target-id`           | —               | **Required.** Id of the input/field the typeahead drives.                                       |
+| `source` (prop)       | —               | Array, or `(term) => Array \| Promise<Array>`.                                                  |
+| `formatter` (prop)    | `String(value)` | Maps an object value to its displayed label.                                                    |
+| `template` (prop)     | —               | `(term, value) => string \| HTMLElement \| TemplateResult` per option.                          |
+| `minlength`           | `2`             | Min chars before suggestions show. **Array sources show nothing until 2 chars** unless lowered. |
+| `debounce`            | `300` (ms)      | Debounce before `source` is called.                                                             |
+| `limit`               | —               | Max options shown.                                                                              |
+| `open-on-focus`       | off             | Open the popover on focus (before typing).                                                      |
+| `editable`            | —               | Allow free text alongside suggestions.                                                          |
+| `positioning="fixed"` | —               | Let the popover escape an `overflow:hidden`/scroll wrapper.                                     |
+| `clear()` (method)    | —               | Clear the current value.                                                                        |
 
 For multi-select with chips, drive a `<u-chip-field>` from a typeahead instead.
 

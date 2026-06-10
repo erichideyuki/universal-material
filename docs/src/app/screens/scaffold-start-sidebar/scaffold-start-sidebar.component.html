@@ -1,5 +1,8 @@
 <u-scaffold>
-  <u-top-app-bar slot="top-bar" headline="Start pane — sidebar collapse">
+  <u-top-app-bar
+    slot="top-bar"
+    headline="Start pane — sidebar collapse"
+  >
     <u-icon-button
       slot="leading-icon"
       routerLink="/components/scaffold"
@@ -9,8 +12,17 @@
     </u-icon-button>
   </u-top-app-bar>
 
-  <u-pane mode="sidebar" mode-lg="fixed" variant="filled" #pane style="width: 220px;">
-    <div slot="header" class="pane-header">
+  <u-pane
+    variant="filled"
+    mode="sidebar"
+    mode-lg="fixed"
+    #pane
+    style="width: 220px"
+  >
+    <div
+      class="pane-header"
+      slot="header"
+    >
       <strong>Navigation</strong>
       <u-icon-button (click)="$any(pane).close()">
         <span class="material-symbols-outlined">close</span>
@@ -24,7 +36,10 @@
   </u-pane>
 
   <div class="screen-content">
-    <p>On a viewport ≥ 1200px (<code>lg</code>) the start pane is permanent. Below that it collapses to a sidebar overlay — open it with the button below.</p>
+    <p>
+      On a viewport ≥ 1200px (<code>lg</code>) the start pane is permanent. Below that it collapses to a sidebar overlay
+      — open it with the button below.
+    </p>
     <u-button (click)="$any(pane).show()">Open start pane</u-button>
   </div>
 </u-scaffold>

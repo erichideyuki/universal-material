@@ -1,12 +1,25 @@
-<u-scaffold style="height: 560px; border: 1px solid var(--u-color-outline-variant, rgba(0,0,0,.12)); border-radius: 12px;">
-  <u-top-app-bar slot="top-bar" headline="Project">
+<u-scaffold
+  style="height: 560px; border: 1px solid var(--u-color-outline-variant, rgba(0, 0, 0, 0.12)); border-radius: 12px"
+>
+  <u-top-app-bar
+    slot="top-bar"
+    headline="Project"
+  >
     <u-icon-button slot="leading-icon">
       <span class="material-symbols-outlined">menu</span>
     </u-icon-button>
   </u-top-app-bar>
 
-  <u-pane variant="filled" style="width: 200px;">
-    <div slot="header" style="padding: 12px 16px;"><strong>Files</strong></div>
+  <u-pane
+    variant="filled"
+    style="width: 200px"
+  >
+    <div
+      slot="header"
+      style="padding: 12px 16px"
+    >
+      <strong>Files</strong>
+    </div>
     <u-list>
       <u-list-item>README.md</u-list-item>
       <u-list-item>package.json</u-list-item>
@@ -14,21 +27,38 @@
     </u-list>
   </u-pane>
 
-  <div style="padding: 16px 24px; overflow: auto;">
-    <h3 style="margin: 0 0 8px;">README.md</h3>
-    <p>Top bar, bottom bar, FAB and panes all coexist. Body content (this <code>&lt;div&gt;</code>) flexes to fill the remaining space and scrolls inside itself.</p>
-    <p>Panes around it (filled <code>Files</code> on the left, transparent <code>Outline</code> on the right) keep their own widths and scroll independently.</p>
-    <p style="margin-top: 1200px;">Bottom of main content.</p>
+  <div style="padding: 16px 24px; overflow: auto">
+    <h3 style="margin: 0 0 8px">README.md</h3>
+    <p>
+      Top bar, bottom bar, FAB and panes all coexist. Body content (this <code>&lt;div&gt;</code>) flexes to fill the
+      remaining space and scrolls inside itself.
+    </p>
+    <p>
+      Panes around it (filled <code>Files</code> on the left, transparent <code>Outline</code> on the right) keep their
+      own widths and scroll independently.
+    </p>
+    <p style="margin-top: 1200px">Bottom of main content.</p>
   </div>
 
-  <u-pane variant="transparent" style="width: 220px;">
-    <div slot="header" style="padding: 12px 16px;"><strong>Outline</strong></div>
-    <div style="padding: 16px;">
+  <u-pane
+    variant="transparent"
+    style="width: 220px"
+  >
+    <div
+      slot="header"
+      style="padding: 12px 16px"
+    >
+      <strong>Outline</strong>
+    </div>
+    <div style="padding: 16px">
       <p>Right-side outline / context panel.</p>
     </div>
   </u-pane>
 
-  <u-fab slot="fab" color="primary">
+  <u-fab
+    slot="fab"
+    color="primary"
+  >
     <span class="material-symbols-outlined">edit</span>
   </u-fab>
 </u-scaffold>

@@ -71,23 +71,59 @@ mockup/
 <html lang="pt-br">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1"
+    />
     <title>Aurora — <Página></title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0&display=block" />
-    <link rel="stylesheet" href="../dist/css/universal-material.min.css" />
-    <link rel="stylesheet" href="./assets/app.css" />
+    <link
+      rel="preconnect"
+      href="https://fonts.googleapis.com"
+    />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0&display=block"
+    />
+    <link
+      rel="stylesheet"
+      href="../dist/css/universal-material.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="./assets/app.css"
+    />
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>tailwind.config = { corePlugins: { preflight: false } };</script>
-    <script type="module" src="https://unpkg.com/element-internals-polyfill@1.3.9/dist/index.js"></script>
-    <script type="module" src="../dist/bundle.min.js"></script>
+    <script>
+      tailwind.config = { corePlugins: { preflight: false } };
+    </script>
+    <script
+      type="module"
+      src="https://unpkg.com/element-internals-polyfill@1.3.9/dist/index.js"
+    ></script>
+    <script
+      type="module"
+      src="../dist/bundle.min.js"
+    ></script>
     <script src="./assets/data.js"></script>
-    <script type="module" src="./assets/shell.js"></script>
+    <script
+      type="module"
+      src="./assets/shell.js"
+    ></script>
   </head>
   <body>
-    <aurora-shell active="<chave-nav>" titulo="<Título>">
+    <aurora-shell
+      active="<chave-nav>"
+      titulo="<Título>"
+    >
       <!-- conteúdo da página vai aqui (vira o <main> do scaffold) -->
     </aurora-shell>
     <script type="module">
@@ -99,6 +135,7 @@ mockup/
 ```
 
 **Atributos do `<aurora-shell>`**:
+
 - `active` — chave do item de nav ativo (`dashboard`, `clientes`, `pipeline`, `inbox`, `agenda`, `pedidos`, `produtos`, `oportunidade`, `relatorios`, `equipe`, `configuracoes`, `perfil`).
 - `titulo` — headline do top app bar.
 - `top-size` — `small` (default), `medium`, `large`.
@@ -114,34 +151,42 @@ Para adicionar uma rota nova ao menu, edite `NAV_GROUPS` / `NAV_RAIL_PRIMARY` / 
 Cada item abaixo foi um erro real cometido e corrigido. As skills foram atualizadas; aqui está o resumo operacional.
 
 **Cascata CSS**
+
 - **Inline style vence `@media`.** `style="grid-column: span 1"` + uma regra `@media{ ... span 3 }` nunca sobrepõe — o inline ganha. Idem `style="display:flex"` vs `.classe-mobile{display:none}`. Ponha o que precisa virar por breakpoint **numa classe**, nunca inline.
 
 **Cards** (`skills/card`)
+
 - **Não use `<u-card-content>`** — o `u-card` já embrulha o slot default num bloco com padding. Conteúdo vai **direto** no `<u-card>`. `--u-card-padding` para tunar/zerar o padding.
 - Mídia/banner vai em **`slot="before-content"`** (flush, sem padding): `<u-card-media slot="before-content">`. `wide` = 16:9. Overlays (chips sobre a mídia) num `<div style="position:relative">` interno, não direto no card-media.
 - **Cards irmãos de mesma importância = mesma variant** (KPI grid, catálogo). Variar variant cria hierarquia que os dados não têm. Variant diferente só para papel diferente (main vs side).
 
 **Slider** (`skills/slider`)
+
 - **`discrete` só com ≤ ~15 stops** (`(max-min)/step`). Acima disso os ticks viram ruído. Para faixas grandes (preço, score 0-100), slider contínuo + `<span>` que atualiza no evento `input`.
 
 **Grid responsivo**
+
 - O `.u-grid` do projeto lê só `--u-grid-columns`. O `app.css` adiciona `--u-grid-columns-{sm,md,lg,xl}` com fallback em cascata. Use: `style="--u-grid-columns:1; --u-grid-columns-md:2; --u-grid-columns-lg:3"`.
 - Para "sidebar + content" prefira **flexbox** a nested grid (`flex: 0 0 260px` + `flex: 1 1 0`).
 
 **Scaffold / panes** (`skills/scaffold`)
+
 - **Se usar `<u-pane>` para um filho do body, use pane para todos** (consistência de surface, scroll e modes). Conteúdo central = `<u-pane variant="transparent" style="flex:1 1 0">`.
-- **List-detail "settings"** (configuracoes): nav de seções = a *lista* → `mode="fixed"`, largura via classe (`flex:1 1 0` no mobile, `flex:0 0 320px` no md+). Conteúdo = o *detalhe* → `mode="fullscreen" mode-md="fixed"`. Clicar numa seção → `detailPane.show()`; back → `.close()`.
+- **List-detail "settings"** (configuracoes): nav de seções = a _lista_ → `mode="fixed"`, largura via classe (`flex:1 1 0` no mobile, `flex:0 0 320px` no md+). Conteúdo = o _detalhe_ → `mode="fullscreen" mode-md="fixed"`. Clicar numa seção → `detailPane.show()`; back → `.close()`.
 - **List-detail "mail"** (inbox): nav `mode="sidebar" mode-lg="fixed"` + lista `mode="fixed"` + detalhe `mode="fullscreen" mode-md="fixed"`. Referência completa: `docs/src/app/screens/scaffold-list-detail/`.
 - Header fixo do pane vai em `slot="header"`.
 
 **Navigation rail** (`skills/navigation-rail`)
+
 - Os slots `rail` (collapsed) e `expanded` são **a mesma navegação em dois níveis de detalhe**, não dois menus diferentes. Não coloque sub-navegação de seção (ex.: pastas de email) no slot expanded — isso troca o que o rail navega ao expandir e quebra o modelo mental. Sub-nav leve vai em chips/tabs no header; árvore grande vai em pane+drawer próprio (ou corte a camada).
 
 **Drawer** (`skills/drawer`)
+
 - Badge é `<span slot="badge">12</span>`, **não** `<u-badge>` (o `u-badge` é o badge flutuante de ícone, fica fora do lugar inline).
 - **`<u-drawer>` dentro de `<u-pane variant="filled">`**: o drawer pinta o próprio fundo, e no `lg+` esse fundo vira `surface`/body — cobrindo o filled do pane e sumindo no desktop. Neutralize no pane: `--u-modal-drawer-bg-color: transparent; --u-standard-drawer-bg-color: transparent;`.
 
 **Console**
+
 - Erros `_scheduleSync` / `_renderOptionRelatedElements` ao carregar páginas com vários `u-select` são um **race de upgrade-order conhecido da lib** (option sobe antes do select). A página renderiza e funciona; ignore. Se for corrigir, é no `src/select/`.
 
 ---
@@ -175,20 +220,20 @@ Servidor rodando (`python mockup/serve.py`), depois com o Chrome MCP (`mcp__Clau
 
 ## Mapa de cobertura (página → componentes estressados)
 
-| Página | Foco |
-| --- | --- |
-| login | text-field (validação, password), button, checkbox, dialog imperativo, snackbar |
-| dashboard | scaffold, top-app-bar, rail, card (3 variants), progress-bar, circular-progress, chip, badge, list, fab-menu |
-| clientes | list-detail/tabela, list-item, chip-set/chip-field, select, range-datepicker, slider, checkbox bulk, overflow-menu, dialog |
-| cliente | tab-bar (7 abas), card-media, chip removable, expansion-panel, typeahead, text-area, slider, divider |
-| pipeline | kanban drag-and-drop, card elevated, chip, badge, select, dialog, snackbar |
-| oportunidade | top-app-bar large, slider, tab-bar, typeahead, expansion-panel, button-set |
-| pedidos | tabela densa, chips status, checkbox bulk, select, range-datepicker, overflow-menu, dialog confirm |
-| pedido-novo | tab-bar stepper, todos os text-field types, radio/switch/checkbox list-item, collapse, chip-field, datepicker |
-| produtos | card grid (media before-content), chip-set toggle, slider range, switch-list-item, menu, fab |
-| inbox | scaffold 2-pane list-detail (fullscreen no mobile), list-item, typeahead, expansion-panel, text-area, menu, dialog |
-| agenda | calendar inline, range-datepicker/calendar, switch-list-item, chip-set, dialog com form completo |
-| relatorios | tab-bar, vários select, range-datepicker, chip removable, tabela 200 linhas, circular-progress, expansion-panel |
-| equipe | tabela, matriz de checkbox (checked/indeterminate/disabled), chip-set, dialog convite |
-| configuracoes | list-detail (nav fixed + content fullscreen/fixed), drawer, todos os selection-controls, save por seção |
-| perfil | top-app-bar medium, card-media banner, tab-bar, chip-field, switch-list-item, dialog troca de senha |
+| Página        | Foco                                                                                                                       |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| login         | text-field (validação, password), button, checkbox, dialog imperativo, snackbar                                            |
+| dashboard     | scaffold, top-app-bar, rail, card (3 variants), progress-bar, circular-progress, chip, badge, list, fab-menu               |
+| clientes      | list-detail/tabela, list-item, chip-set/chip-field, select, range-datepicker, slider, checkbox bulk, overflow-menu, dialog |
+| cliente       | tab-bar (7 abas), card-media, chip removable, expansion-panel, typeahead, text-area, slider, divider                       |
+| pipeline      | kanban drag-and-drop, card elevated, chip, badge, select, dialog, snackbar                                                 |
+| oportunidade  | top-app-bar large, slider, tab-bar, typeahead, expansion-panel, button-set                                                 |
+| pedidos       | tabela densa, chips status, checkbox bulk, select, range-datepicker, overflow-menu, dialog confirm                         |
+| pedido-novo   | tab-bar stepper, todos os text-field types, radio/switch/checkbox list-item, collapse, chip-field, datepicker              |
+| produtos      | card grid (media before-content), chip-set toggle, slider range, switch-list-item, menu, fab                               |
+| inbox         | scaffold 2-pane list-detail (fullscreen no mobile), list-item, typeahead, expansion-panel, text-area, menu, dialog         |
+| agenda        | calendar inline, range-datepicker/calendar, switch-list-item, chip-set, dialog com form completo                           |
+| relatorios    | tab-bar, vários select, range-datepicker, chip removable, tabela 200 linhas, circular-progress, expansion-panel            |
+| equipe        | tabela, matriz de checkbox (checked/indeterminate/disabled), chip-set, dialog convite                                      |
+| configuracoes | list-detail (nav fixed + content fullscreen/fixed), drawer, todos os selection-controls, save por seção                    |
+| perfil        | top-app-bar medium, card-media banner, tab-bar, chip-field, switch-list-item, dialog troca de senha                        |

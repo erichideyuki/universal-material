@@ -18,7 +18,11 @@ By default the badge is **absolutely positioned**, dotting the top-right corner 
 
 <!-- nav-bar / nav-rail item: the `badge` slot floats over the item's icon -->
 <u-navigation-bar-item>
-  <span class="material-symbols-outlined" slot="icon">inbox</span>
+  <span
+    class="material-symbols-outlined"
+    slot="icon"
+    >inbox</span
+  >
   Inbox
   <u-badge slot="badge">12</u-badge>
 </u-navigation-bar-item>
@@ -39,5 +43,5 @@ Add `static` to render the badge **in flow** (not floating) — for a count chip
 
 ## Caveats
 
-- **Don't put a floating `<u-badge>` in a `<u-drawer-item>`'s `badge` slot** — there the badge must sit inline at the row's trailing edge, so use a plain `<span slot="badge">12</span>` (the drawer item styles it). A floating `<u-badge>` would position absolutely and land in the wrong place. (Nav-rail / nav-bar items are the opposite — their `badge` slot *does* take a floating `<u-badge>`, since it overlays the icon.)
+- **Don't put a floating `<u-badge>` in a `<u-drawer-item>`'s `badge` slot** — there the badge must sit inline at the row's trailing edge, so use a plain `<span slot="badge">12</span>` (the drawer item styles it). A floating `<u-badge>` would position absolutely and land in the wrong place. (Nav-rail / nav-bar items are the opposite — their `badge` slot _does_ take a floating `<u-badge>`, since it overlays the icon.)
 - The floating badge anchors to the nearest positioned ancestor (the icon/button provides one). For an inline count next to plain text, use `static`.

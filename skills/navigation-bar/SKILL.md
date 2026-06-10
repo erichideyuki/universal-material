@@ -11,25 +11,42 @@ description: Build a Material 3 navigation bar — destinations with icon + labe
 ```html
 <u-navigation-bar>
   <u-navigation-bar-item active>
-    <span class="material-symbols-outlined" slot="icon">home</span>
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >home</span
+    >
     Home
   </u-navigation-bar-item>
   <u-navigation-bar-item>
-    <span class="material-symbols-outlined" slot="icon">explore</span>
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >explore</span
+    >
     Browse
   </u-navigation-bar-item>
   <u-navigation-bar-item>
-    <span class="material-symbols-outlined" slot="icon">radio</span>
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >radio</span
+    >
     Radio
   </u-navigation-bar-item>
   <u-navigation-bar-item>
-    <span class="material-symbols-outlined" slot="icon">library_music</span>
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >library_music</span
+    >
     Library
   </u-navigation-bar-item>
 </u-navigation-bar>
 ```
 
 M3 tokens applied automatically:
+
 - container: 64dp height, `surface-container` color, level-2 elevation
 - active indicator pill: 56×32dp, `secondary-container`
 - icon: 24dp, `on-secondary-container` (active) / `on-surface-variant` (inactive)
@@ -41,12 +58,23 @@ For wider items where icon and label sit side-by-side inside a 40dp pill:
 
 ```html
 <u-navigation-bar>
-  <u-navigation-bar-item variant="horizontal" active>
-    <span class="material-symbols-outlined" slot="icon">home</span>
+  <u-navigation-bar-item
+    variant="horizontal"
+    active
+  >
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >home</span
+    >
     Home
   </u-navigation-bar-item>
   <u-navigation-bar-item variant="horizontal">
-    <span class="material-symbols-outlined" slot="icon">explore</span>
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >explore</span
+    >
     Browse
   </u-navigation-bar-item>
 </u-navigation-bar>
@@ -54,11 +82,11 @@ For wider items where icon and label sit side-by-side inside a 40dp pill:
 
 ## Slots on `<u-navigation-bar-item>`
 
-| Slot | Content |
-| --- | --- |
-| default | Destination label (text). |
-| `icon` | 24dp icon (`<span class="material-symbols-outlined">…</span>`). |
-| `badge` | Optional `<u-badge>` — auto-positions over the icon. |
+| Slot    | Content                                                         |
+| ------- | --------------------------------------------------------------- |
+| default | Destination label (text).                                       |
+| `icon`  | 24dp icon (`<span class="material-symbols-outlined">…</span>`). |
+| `badge` | Optional `<u-badge>` — auto-positions over the icon.            |
 
 ## Tracking selection
 
@@ -66,11 +94,11 @@ For wider items where icon and label sit side-by-side inside a 40dp pill:
 <u-navigation-bar id="nav">…</u-navigation-bar>
 
 <script>
-  const nav = document.getElementById('nav');
-  nav.addEventListener('click', (e) => {
-    const item = e.target.closest('u-navigation-bar-item');
+  const nav = document.getElementById("nav");
+  nav.addEventListener("click", (e) => {
+    const item = e.target.closest("u-navigation-bar-item");
     if (!item) return;
-    [...nav.children].forEach(i => i.active = i === item);
+    [...nav.children].forEach((i) => (i.active = i === item));
   });
 </script>
 ```

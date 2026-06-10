@@ -21,13 +21,21 @@ description: Render Material 3 lists — u-list + u-list-item, with leading icon
 ```html
 <u-list>
   <u-list-item>
-    <span class="material-symbols-outlined" slot="leading-icon">person</span>
+    <span
+      class="material-symbols-outlined"
+      slot="leading-icon"
+      >person</span
+    >
     Maria Andrade
     <span slot="supporting-text">maria@example.com</span>
   </u-list-item>
 
   <u-list-item>
-    <span class="material-symbols-outlined" slot="leading-icon">person</span>
+    <span
+      class="material-symbols-outlined"
+      slot="leading-icon"
+      >person</span
+    >
     Carlos Pereira
     <span slot="supporting-text">carlos@example.com</span>
   </u-list-item>
@@ -38,7 +46,11 @@ description: Render Material 3 lists — u-list + u-list-item, with leading icon
 
 ```html
 <u-list-item>
-  <span class="material-symbols-outlined" slot="leading-icon">archive</span>
+  <span
+    class="material-symbols-outlined"
+    slot="leading-icon"
+    >archive</span
+  >
   Archive
   <u-icon-button slot="trailing-icon">
     <span class="material-symbols-outlined">chevron_right</span>
@@ -52,8 +64,16 @@ description: Render Material 3 lists — u-list + u-list-item, with leading icon
 
 ```html
 <u-list>
-  <u-list-item selectable onclick="…">One</u-list-item>
-  <u-list-item selectable onclick="…">Two</u-list-item>
+  <u-list-item
+    selectable
+    onclick="…"
+    >One</u-list-item
+  >
+  <u-list-item
+    selectable
+    onclick="…"
+    >Two</u-list-item
+  >
 </u-list>
 ```
 
@@ -61,14 +81,18 @@ For a persistent **active / selected** highlight (e.g. the open row in a list-de
 
 ```html
 <u-list>
-  <u-list-item selectable selected>One</u-list-item>
+  <u-list-item
+    selectable
+    selected
+    >One</u-list-item
+  >
   <u-list-item selectable>Two</u-list-item>
 </u-list>
 <script>
-  list.addEventListener('click', (e) => {
-    const item = e.target.closest('u-list-item');
+  list.addEventListener("click", (e) => {
+    const item = e.target.closest("u-list-item");
     if (!item) return;
-    list.querySelectorAll('u-list-item[selected]').forEach((i) => (i.selected = false));
+    list.querySelectorAll("u-list-item[selected]").forEach((i) => (i.selected = false));
     item.selected = true;
   });
 </script>

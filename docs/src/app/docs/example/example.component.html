@@ -26,9 +26,16 @@
   <ng-content></ng-content>
 </div>
 @if (_html) {
-  <div class="example-block" [class.fluid]="fluid" [attr.data-align]="alignment">
+  <div
+    class="example-block"
+    [class.fluid]="fluid"
+    [attr.data-align]="alignment"
+  >
     @if (screenRoute) {
-      <a class="example-screen-cta" [routerLink]="screenRoute">
+      <a
+        class="example-screen-cta"
+        [routerLink]="screenRoute"
+      >
         <span class="example-screen-cta-icon material-symbols-outlined">open_in_new</span>
         <span class="example-screen-cta-text">
           <span class="example-screen-cta-title">Open as screen</span>

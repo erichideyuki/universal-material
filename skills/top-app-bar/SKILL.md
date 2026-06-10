@@ -22,9 +22,18 @@ description: Add a top app bar to a screen — small/medium/large sizes, leading
 ## Size variants
 
 ```html
-<u-top-app-bar size="small"  headline="Small"></u-top-app-bar>
-<u-top-app-bar size="medium" headline="Medium"></u-top-app-bar>
-<u-top-app-bar size="large"  headline="Large"></u-top-app-bar>
+<u-top-app-bar
+  size="small"
+  headline="Small"
+></u-top-app-bar>
+<u-top-app-bar
+  size="medium"
+  headline="Medium"
+></u-top-app-bar>
+<u-top-app-bar
+  size="large"
+  headline="Large"
+></u-top-app-bar>
 ```
 
 - `small` (64dp) — default.
@@ -32,11 +41,11 @@ description: Add a top app bar to a screen — small/medium/large sizes, leading
 
 ## Positioning
 
-| Mode | Anchored to | When to use |
-| --- | --- | --- |
-| `fixed` (default) | Viewport top. Slides with `--u-app-bar-offset` when a `u-side-navigation` drawer opens. | Standalone pages, side-navigation layouts. |
-| `absolute` | Nearest positioned ancestor. | Inside a `u-scaffold` (auto-set), or any custom container. |
-| `static` | In-flow, no special positioning. | Rare — when the bar should scroll with content. |
+| Mode              | Anchored to                                                                             | When to use                                                |
+| ----------------- | --------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| `fixed` (default) | Viewport top. Slides with `--u-app-bar-offset` when a `u-side-navigation` drawer opens. | Standalone pages, side-navigation layouts.                 |
+| `absolute`        | Nearest positioned ancestor.                                                            | Inside a `u-scaffold` (auto-set), or any custom container. |
+| `static`          | In-flow, no special positioning.                                                        | Rare — when the bar should scroll with content.            |
 
 Inside a `<u-scaffold>` the scaffold flips `position` to `absolute` automatically and feeds the bar its scroll container via context, so the scroll-driven collapse works without manual wiring.
 

@@ -1,5 +1,8 @@
 <u-scaffold>
-  <u-top-app-bar slot="top-bar" headline="Mode per breakpoint">
+  <u-top-app-bar
+    slot="top-bar"
+    headline="Mode per breakpoint"
+  >
     <u-icon-button
       slot="leading-icon"
       routerLink="/components/scaffold"
@@ -10,14 +13,17 @@
   </u-top-app-bar>
 
   <u-pane
+    variant="filled"
     #nav
     mode="sidebar"
     mode-md="collapsible"
     mode-lg="fixed"
-    variant="filled"
-    style="width: 220px; --u-pane-width: 220px;"
+    style="width: 220px; --u-pane-width: 220px"
   >
-    <div slot="header" class="pane-header">
+    <div
+      class="pane-header"
+      slot="header"
+    >
       <strong>Navigation</strong>
       <u-icon-button (click)="$any(nav).close()">
         <span class="material-symbols-outlined">close</span>
@@ -31,18 +37,29 @@
   </u-pane>
 
   <div class="screen-content">
-    <p>The pane has <code>mode="sidebar"</code> base, <code>mode-md="collapsible"</code> from 840px, and <code>mode-lg="fixed"</code> from 1200px:</p>
+    <p>
+      The pane has <code>mode="sidebar"</code> base, <code>mode-md="collapsible"</code> from 840px, and
+      <code>mode-lg="fixed"</code> from 1200px:
+    </p>
     <ul>
       <li>&lt; <strong>md</strong> (sub-840): modal sidebar overlay — opens with the button below</li>
       <li><strong>md – lg</strong>: collapsible in-flow flex item — toggle to slide off without overlay</li>
       <li>≥ <strong>lg</strong>: always visible</li>
     </ul>
-    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+    <div style="display: flex; gap: 8px; flex-wrap: wrap">
       <u-button (click)="$any(nav).show()">Open</u-button>
-      <u-button color="secondary" (click)="$any(nav).close()">Close</u-button>
-      <u-button color="tertiary" (click)="$any(nav).toggle()">Toggle</u-button>
+      <u-button
+        color="secondary"
+        (click)="$any(nav).close()"
+        >Close</u-button
+      >
+      <u-button
+        color="tertiary"
+        (click)="$any(nav).toggle()"
+        >Toggle</u-button
+      >
     </div>
-    <p style="margin-top: 16px; font-size: 13px; color: var(--u-color-on-surface-variant);">
+    <p style="margin-top: 16px; font-size: 13px; color: var(--u-color-on-surface-variant)">
       Resize the browser to cross the breakpoints — no JS reactivity needed; the CSS owns the resolution.
     </p>
   </div>

@@ -1,13 +1,12 @@
 <u-button (click)="showMessage()">Show message</u-button>
 
 <script type="module">
-  import { Dialog } from '@universal-material/web';
+  import { Dialog } from "@universal-material/web";
 
   function showMessage() {
-    Dialog
-      .message('Your changes have been saved.')
-      .headline('Saved')
-      .acknowledgeButton({ label: 'Got it', variant: 'filled' })
+    Dialog.message("Your changes have been saved.")
+      .headline("Saved")
+      .acknowledgeButton({ label: "Got it", variant: "filled" })
       .show();
   }
 </script>

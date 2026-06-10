@@ -10,15 +10,25 @@ Both `<u-text-field>` and `<u-text-area>` are form-associated, support M3 filled
 
 ```html
 <u-text-field label="Name"></u-text-field>
-<u-text-field label="Email" type="email" placeholder="you@example.com"></u-text-field>
-<u-text-field label="Password" type="password"></u-text-field>
+<u-text-field
+  type="email"
+  label="Email"
+  placeholder="you@example.com"
+></u-text-field>
+<u-text-field
+  type="password"
+  label="Password"
+></u-text-field>
 ```
 
 ## Variants
 
 ```html
 <u-text-field label="Filled (default)"></u-text-field>
-<u-text-field label="Outlined" variant="outlined"></u-text-field>
+<u-text-field
+  variant="outlined"
+  label="Outlined"
+></u-text-field>
 ```
 
 Set a global default with `FieldBase.setDefaults(rootElement, { variant: 'outlined' })`.
@@ -27,8 +37,15 @@ Set a global default with `FieldBase.setDefaults(rootElement, { variant: 'outlin
 
 ```html
 <u-text-field label="Search">
-  <span class="material-symbols-outlined" slot="leading-icon">search</span>
-  <u-icon-button slot="trailing-icon" type="button">
+  <span
+    class="material-symbols-outlined"
+    slot="leading-icon"
+    >search</span
+  >
+  <u-icon-button
+    slot="trailing-icon"
+    type="button"
+  >
     <span class="material-symbols-outlined">close</span>
   </u-icon-button>
 </u-text-field>
@@ -37,7 +54,11 @@ Set a global default with `FieldBase.setDefaults(rootElement, { variant: 'outlin
 ## Prefix / suffix (text-field only)
 
 ```html
-<u-text-field label="Amount" prefix-text="$" suffix-text="USD"></u-text-field>
+<u-text-field
+  label="Amount"
+  prefix-text="$"
+  suffix-text="USD"
+></u-text-field>
 ```
 
 ## Supporting text, error text, char counter
@@ -46,13 +67,15 @@ Set a global default with `FieldBase.setDefaults(rootElement, { variant: 'outlin
 <u-text-field
   label="Bio"
   supporting-text="Tell us about yourself"
-  [maxlength]="120">
+  [maxlength]="120"
+>
 </u-text-field>
 
 <u-text-field
   label="Username"
   error-text="Already taken"
-  invalid>
+  invalid
+>
 </u-text-field>
 ```
 
@@ -66,14 +89,25 @@ Set a global default with `FieldBase.setDefaults(rootElement, { variant: 'outlin
 `<u-text-area>` is the textarea equivalent; same API plus `rows`:
 
 ```html
-<u-text-area label="Description" rows="4" maxlength="500"></u-text-area>
+<u-text-area
+  label="Description"
+  rows="4"
+  maxlength="500"
+></u-text-area>
 ```
 
 ## Read-only / disabled
 
 ```html
-<u-text-field label="ID" value="abc-123" readOnly></u-text-field>
-<u-text-field label="Locked" disabled></u-text-field>
+<u-text-field
+  label="ID"
+  value="abc-123"
+  readOnly
+></u-text-field>
+<u-text-field
+  label="Locked"
+  disabled
+></u-text-field>
 ```
 
 ## Validation
@@ -81,15 +115,23 @@ Set a global default with `FieldBase.setDefaults(rootElement, { variant: 'outlin
 `required`, `pattern`, `minlength` and `maxlength` are forwarded to the inner input and participate in **constraint validation** — they block native `<form>` submit and feed `checkValidity()` / `reportValidity()`:
 
 ```html
-<u-text-field label="Email" type="email" required></u-text-field>
-<u-text-field label="ZIP" pattern="[0-9]{5}" minlength="5"></u-text-field>
+<u-text-field
+  type="email"
+  label="Email"
+  required
+></u-text-field>
+<u-text-field
+  label="ZIP"
+  pattern="[0-9]{5}"
+  minlength="5"
+></u-text-field>
 ```
 
 ```ts
-field.checkValidity();    // boolean; fires `invalid` if not valid
-field.reportValidity();   // also shows the native bubble + sets the visual `invalid` state
-field.validity.patternMismatch;   // live ValidityState
-field.validationMessage;          // localized message
+field.checkValidity(); // boolean; fires `invalid` if not valid
+field.reportValidity(); // also shows the native bubble + sets the visual `invalid` state
+field.validity.patternMismatch; // live ValidityState
+field.validationMessage; // localized message
 ```
 
 For custom errors, keep driving `invalid` + `error-text` yourself (`field.invalid = true; field.errorText = 'Already taken'`).
@@ -99,11 +141,11 @@ For custom errors, keep driving `invalid` + `error-text` yourself (`field.invali
 Form integration via `ElementInternals` — the field participates in `<form>` submission and `FormData`. From JS:
 
 ```ts
-const field = document.querySelector('u-text-field')!;
-field.value = 'hello';
+const field = document.querySelector("u-text-field")!;
+field.value = "hello";
 console.log(field.value);
 
-field.addEventListener('input', () => console.log(field.value));
+field.addEventListener("input", () => console.log(field.value));
 ```
 
 ## Caveats

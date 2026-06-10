@@ -1,7 +1,9 @@
 <docs-title
   title="Datepicker"
   tag="u-datepicker, u-range-datepicker, u-calendar, u-range-calendar"
->Date selection components. `u-datepicker` and `u-range-datepicker` are form-associated text inputs with a calendar popover. For inline-only use, the library also exposes `u-calendar` and `u-range-calendar`.</docs-title>
+  >Date selection components. `u-datepicker` and `u-range-datepicker` are form-associated text inputs with a calendar
+  popover. For inline-only use, the library also exposes `u-calendar` and `u-range-calendar`.</docs-title
+>
 
 <docs-example
   sectionTitle="Datepicker"
@@ -15,19 +17,26 @@
         [selected]="datepickerFormat === f"
         (click)="datepickerFormat = f"
       >
-        <span class="material-symbols-outlined" slot="icon-selected">done</span>
+        <span
+          class="material-symbols-outlined"
+          slot="icon-selected"
+          >done</span
+        >
         {{ f }}
       </u-chip>
     }
   </u-chip-set>
-  <div example class="u-column">
+  <div
+    class="u-column"
+    example
+  >
     <u-datepicker
       label="Date"
       placeholder="YYYY-MM-DD"
       [attr.format]="datepickerFormat"
       (input)="onDatepickerInput($event)"
     ></u-datepicker>
-    <p>Selected: {{ datepickerValue || '—' }}</p>
+    <p>Selected: {{ datepickerValue || "—" }}</p>
   </div>
 </docs-example>
 <docs-example
@@ -35,19 +44,26 @@
   [html]="datepickerEditableHtml"
   [renderExample]="false"
 >
-  <u-select label="Locale" [(ngModel)]="editableLocale" ngDefaultControl>
+  <u-select
+    label="Locale"
+    [(ngModel)]="editableLocale"
+    ngDefaultControl
+  >
     @for (l of locales; track l.value) {
       <u-option [value]="l.value">{{ l.label }}</u-option>
     }
   </u-select>
-  <div example class="u-column">
+  <div
+    class="u-column"
+    example
+  >
     <u-datepicker
       label="Date"
       editable
       [attr.locale]="editableLocale"
       (input)="onDatepickerInput($event)"
     ></u-datepicker>
-    <p>Selected: {{ datepickerValue || '—' }}</p>
+    <p>Selected: {{ datepickerValue || "—" }}</p>
   </div>
 </docs-example>
 <docs-example
@@ -62,19 +78,26 @@
         [selected]="rangeDatepickerFormat === f"
         (click)="rangeDatepickerFormat = f"
       >
-        <span class="material-symbols-outlined" slot="icon-selected">done</span>
+        <span
+          class="material-symbols-outlined"
+          slot="icon-selected"
+          >done</span
+        >
         {{ f }}
       </u-chip>
     }
   </u-chip-set>
-  <div example class="u-column">
+  <div
+    class="u-column"
+    example
+  >
     <u-range-datepicker
       label="Date range"
       placeholder="YYYY-MM-DD - YYYY-MM-DD"
       [attr.format]="rangeDatepickerFormat"
       (input)="onRangeDatepickerInput($event)"
     ></u-range-datepicker>
-    <p>Selected: {{ rangeDatepickerValue || '—' }}</p>
+    <p>Selected: {{ rangeDatepickerValue || "—" }}</p>
   </div>
 </docs-example>
 <docs-example
@@ -82,9 +105,12 @@
   [html]="calendarHtml"
   [renderExample]="false"
 >
-  <div example class="u-column">
+  <div
+    class="u-column"
+    example
+  >
     <u-calendar (input)="onDateInput($event)"></u-calendar>
-    <p>Selected: {{ selectedDate || '—' }}</p>
+    <p>Selected: {{ selectedDate || "—" }}</p>
   </div>
 </docs-example>
 <docs-example
@@ -92,9 +118,12 @@
   [html]="rangeCalendarHtml"
   [renderExample]="false"
 >
-  <div example class="u-column">
+  <div
+    class="u-column"
+    example
+  >
     <u-range-calendar (input)="onRangeInput($event)"></u-range-calendar>
-    <p>Range: {{ selectedRange || '—' }}</p>
+    <p>Range: {{ selectedRange || "—" }}</p>
   </div>
 </docs-example>
 <docs-example
@@ -102,12 +131,19 @@
   [html]="localeHtml"
   [renderExample]="false"
 >
-  <u-select label="Locale" [(ngModel)]="locale" ngDefaultControl>
+  <u-select
+    label="Locale"
+    [(ngModel)]="locale"
+    ngDefaultControl
+  >
     @for (l of locales; track l.value) {
       <u-option [value]="l.value">{{ l.label }}</u-option>
     }
   </u-select>
-  <div example class="u-column">
+  <div
+    class="u-column"
+    example
+  >
     <u-calendar [attr.locale]="locale"></u-calendar>
   </div>
 </docs-example>

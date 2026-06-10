@@ -1,5 +1,8 @@
 <u-scaffold>
-  <u-top-app-bar slot="top-bar" headline="Project">
+  <u-top-app-bar
+    slot="top-bar"
+    headline="Project"
+  >
     <u-icon-button
       slot="leading-icon"
       routerLink="/components/scaffold"
@@ -9,8 +12,16 @@
     </u-icon-button>
   </u-top-app-bar>
 
-  <u-pane variant="filled" style="width: 240px;">
-    <div slot="header" class="pane-header"><strong>Files</strong></div>
+  <u-pane
+    variant="filled"
+    style="width: 240px"
+  >
+    <div
+      class="pane-header"
+      slot="header"
+    >
+      <strong>Files</strong>
+    </div>
     <u-list>
       <u-list-item>README.md</u-list-item>
       <u-list-item>package.json</u-list-item>
@@ -20,19 +31,36 @@
 
   <div class="screen-content scrollable">
     <h3>README.md</h3>
-    <p>Top bar, FAB and panes coexist. Non-pane body content flexes to fill the remaining space and scrolls inside itself.</p>
-    <p>Panes around it (filled <code>Files</code> on the left, transparent <code>Outline</code> on the right) keep their own widths and scroll independently.</p>
+    <p>
+      Top bar, FAB and panes coexist. Non-pane body content flexes to fill the remaining space and scrolls inside
+      itself.
+    </p>
+    <p>
+      Panes around it (filled <code>Files</code> on the left, transparent <code>Outline</code> on the right) keep their
+      own widths and scroll independently.
+    </p>
     <p class="bottom-anchor">Bottom of main content.</p>
   </div>
 
-  <u-pane variant="transparent" style="width: 280px;">
-    <div slot="header" class="pane-header"><strong>Outline</strong></div>
+  <u-pane
+    variant="transparent"
+    style="width: 280px"
+  >
+    <div
+      class="pane-header"
+      slot="header"
+    >
+      <strong>Outline</strong>
+    </div>
     <div class="pane-body">
       <p>Right-side outline / context panel.</p>
     </div>
   </u-pane>
 
-  <u-fab slot="fab" color="primary">
+  <u-fab
+    slot="fab"
+    color="primary"
+  >
     <span class="material-symbols-outlined">edit</span>
   </u-fab>
 </u-scaffold>

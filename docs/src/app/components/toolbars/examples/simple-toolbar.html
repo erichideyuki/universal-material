@@ -1,7 +1,18 @@
 <!-- Drag the bottom-right corner of the dashed box to resize and watch items
      collapse into the menu. `menuPositioning="fixed"` lets the popover
      escape the wrapper's clipped overflow. -->
-<div style="resize: horizontal; overflow: hidden; max-width: 100%; min-width: 56px; width: 320px; padding: 8px; border: 1px dashed var(--u-color-outline-variant, rgba(0,0,0,.12)); border-radius: 8px;">
+<div
+  style="
+    resize: horizontal;
+    overflow: hidden;
+    max-width: 100%;
+    min-width: 56px;
+    width: 320px;
+    padding: 8px;
+    border: 1px dashed var(--u-color-outline-variant, rgba(0, 0, 0, 0.12));
+    border-radius: 8px;
+  "
+>
   <u-overflow-menu menuPositioning="fixed">
     <u-overflow-menu-item label="Bold">
       <span class="material-symbols-outlined">format_bold</span>

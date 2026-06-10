@@ -7,6 +7,7 @@ A Material Design 3 web-components library, built with [Lit](https://lit.dev/). 
 > **Everything must be visually evaluated and be pixel perfect.**
 
 Components are not done when the build passes or the diagnostic prints look right. They are done when the rendered output matches the Material 3 spec to the pixel and is exercised in a real browser. Always open the **docs site** (`npm run docs`, served at `http://localhost:4200`) and verify:
+
 - dimensions match the M3 tokens (1dp = 1px on the web, no rounding),
 - colors come from `sys.color.*` tokens (never hardcoded),
 - spacing, typography, shape and elevation are correct,
@@ -19,6 +20,7 @@ If a measurement comes back slightly off (e.g. `0.667px` letter-spacing when the
 Before creating, modifying, or auditing a component, **read its Material 3 spec page first** at `https://m3.material.io/components/<component-name>/specs`. The spec page is the ground truth — token files alone aren't enough because some details (anatomy slots, contextual behaviors like "active label color differs between vertical and horizontal variants", FAB/menu positioning, expanded vs collapsed layouts) live in the prose and diagrams, not in the token names.
 
 How to read it:
+
 - The page is JS-rendered, so `curl`/`WebFetch` returns almost nothing — open it in the connected Chrome browser (e.g. `mcp__Claude_in_Chrome__navigate` + `get_page_text`) instead.
 - Capture the **Anatomy** section (which slots/parts the component supports).
 - Capture every dimension, color role and typography token listed under **Tokens & specs**, **Color**, **Measurements**, **States** and **Configurations** — including any "X (variantA), Y (variantB)" notes that signal context-dependent values.
@@ -29,11 +31,11 @@ Skipping the spec page and using only the token files leads to drawer-style impl
 
 ## Commit messages
 
-Write commit messages **in English**, even when chatting in Portuguese. Use imperative mood ("Add navigation bar item variants", not "Added" or "Adds"), reference the affected component/area, and keep the subject under ~70 chars. The body, when needed, explains *why* — not what (the diff already shows the what).
+Write commit messages **in English**, even when chatting in Portuguese. Use imperative mood ("Add navigation bar item variants", not "Added" or "Adds"), reference the affected component/area, and keep the subject under ~70 chars. The body, when needed, explains _why_ — not what (the diff already shows the what).
 
 ## Versioning
 
-The **major** version tracks the Material Design spec major (M3 → `3.x`, M4 → `4.x`). Breaking changes *inside the library* — renames, removed exports, changed defaults — bump the **minor** (e.g. `3.9.0` → `3.10.0`), not the major. The major only moves when Material publishes a new generation.
+The **major** version tracks the Material Design spec major (M3 → `3.x`, M4 → `4.x`). Breaking changes _inside the library_ — renames, removed exports, changed defaults — bump the **minor** (e.g. `3.9.0` → `3.10.0`), not the major. The major only moves when Material publishes a new generation.
 
 ---
 
@@ -87,7 +89,7 @@ skills/                  # Claude Code skills shipped with the npm package
 ## Common gotchas (learned the hard way)
 
 1. **`@property({ reflect: true })` and defaults.** A property with `reflect: true` is reflected to the attribute as soon as the element is upgraded. Checking `el.hasAttribute('position')` to detect whether the consumer explicitly set it **always returns true**. Compare against the property's default value instead (`el.position === 'fixed'`).
-2. **Lit context import order.** A provider must be registered (via `customElements.define`) *before* consumers — otherwise the consumer's `context-request` event bubbles past an unupgraded host and gets no answer. In `src/index.ts`, register providers first (e.g. `import './scaffold/scaffold.js'` before `top-app-bar` and `fab`).
+2. **Lit context import order.** A provider must be registered (via `customElements.define`) _before_ consumers — otherwise the consumer's `context-request` event bubbles past an unupgraded host and gets no answer. In `src/index.ts`, register providers first (e.g. `import './scaffold/scaffold.js'` before `top-app-bar` and `fab`).
 3. **`flex-direction: row-reverse`** is used by `u-dialog`'s `.actions`. The first child in DOM order ends up **on the right**. Always put the confirming action first in markup.
 4. **`pointer-events: none`** on a slot wrapper propagates to slotted children. Don't blanket-override with `::slotted(*) { pointer-events: auto }` — it breaks components like `u-fab-menu` that intentionally use `pointer-events: none` on their host so the invisible "menu items area" passes clicks through. Scope to specific tags (`::slotted(u-fab)`).
 5. **`contain: layout` / `contain: paint`** establish a containing block for absolutely-positioned descendants. If you need a descendant to position relative to a higher ancestor, use `contain: style` (or none) — or apply `contain` on the higher element instead.
@@ -100,13 +102,13 @@ skills/                  # Claude Code skills shipped with the npm package
 
 ## Build pipeline
 
-| Step | Command | What it does |
-| --- | --- | --- |
-| SCSS → TS | `node node_modules/gulp/bin/gulp.js -f gulpfile.js scripts:sass-to-ts` | Compiles every `*.styles.scss` to `*.styles.ts` (a `css\`…\`` template literal). Run after any SCSS change. |
-| Type-check + emit | `node node_modules/typescript/bin/tsc` | Compiles `src/` to `dist/`. The docs Angular app imports `@universal-material/web` → `../dist/index` via tsconfig path mapping. |
-| Bundle | `./node_modules/@esbuild/win32-x64/esbuild.exe src/index.ts --bundle --format=esm --define:process.env.NODE_ENV='"production"' --minify --outfile=dist/bundle.min.js` | Builds the standalone bundle. Rarely needed — the docs site does not consume it. Use the direct exe — `npx esbuild` fails in this environment with EPERM. |
-| Docs API table | `node node_modules/gulp/bin/gulp.js -f gulpfile.js docs:apis` | Regenerates `docs/src/app/apis.ts` from JSDoc on `@property` declarations. Run after editing any property's JSDoc. |
-| All-in-one | `npm run build` | The full release build (sass → esm → bundle → sass → analyze → copy). |
+| Step              | Command                                                                                                                                                               | What it does                                                                                                                                              |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| SCSS → TS         | `node node_modules/gulp/bin/gulp.js -f gulpfile.js scripts:sass-to-ts`                                                                                                | Compiles every `*.styles.scss` to `*.styles.ts` (a `css\`…\`` template literal). Run after any SCSS change.                                               |
+| Type-check + emit | `node node_modules/typescript/bin/tsc`                                                                                                                                | Compiles `src/` to `dist/`. The docs Angular app imports `@universal-material/web` → `../dist/index` via tsconfig path mapping.                           |
+| Bundle            | `./node_modules/@esbuild/win32-x64/esbuild.exe src/index.ts --bundle --format=esm --define:process.env.NODE_ENV='"production"' --minify --outfile=dist/bundle.min.js` | Builds the standalone bundle. Rarely needed — the docs site does not consume it. Use the direct exe — `npx esbuild` fails in this environment with EPERM. |
+| Docs API table    | `node node_modules/gulp/bin/gulp.js -f gulpfile.js docs:apis`                                                                                                         | Regenerates `docs/src/app/apis.ts` from JSDoc on `@property` declarations. Run after editing any property's JSDoc.                                        |
+| All-in-one        | `npm run build`                                                                                                                                                       | The full release build (sass → esm → bundle → sass → analyze → copy).                                                                                     |
 
 The docs Angular dev server is the primary test surface: `npm run docs` (kept running by the developer). It watches `src/` via the `build:watch` gulp task and `docs/` via `ng serve` on port 4200, both with hot-reload. After a `tsc` rebuild from inside a Claude session, give the Angular watcher a few seconds to pick up the new `dist/` files.
 
@@ -117,6 +119,7 @@ The docs Angular dev server is the primary test surface: `npm run docs` (kept ru
 If a component doesn't have a docs example for what you're testing, add one — that becomes both the validation surface and documentation.
 
 Browser tooling notes (`mcp__Claude_in_Chrome__*`, running in the developer's real Brave/Chrome):
+
 - This is a real, logged-in browser — not the old headless preview. Screenshots, `ResizeObserver`, viewport sizing, hover/focus, and other DOM behaviour all work like any normal Chromium tab. The previous `mcp__Claude_Preview__*` caveats (screenshot timeouts, 0×0 viewport, broken ResizeObserver) no longer apply.
 - Use `navigate` to go to `http://localhost:4200/#/components/<name>` (hash routing) and `get_page_text` / DOM eval helpers for inspection and computed-style checks.
 - The browser tab is shared with the developer. Don't navigate away from pages they're actively using without reason, and clean up after yourself (close menus/dialogs you open).
@@ -128,13 +131,14 @@ Each component gets a folder under `docs/src/app/components/<name>/`:
 - `<name>.component.ts` — Angular standalone component. Imports `examples/*.html` as strings (the docs build resolves them via `raw-loader`).
 - `<name>.component.html` — uses `<docs-title>`, `<docs-example>`, `<docs-apis-table>`.
 - `<name>.component.scss` — usually `:host { display: block; }`.
-- `examples/*.html` — the *shown* code. When `[renderExample]="true"` (default) the example is also rendered live from the same HTML.
+- `examples/*.html` — the _shown_ code. When `[renderExample]="true"` (default) the example is also rendered live from the same HTML.
 
 For interactive playgrounds where the rendered example differs from the shown code, use `[renderExample]="false"` and put the live demo inside `<div example>...</div>`.
 
-For **radio-like chip selectors**, use `<u-chip clickable [selected]="x === v" (click)="x = v">` — *not* `toggle`. `toggle` allows the user to deselect the only selected option, leaving the playground in an invalid empty state. `clickable` gets the ripple/hover treatment without the toggle semantics.
+For **radio-like chip selectors**, use `<u-chip clickable [selected]="x === v" (click)="x = v">` — _not_ `toggle`. `toggle` allows the user to deselect the only selected option, leaving the playground in an invalid empty state. `clickable` gets the ripple/hover treatment without the toggle semantics.
 
 After adding a new component:
+
 1. Register the route in `docs/src/app/app.routes.ts`.
 2. Add a `<u-drawer-item routerLink="components/...">` in `docs/src/app/app.component.html`. **Drawer items must be in alphabetical order within their `<u-drawer-headline>` group** (Components, Colors, Layout, etc.) — sort by the visible label, case-insensitive. When adding a new item, find its slot in the existing order.
 3. Add a `<docs-apis-table key="...">` to its docs page.

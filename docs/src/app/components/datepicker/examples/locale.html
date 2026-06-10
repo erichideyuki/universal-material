@@ -1,6 +1,10 @@
-<u-select label="Locale" [(ngModel)]="locale" ngDefaultControl>
+<u-select
+  label="Locale"
+  [(ngModel)]="locale"
+  ngDefaultControl
+>
   @for (l of locales; track l.value) {
-    <u-option [value]="l.value">{{ l.label }}</u-option>
+  <u-option [value]="l.value">{{ l.label }}</u-option>
   }
 </u-select>
 <u-calendar [attr.locale]="locale"></u-calendar>

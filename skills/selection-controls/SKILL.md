@@ -27,9 +27,19 @@ With a label, either inline or via `<u-checkbox-list-item>`:
 ## Radio
 
 ```html
-<u-radio name="color" value="red"></u-radio>
-<u-radio name="color" value="green" checked></u-radio>
-<u-radio name="color" value="blue"></u-radio>
+<u-radio
+  name="color"
+  value="red"
+></u-radio>
+<u-radio
+  name="color"
+  value="green"
+  checked
+></u-radio>
+<u-radio
+  name="color"
+  value="blue"
+></u-radio>
 ```
 
 `name` groups them â€” only one in a group can be checked. Listen on each, or use a wrapping `<form>` and read `FormData`.
@@ -60,12 +70,19 @@ For settings screens with rows of controls, use the `u-*-list-item` components â
     <span slot="supporting-text">Off</span>
   </u-switch-list-item>
 
-  <u-checkbox-list-item>
-    Show passwords
-  </u-checkbox-list-item>
+  <u-checkbox-list-item> Show passwords </u-checkbox-list-item>
 
-  <u-radio-list-item name="theme" value="light">Light</u-radio-list-item>
-  <u-radio-list-item name="theme" value="dark" checked>Dark</u-radio-list-item>
+  <u-radio-list-item
+    name="theme"
+    value="light"
+    >Light</u-radio-list-item
+  >
+  <u-radio-list-item
+    name="theme"
+    value="dark"
+    checked
+    >Dark</u-radio-list-item
+  >
 </u-list>
 ```
 
@@ -74,9 +91,9 @@ The list items handle the click on the whole row (toggling the control), the rip
 ## Programmatic
 
 ```ts
-const cb = document.querySelector('u-checkbox')!;
+const cb = document.querySelector("u-checkbox")!;
 cb.checked = true;
-cb.addEventListener('change', () => console.log(cb.checked));
+cb.addEventListener("change", () => console.log(cb.checked));
 ```
 
 ## Caveats

@@ -65,16 +65,16 @@
         ></span>
       </u-icon-button>
       <u-menu
+        class="color-picker-menu"
         #colorMenu
         anchor-corner="end-end"
-        class="color-picker-menu"
       >
         <div class="color-picker-header">Theme color</div>
         <div class="color-picker-grid">
           @for (preset of theme.themeColorPresets; track preset.value) {
             <button
-              type="button"
               class="color-picker-chip"
+              type="button"
               [class.active]="theme.isPresetActive(preset.value)"
               [style.--swatch]="preset.value"
               [attr.aria-label]="preset.name"
@@ -93,7 +93,10 @@
             (ngModelChange)="theme.$themeColorChange.next($event)"
             aria-label="Custom theme color"
           />
-          <span class="color-picker-custom-swatch" [style.background]="theme.themeColor"></span>
+          <span
+            class="color-picker-custom-swatch"
+            [style.background]="theme.themeColor"
+          ></span>
           <span class="color-picker-custom-label">
             <span class="color-picker-custom-title">Custom</span>
             <span class="color-picker-custom-value">{{ theme.themeColor }}</span>
@@ -173,515 +176,569 @@
       </svg>
     </a>
   </u-top-app-bar>
-    <u-navigation-rail-headline slot="expanded">Get started</u-navigation-rail-headline>
-    <u-navigation-rail-item slot="expanded"
-      routerLink=""
-      docsLinkActive
-      [routerLinkActiveOptions]="{ exact: true }"
-      >Installation
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >terminal</span
-      >
-    </u-navigation-rail-item>
-
-    <u-navigation-rail-headline slot="expanded">Frameworks</u-navigation-rail-headline>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="frameworks/angular"
-      docsLinkActive
-      >Angular
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >deployed_code</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="frameworks/react"
-      docsLinkActive
-      >React
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >deployed_code</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="frameworks/solid"
-      docsLinkActive
-      >Solid
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >deployed_code</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="frameworks/svelte"
-      docsLinkActive
-      >Svelte
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >deployed_code</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="frameworks/vue"
-      docsLinkActive
-      >Vue
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >deployed_code</span
-      >
-    </u-navigation-rail-item>
-
-    <u-navigation-rail-headline slot="expanded">Foundations</u-navigation-rail-headline>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="content/typography"
-      docsLinkActive
-      >Typography
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >text_fields</span
-      >
-    </u-navigation-rail-item>
-
-    <u-navigation-rail-headline slot="expanded">Colors</u-navigation-rail-headline>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="utilities/background-colors"
-      docsLinkActive
-      >Background
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >format_color_fill</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="utilities/text-and-background-colors"
-      docsLinkActive
-      >Color & background
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >palette</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="utilities/text-colors"
-      docsLinkActive
-      >Text
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >format_color_text</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="utilities/text-emphasis"
-      docsLinkActive
-      >Text emphasis
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >contrast</span
-      >
-    </u-navigation-rail-item>
-
-    <u-navigation-rail-headline slot="expanded">Layout</u-navigation-rail-headline>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="layout/container"
-      docsLinkActive
-      >Container
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >crop_din</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="utilities/dividers"
-      docsLinkActive
-      >Dividers
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >horizontal_rule</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="layout/grid"
-      docsLinkActive
-      >Grid
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >grid_view</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="components/tables"
-      docsLinkActive
-      >Tables
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >table_chart</span
-      >
-    </u-navigation-rail-item>
-
-    <u-navigation-rail-headline slot="expanded">Components</u-navigation-rail-headline>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="components/badges"
-      docsLinkActive
-      >Badges
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >notifications</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="components/button-set"
-      docsLinkActive
-      >Button set
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >view_week</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="components/common-buttons"
-      docsLinkActive
-      >Buttons
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >smart_button</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="components/cards"
-      docsLinkActive
-      >Cards
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >style</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="components/chip-field"
-      docsLinkActive
-      >Chip field
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >local_offer</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="components/chips"
-      docsLinkActive
-      >Chips
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >label</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="components/collapse"
-      docsLinkActive
-      >Collapse
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >unfold_less</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="components/datepicker"
-      docsLinkActive
-      >Datepicker
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >calendar_month</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="components/dialogs"
-      docsLinkActive
-      >Dialogs
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >feedback</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="components/elevation"
-      docsLinkActive
-      >Elevation
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >layers</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="components/expansion-panel"
-      docsLinkActive
-      >Expansion panel
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >unfold_more</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="components/fab-menu"
-      docsLinkActive
-      >FAB menu
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >bubble_chart</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="components/fab"
-      docsLinkActive
-      >FABs
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >add_circle</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="components/field"
-      docsLinkActive
-      >Field
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >edit_note</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="components/icon"
-      docsLinkActive
-      >Icon
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >category</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="components/icon-buttons"
-      docsLinkActive
-      >Icon buttons
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >radio_button_unchecked</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="components/lists"
-      docsLinkActive
-      >Lists
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >list_alt</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="components/menus"
-      docsLinkActive
-      >Menus
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >more_vert</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="components/navigation-bar"
-      docsLinkActive
-      >Navigation bar
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >bottom_navigation</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="components/navigation-rail"
-      docsLinkActive
-      >Navigation rail
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >side_navigation</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="components/toolbars"
-      docsLinkActive
-      >Overflow menu
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >more_horiz</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="components/progress"
-      docsLinkActive
-      >Progress
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >progress_activity</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="components/ripple"
-      docsLinkActive
-      >Ripple
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >touch_app</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="components/scaffold"
-      docsLinkActive
-      >Scaffold
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >dashboard</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="components/search"
-      docsLinkActive
-      >Search
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >search</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="components/select"
-      docsLinkActive
-      >Select
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >arrow_drop_down_circle</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="components/selection-controls"
-      docsLinkActive
-      >Selection controls
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >select_check_box</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="components/sliders"
-      docsLinkActive
-      >Sliders
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >tune</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="components/snackbars"
-      docsLinkActive
-      >Snackbars
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >notifications_active</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="components/tabs"
-      docsLinkActive
-      >Tabs
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >tab</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="components/text-fields"
-      docsLinkActive
-      >Text fields
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >text_fields</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="components/top-app-bar"
-      docsLinkActive
-      >Top app bar
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >web_asset</span
-      >
-    </u-navigation-rail-item>
-    <u-navigation-rail-item slot="expanded"
-      routerLink="components/typeahead"
-      docsLinkActive
-      >Typeahead
-      <span
-        class="material-symbols-outlined"
-        slot="icon"
-        >manage_search</span
-      >
-    </u-navigation-rail-item>
-    <div slot="expanded" class="u-divider"></div>
-    <a
-      slot="expanded"
-      class="drawer-footer-link"
-      href="https://github.com/universal-material/universal-material-web"
-      target="_blank"
-      rel="noopener"
-      aria-label="GitHub repository"
+  <u-navigation-rail-headline slot="expanded">Get started</u-navigation-rail-headline>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink=""
+    docsLinkActive
+    [routerLinkActiveOptions]="{ exact: true }"
+    >Installation
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >terminal</span
     >
-      <span class="material-symbols-outlined">code</span>
-      <span class="drawer-footer-text">
-        <span class="drawer-footer-title">universal-material/web</span>
-        <span class="drawer-footer-sub">v{{ version }} · MIT</span>
-      </span>
-      <span class="material-symbols-outlined drawer-footer-arrow">arrow_outward</span>
-    </a>
-  <div class="page-layout" #pageLayout>
+  </u-navigation-rail-item>
+
+  <u-navigation-rail-headline slot="expanded">Frameworks</u-navigation-rail-headline>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="frameworks/angular"
+    docsLinkActive
+    >Angular
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >deployed_code</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="frameworks/react"
+    docsLinkActive
+    >React
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >deployed_code</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="frameworks/solid"
+    docsLinkActive
+    >Solid
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >deployed_code</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="frameworks/svelte"
+    docsLinkActive
+    >Svelte
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >deployed_code</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="frameworks/vue"
+    docsLinkActive
+    >Vue
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >deployed_code</span
+    >
+  </u-navigation-rail-item>
+
+  <u-navigation-rail-headline slot="expanded">Foundations</u-navigation-rail-headline>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="content/typography"
+    docsLinkActive
+    >Typography
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >text_fields</span
+    >
+  </u-navigation-rail-item>
+
+  <u-navigation-rail-headline slot="expanded">Colors</u-navigation-rail-headline>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="utilities/background-colors"
+    docsLinkActive
+    >Background
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >format_color_fill</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="utilities/text-and-background-colors"
+    docsLinkActive
+    >Color & background
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >palette</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="utilities/text-colors"
+    docsLinkActive
+    >Text
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >format_color_text</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="utilities/text-emphasis"
+    docsLinkActive
+    >Text emphasis
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >contrast</span
+    >
+  </u-navigation-rail-item>
+
+  <u-navigation-rail-headline slot="expanded">Layout</u-navigation-rail-headline>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="layout/container"
+    docsLinkActive
+    >Container
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >crop_din</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="utilities/dividers"
+    docsLinkActive
+    >Dividers
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >horizontal_rule</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="layout/grid"
+    docsLinkActive
+    >Grid
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >grid_view</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="components/tables"
+    docsLinkActive
+    >Tables
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >table_chart</span
+    >
+  </u-navigation-rail-item>
+
+  <u-navigation-rail-headline slot="expanded">Components</u-navigation-rail-headline>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="components/badges"
+    docsLinkActive
+    >Badges
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >notifications</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="components/button-set"
+    docsLinkActive
+    >Button set
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >view_week</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="components/common-buttons"
+    docsLinkActive
+    >Buttons
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >smart_button</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="components/cards"
+    docsLinkActive
+    >Cards
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >style</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="components/chip-field"
+    docsLinkActive
+    >Chip field
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >local_offer</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="components/chips"
+    docsLinkActive
+    >Chips
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >label</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="components/collapse"
+    docsLinkActive
+    >Collapse
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >unfold_less</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="components/datepicker"
+    docsLinkActive
+    >Datepicker
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >calendar_month</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="components/dialogs"
+    docsLinkActive
+    >Dialogs
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >feedback</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="components/elevation"
+    docsLinkActive
+    >Elevation
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >layers</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="components/expansion-panel"
+    docsLinkActive
+    >Expansion panel
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >unfold_more</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="components/fab-menu"
+    docsLinkActive
+    >FAB menu
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >bubble_chart</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="components/fab"
+    docsLinkActive
+    >FABs
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >add_circle</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="components/field"
+    docsLinkActive
+    >Field
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >edit_note</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="components/icon"
+    docsLinkActive
+    >Icon
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >category</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="components/icon-buttons"
+    docsLinkActive
+    >Icon buttons
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >radio_button_unchecked</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="components/lists"
+    docsLinkActive
+    >Lists
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >list_alt</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="components/menus"
+    docsLinkActive
+    >Menus
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >more_vert</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="components/navigation-bar"
+    docsLinkActive
+    >Navigation bar
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >bottom_navigation</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="components/navigation-rail"
+    docsLinkActive
+    >Navigation rail
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >side_navigation</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="components/toolbars"
+    docsLinkActive
+    >Overflow menu
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >more_horiz</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="components/progress"
+    docsLinkActive
+    >Progress
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >progress_activity</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="components/ripple"
+    docsLinkActive
+    >Ripple
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >touch_app</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="components/scaffold"
+    docsLinkActive
+    >Scaffold
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >dashboard</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="components/search"
+    docsLinkActive
+    >Search
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >search</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="components/select"
+    docsLinkActive
+    >Select
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >arrow_drop_down_circle</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="components/selection-controls"
+    docsLinkActive
+    >Selection controls
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >select_check_box</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="components/sliders"
+    docsLinkActive
+    >Sliders
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >tune</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="components/snackbars"
+    docsLinkActive
+    >Snackbars
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >notifications_active</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="components/tabs"
+    docsLinkActive
+    >Tabs
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >tab</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="components/text-fields"
+    docsLinkActive
+    >Text fields
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >text_fields</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="components/top-app-bar"
+    docsLinkActive
+    >Top app bar
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >web_asset</span
+    >
+  </u-navigation-rail-item>
+  <u-navigation-rail-item
+    slot="expanded"
+    routerLink="components/typeahead"
+    docsLinkActive
+    >Typeahead
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >manage_search</span
+    >
+  </u-navigation-rail-item>
+  <div
+    class="u-divider"
+    slot="expanded"
+  ></div>
+  <a
+    class="drawer-footer-link"
+    slot="expanded"
+    href="https://github.com/universal-material/universal-material-web"
+    target="_blank"
+    rel="noopener"
+    aria-label="GitHub repository"
+  >
+    <span class="material-symbols-outlined">code</span>
+    <span class="drawer-footer-text">
+      <span class="drawer-footer-title">universal-material/web</span>
+      <span class="drawer-footer-sub">v{{ version }} · MIT</span>
+    </span>
+    <span class="material-symbols-outlined drawer-footer-arrow">arrow_outward</span>
+  </a>
+  <div
+    class="page-layout"
+    #pageLayout
+  >
     <div class="u-container chapter">
       <router-outlet></router-outlet>
     </div>

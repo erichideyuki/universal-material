@@ -13,3 +13,12 @@
 # formatting; they are not part of the web (root) package's lint surface.
 /planning/
 /packages/
+
+# Framework "Using with X" example snippets are source code shown as text
+# (TypeScript, Vue SFC, Svelte, React/JSX, shell), not real HTML. Prettier's
+# html/angular parsers can't parse them, so they are excluded from formatting.
+/docs/src/app/frameworks/**/examples/
+
+# Untracked root scratch notes — not part of the formatted surface.
+/GRID.md
+/NEXT.md

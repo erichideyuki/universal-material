@@ -1,14 +1,21 @@
-<docs-title title="Menus" tag="u-menu, u-menu-item">Floating surfaces that present a list of choices anchored to a trigger.</docs-title>
+<docs-title
+  title="Menus"
+  tag="u-menu, u-menu-item"
+  >Floating surfaces that present a list of choices anchored to a trigger.</docs-title
+>
 
 <docs-example
   sectionTitle="Usage"
   [html]="basicHtml"
->A `u-menu` opens above any element you call `.toggle()`/`.show()` on. By default it anchors to its parent, so a button next to the menu just works.</docs-example>
+  >A `u-menu` opens above any element you call `.toggle()`/`.show()` on. By default it anchors to its parent, so a
+  button next to the menu just works.</docs-example
+>
 
 <docs-example
   sectionTitle="With icons"
   [html]="iconsHtml"
->Use the `leading-icon` slot on `u-menu-item` to add a glyph. The classic "share" pattern below.</docs-example>
+  >Use the `leading-icon` slot on `u-menu-item` to add a glyph. The classic "share" pattern below.</docs-example
+>
 
 <docs-example
   sectionTitle="Anchor &amp; direction"
@@ -44,10 +51,13 @@
       </u-chip-set>
     </div>
   </div>
-  <div example class="positioning-stage">
+  <div
+    class="positioning-stage"
+    example
+  >
     <u-button
-      #anchorTrigger
       variant="filled"
+      #anchorTrigger
       (click)="positioningMenu.toggle()"
       >Toggle menu
     </u-button>
@@ -58,19 +68,35 @@
       [direction]="direction"
     >
       <u-menu-item>
-        <span class="material-symbols-outlined" slot="leading-icon">edit</span>
+        <span
+          class="material-symbols-outlined"
+          slot="leading-icon"
+          >edit</span
+        >
         Edit
       </u-menu-item>
       <u-menu-item>
-        <span class="material-symbols-outlined" slot="leading-icon">content_copy</span>
+        <span
+          class="material-symbols-outlined"
+          slot="leading-icon"
+          >content_copy</span
+        >
         Duplicate
       </u-menu-item>
       <u-menu-item>
-        <span class="material-symbols-outlined" slot="leading-icon">archive</span>
+        <span
+          class="material-symbols-outlined"
+          slot="leading-icon"
+          >archive</span
+        >
         Archive
       </u-menu-item>
       <u-menu-item>
-        <span class="material-symbols-outlined" slot="leading-icon">delete</span>
+        <span
+          class="material-symbols-outlined"
+          slot="leading-icon"
+          >delete</span
+        >
         Delete
       </u-menu-item>
     </u-menu>

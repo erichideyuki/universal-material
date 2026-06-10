@@ -9,20 +9,20 @@ Brief, transient messages shown at the bottom of the screen. Created imperativel
 ## Show a message
 
 ```ts
-import { Snackbar } from '@universal-material/web';
+import { Snackbar } from "@universal-material/web";
 
 Snackbar.show({
-  message: 'Your changes have been saved.',
+  message: "Your changes have been saved.",
 });
 ```
 
 ## With an action
 
 ```ts
-const sb = Snackbar.show({ message: 'Item deleted.', action: 'Undo' });
+const sb = Snackbar.show({ message: "Item deleted.", action: "Undo" });
 // The action button fires an `actionClick` event on the returned snackbar.
 // There is NO `onAction` config option — passing one is silently ignored.
-sb.addEventListener('actionClick', () => undoDelete());
+sb.addEventListener("actionClick", () => undoDelete());
 ```
 
 Clicking the action button fires `actionClick` and closes the snackbar.
@@ -30,21 +30,21 @@ Clicking the action button fires `actionClick` and closes the snackbar.
 ## Duration
 
 ```ts
-import { Snackbar, SnackbarDuration } from '@universal-material/web';
+import { Snackbar, SnackbarDuration } from "@universal-material/web";
 
 Snackbar.show({
-  message: 'Saved as draft',
-  duration: SnackbarDuration.long,   // 5000ms — this is the default when omitted
+  message: "Saved as draft",
+  duration: SnackbarDuration.long, // 5000ms — this is the default when omitted
 });
 
 Snackbar.show({
-  message: 'Quick toast',
-  duration: SnackbarDuration.short,  // 2500ms
+  message: "Quick toast",
+  duration: SnackbarDuration.short, // 2500ms
 });
 
 Snackbar.show({
-  message: 'Custom 6s',
-  duration: 6000,                    // any ms value
+  message: "Custom 6s",
+  duration: 6000, // any ms value
 });
 ```
 
@@ -54,7 +54,7 @@ Pass `duration: 0` (or `Infinity`) for a sticky snackbar that only closes on act
 
 ```ts
 Snackbar.show({
-  message: 'Network request failed',
+  message: "Network request failed",
   showClose: true,
 });
 ```

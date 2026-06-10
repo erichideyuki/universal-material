@@ -20,15 +20,36 @@ The value is always ISO `YYYY-MM-DD` (suitable for form submission). The display
 ## Display formats
 
 ```html
-<u-datepicker label="Short"  format="short"></u-datepicker>   <!-- 12/31/2025 -->
-<u-datepicker label="Medium" format="medium"></u-datepicker>  <!-- Dec 31, 2025 -->
-<u-datepicker label="Long"   format="long"></u-datepicker>    <!-- December 31, 2025 -->
-<u-datepicker label="Full"   format="full"></u-datepicker>    <!-- Wednesday, December 31, 2025 -->
-<u-datepicker label="ISO"    format="iso"></u-datepicker>     <!-- 2025-12-31 -->
+<u-datepicker
+  label="Short"
+  format="short"
+></u-datepicker>
+<!-- 12/31/2025 -->
+<u-datepicker
+  label="Medium"
+  format="medium"
+></u-datepicker>
+<!-- Dec 31, 2025 -->
+<u-datepicker
+  label="Long"
+  format="long"
+></u-datepicker>
+<!-- December 31, 2025 -->
+<u-datepicker
+  label="Full"
+  format="full"
+></u-datepicker>
+<!-- Wednesday, December 31, 2025 -->
+<u-datepicker
+  label="ISO"
+  format="iso"
+></u-datepicker>
+<!-- 2025-12-31 -->
 
 <u-datepicker
   label="Custom"
-  [format]="{ year: 'numeric', month: '2-digit', day: '2-digit' }">
+  [format]="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
+>
 </u-datepicker>
 ```
 
@@ -37,8 +58,16 @@ The value is always ISO `YYYY-MM-DD` (suitable for form submission). The display
 ## Locale
 
 ```html
-<u-datepicker label="Data" locale="pt-BR" format="long"></u-datepicker>
-<u-datepicker label="日付"  locale="ja-JP" format="full"></u-datepicker>
+<u-datepicker
+  label="Data"
+  locale="pt-BR"
+  format="long"
+></u-datepicker>
+<u-datepicker
+  label="日付"
+  locale="ja-JP"
+  format="full"
+></u-datepicker>
 ```
 
 When omitted, falls back to `navigator.language`. Also drives the calendar's month/weekday labels.
@@ -54,7 +83,10 @@ Default — clicking the field opens the calendar; typing is blocked.
 Editable — the input becomes a native `<input type="date">`; the trailing calendar icon opens the popover:
 
 ```html
-<u-datepicker label="Date" editable></u-datepicker>
+<u-datepicker
+  label="Date"
+  editable
+></u-datepicker>
 ```
 
 In editable mode the browser's native date-format mask is hidden until the user focuses the field (so it doesn't visually collide with the floating label).
@@ -62,7 +94,11 @@ In editable mode the browser's native date-format mask is hidden until the user 
 ## Read-only
 
 ```html
-<u-datepicker label="Date" value="2025-12-31" readOnly></u-datepicker>
+<u-datepicker
+  label="Date"
+  value="2025-12-31"
+  readOnly
+></u-datepicker>
 ```
 
 ## Range
@@ -82,15 +118,19 @@ Value format is `YYYY-MM-DD - YYYY-MM-DD`. Same `format`/`locale`/`editable`/`re
 `<u-calendar>` (single) and `<u-range-calendar>` (range) embed the calendar in your own layout (sidebars, custom popovers).
 
 ```html
-<u-calendar id="cal" locale="pt-BR"></u-calendar>
+<u-calendar
+  id="cal"
+  locale="pt-BR"
+></u-calendar>
 <script>
-  const cal = document.getElementById('cal');
-  cal.value = '2026-06-02';                                   // ISO get/set (range: 'YYYY-MM-DD - YYYY-MM-DD')
-  cal.addEventListener('change', () => console.log(cal.value)); // a pick also fires `input`
+  const cal = document.getElementById("cal");
+  cal.value = "2026-06-02"; // ISO get/set (range: 'YYYY-MM-DD - YYYY-MM-DD')
+  cal.addEventListener("change", () => console.log(cal.value)); // a pick also fires `input`
 </script>
 ```
 
 Inline-calendar gotchas (not obvious):
+
 - `value` is an ISO string (get/set). A day click fires **both** `input` and `change`, with `e.target.value` = the ISO date.
 - Setting `.value` does **not** move the displayed month — set `.month` / `.year` separately to open on a specific month.
 - `locale` drives the month/weekday labels (defaults to `navigator.language`; use `locale="pt-BR"` for Portuguese).
@@ -100,7 +140,10 @@ Inline-calendar gotchas (not obvious):
 `menu-positioning="fixed"` lets the popover escape any scrollable wrapper:
 
 ```html
-<u-datepicker label="Date" menu-positioning="fixed"></u-datepicker>
+<u-datepicker
+  label="Date"
+  menu-positioning="fixed"
+></u-datepicker>
 ```
 
 ## Caveats

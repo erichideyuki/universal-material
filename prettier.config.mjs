@@ -19,6 +19,14 @@ const config = {
     "^aria-",
     "^\\(click\\)$",
   ],
+  overrides: [
+    {
+      // Angular component templates use control-flow syntax (@if/@for/@switch)
+      // that the default html parser can't parse; the angular parser handles it.
+      files: '*.component.html',
+      options: { parser: 'angular' },
+    },
+  ],
 };
 
 export default config;

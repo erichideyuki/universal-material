@@ -5,6 +5,7 @@ description: Use u-chip, u-chip-set (groups), and u-chip-field (chip input) — 
 # Chips
 
 Three pieces:
+
 - `<u-chip>` — a compact element representing an attribute, filter, or action.
 - `<u-chip-set>` — groups chips with consistent spacing/wrapping.
 - `<u-chip-field>` — text field that renders each entered value as a chip.
@@ -15,13 +16,21 @@ Three pieces:
 <u-chip>Default</u-chip>
 
 <u-chip>
-  <span class="material-symbols-outlined" slot="leading-icon">label</span>
+  <span
+    class="material-symbols-outlined"
+    slot="leading-icon"
+    >label</span
+  >
   With icon
 </u-chip>
 
 <u-chip elevated>Elevated</u-chip>
 
-<u-chip removable (remove)="onRemove($event)">Removable</u-chip>
+<u-chip
+  removable
+  (remove)="onRemove($event)"
+  >Removable</u-chip
+>
 ```
 
 ## Selection: `clickable` vs `toggle`
@@ -35,12 +44,28 @@ Radio-like (one of several):
 
 ```html
 <u-chip-set>
-  <u-chip clickable [selected]="format === 'short'" (click)="format = 'short'">
-    <span class="material-symbols-outlined" slot="icon-selected">done</span>
+  <u-chip
+    clickable
+    [selected]="format === 'short'"
+    (click)="format = 'short'"
+  >
+    <span
+      class="material-symbols-outlined"
+      slot="icon-selected"
+      >done</span
+    >
     Short
   </u-chip>
-  <u-chip clickable [selected]="format === 'long'" (click)="format = 'long'">
-    <span class="material-symbols-outlined" slot="icon-selected">done</span>
+  <u-chip
+    clickable
+    [selected]="format === 'long'"
+    (click)="format = 'long'"
+  >
+    <span
+      class="material-symbols-outlined"
+      slot="icon-selected"
+      >done</span
+    >
     Long
   </u-chip>
 </u-chip-set>
@@ -50,9 +75,21 @@ Independent filters:
 
 ```html
 <u-chip-set>
-  <u-chip toggle [(selected)]="showImages">Images</u-chip>
-  <u-chip toggle [(selected)]="showVideos">Videos</u-chip>
-  <u-chip toggle [(selected)]="showAudio">Audio</u-chip>
+  <u-chip
+    toggle
+    [(selected)]="showImages"
+    >Images</u-chip
+  >
+  <u-chip
+    toggle
+    [(selected)]="showVideos"
+    >Videos</u-chip
+  >
+  <u-chip
+    toggle
+    [(selected)]="showAudio"
+    >Audio</u-chip
+  >
 </u-chip-set>
 ```
 
@@ -63,8 +100,8 @@ A plain `<u-chip>` (no `clickable`, no `toggle`) is a static informational chip 
 Spaces and wraps chips for you. No props needed for the basics. The chip's **`remove` event bubbles and composes**, so you can delegate on the set instead of wiring each chip:
 
 ```ts
-chipSet.addEventListener('remove', (e) => {
-  const chip = e.target;            // the <u-chip> being removed
+chipSet.addEventListener("remove", (e) => {
+  const chip = e.target; // the <u-chip> being removed
   // e.preventDefault() here to keep the chip in the DOM (drive removal from your own state)
 });
 ```
@@ -74,11 +111,14 @@ chipSet.addEventListener('remove', (e) => {
 A text field where each typed value (separated by Enter or comma) becomes a removable chip:
 
 ```html
-<u-chip-field label="Tags" #tags></u-chip-field>
+<u-chip-field
+  label="Tags"
+  #tags
+></u-chip-field>
 
 <script>
-  document.querySelector('u-chip-field').value = ['ts', 'lit'];
-  document.querySelector('u-chip-field').addEventListener('change', e => {
+  document.querySelector("u-chip-field").value = ["ts", "lit"];
+  document.querySelector("u-chip-field").addEventListener("change", (e) => {
     console.log(e.target.value); // string[]
   });
 </script>

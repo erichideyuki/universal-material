@@ -22,12 +22,12 @@ description: Use u-tab-bar and u-tab for horizontally arranged content tabs with
 The bar fires a **`change`** event on user selection and exposes **`activeTabIndex`** / **`activeTab`** (read + write). Use these to switch the body view — more robust than reading `click` + `textContent`:
 
 ```ts
-const bar = document.querySelector('u-tab-bar')!;
-bar.addEventListener('change', () => {
-  showPanel(bar.activeTabIndex);   // 0-based index of the selected tab
+const bar = document.querySelector("u-tab-bar")!;
+bar.addEventListener("change", () => {
+  showPanel(bar.activeTabIndex); // 0-based index of the selected tab
 });
 
-bar.activeTabIndex = 2;            // select programmatically (does NOT fire `change`)
+bar.activeTabIndex = 2; // select programmatically (does NOT fire `change`)
 ```
 
 There's also a cancelable `changing` event — call `preventDefault()` to block the switch. (`variant="primary" | "secondary"` chooses the indicator style.)
@@ -37,11 +37,19 @@ There's also a cancelable `changing` event — call `preventDefault()` to block 
 ```html
 <u-tab-bar>
   <u-tab active>
-    <span class="material-symbols-outlined" slot="icon">home</span>
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >home</span
+    >
     Home
   </u-tab>
   <u-tab>
-    <span class="material-symbols-outlined" slot="icon">search</span>
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >search</span
+    >
     Search
   </u-tab>
 </u-tab-bar>

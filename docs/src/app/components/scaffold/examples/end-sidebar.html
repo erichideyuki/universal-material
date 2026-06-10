@@ -1,17 +1,32 @@
-<u-scaffold style="height: 480px; border: 1px solid var(--u-color-outline-variant, rgba(0,0,0,.12)); border-radius: 12px;">
-  <div style="padding: 16px 24px;">
-    <p>On a viewport ≥ 1200px (<code>lg</code>) the pane is permanent on the right. Below that, open it as a modal sidebar from the trailing edge — the scaffold detects the pane's DOM position (after the body content) and slides it from <code>end</code>.</p>
+<u-scaffold
+  style="height: 480px; border: 1px solid var(--u-color-outline-variant, rgba(0, 0, 0, 0.12)); border-radius: 12px"
+>
+  <div style="padding: 16px 24px">
+    <p>
+      On a viewport ≥ 1200px (<code>lg</code>) the pane is permanent on the right. Below that, open it as a modal
+      sidebar from the trailing edge — the scaffold detects the pane's DOM position (after the body content) and slides
+      it from <code>end</code>.
+    </p>
     <u-button onclick="document.getElementById('end-sidebar-pane').show()">Open details</u-button>
   </div>
 
-  <u-pane mode="sidebar" mode-lg="fixed" variant="filled" id="end-sidebar-pane" style="width: 280px;">
-    <div slot="header" style="padding: 12px 16px; display: flex; align-items: center; justify-content: space-between;">
+  <u-pane
+    id="end-sidebar-pane"
+    variant="filled"
+    mode="sidebar"
+    mode-lg="fixed"
+    style="width: 280px"
+  >
+    <div
+      slot="header"
+      style="padding: 12px 16px; display: flex; align-items: center; justify-content: space-between"
+    >
       <strong>Inspector</strong>
       <u-icon-button onclick="document.getElementById('end-sidebar-pane').close()">
         <span class="material-symbols-outlined">close</span>
       </u-icon-button>
     </div>
-    <div style="padding: 16px;">
+    <div style="padding: 16px">
       <p>Inspector content goes here. Properties, metadata, related actions.</p>
     </div>
   </u-pane>

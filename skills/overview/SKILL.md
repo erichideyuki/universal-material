@@ -8,29 +8,29 @@ Material Design 3 web components built with Lit. Custom elements with the `u-` p
 
 ## What's inside
 
-| Area | Components | Skill |
-| --- | --- | --- |
-| Bootstrap | install, fonts, theme | `setup`, `theming` |
-| Layout | `<u-scaffold>` | `scaffold` |
-| App bars | `<u-top-app-bar>`, `<u-navigation-bar>` | `top-app-bar`, `navigation-bar` |
-| Navigation | `<u-side-navigation>`, `<u-drawer>` | `drawer` |
-| Common buttons | `<u-button>`, `<u-icon-button>`, `<u-button-set>` | `buttons` |
-| FAB | `<u-fab>`, `<u-fab-menu>` | `fab` |
-| Dialogs | `<u-dialog>` + `Dialog.message/.confirm` | `dialog` |
-| Text input | `<u-text-field>`, `<u-text-area>` | `text-field` |
-| Select | `<u-select>`, `<u-option>` | `select` |
-| Chips | `<u-chip>`, `<u-chip-set>`, `<u-chip-field>` | `chips` |
-| Selection controls | `<u-checkbox>`, `<u-radio>`, `<u-switch>` + list-items | `selection-controls` |
-| Date | `<u-datepicker>`, `<u-range-datepicker>`, `<u-calendar>` | `datepicker` |
-| Menus | `<u-menu>`, `<u-menu-item>`, `<u-overflow-menu>` | `menu` |
-| Lists | `<u-list>`, `<u-list-item>` | `list` |
-| Tabs | `<u-tab-bar>`, `<u-tab>` | `tab-bar` |
-| Feedback | `Snackbar.show` | `snackbar` |
-| Progress | `<u-progress-bar>`, `<u-circular-progress>` | `progress` |
-| Badge | `<u-badge>` | `badge` |
-| Cards | `<u-card>`, `<u-card-content>`, `<u-card-media>` | `card` |
-| Autocomplete | `<u-typeahead>`, `<u-highlight>` | `typeahead` |
-| Search | `<u-search>` (M3 search bar; pairs with `u-typeahead`) | `search` |
+| Area               | Components                                               | Skill                           |
+| ------------------ | -------------------------------------------------------- | ------------------------------- |
+| Bootstrap          | install, fonts, theme                                    | `setup`, `theming`              |
+| Layout             | `<u-scaffold>`                                           | `scaffold`                      |
+| App bars           | `<u-top-app-bar>`, `<u-navigation-bar>`                  | `top-app-bar`, `navigation-bar` |
+| Navigation         | `<u-side-navigation>`, `<u-drawer>`                      | `drawer`                        |
+| Common buttons     | `<u-button>`, `<u-icon-button>`, `<u-button-set>`        | `buttons`                       |
+| FAB                | `<u-fab>`, `<u-fab-menu>`                                | `fab`                           |
+| Dialogs            | `<u-dialog>` + `Dialog.message/.confirm`                 | `dialog`                        |
+| Text input         | `<u-text-field>`, `<u-text-area>`                        | `text-field`                    |
+| Select             | `<u-select>`, `<u-option>`                               | `select`                        |
+| Chips              | `<u-chip>`, `<u-chip-set>`, `<u-chip-field>`             | `chips`                         |
+| Selection controls | `<u-checkbox>`, `<u-radio>`, `<u-switch>` + list-items   | `selection-controls`            |
+| Date               | `<u-datepicker>`, `<u-range-datepicker>`, `<u-calendar>` | `datepicker`                    |
+| Menus              | `<u-menu>`, `<u-menu-item>`, `<u-overflow-menu>`         | `menu`                          |
+| Lists              | `<u-list>`, `<u-list-item>`                              | `list`                          |
+| Tabs               | `<u-tab-bar>`, `<u-tab>`                                 | `tab-bar`                       |
+| Feedback           | `Snackbar.show`                                          | `snackbar`                      |
+| Progress           | `<u-progress-bar>`, `<u-circular-progress>`              | `progress`                      |
+| Badge              | `<u-badge>`                                              | `badge`                         |
+| Cards              | `<u-card>`, `<u-card-content>`, `<u-card-media>`         | `card`                          |
+| Autocomplete       | `<u-typeahead>`, `<u-highlight>`                         | `typeahead`                     |
+| Search             | `<u-search>` (M3 search bar; pairs with `u-typeahead`)   | `search`                        |
 
 ## Core conventions
 

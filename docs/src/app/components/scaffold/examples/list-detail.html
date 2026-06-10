@@ -1,9 +1,18 @@
 <u-scaffold
   id="list-detail-scaffold"
-  style="height: 560px; border: 1px solid var(--u-color-outline-variant, rgba(0,0,0,.12)); border-radius: 12px;"
+  style="height: 560px; border: 1px solid var(--u-color-outline-variant, rgba(0, 0, 0, 0.12)); border-radius: 12px"
 >
-  <u-pane mode="sidebar" mode-lg="fixed" variant="filled" id="list-detail-nav" style="width: 200px;">
-    <div slot="header" style="padding: 12px 16px; display: flex; align-items: center; justify-content: space-between;">
+  <u-pane
+    id="list-detail-nav"
+    variant="filled"
+    mode="sidebar"
+    mode-lg="fixed"
+    style="width: 200px"
+  >
+    <div
+      slot="header"
+      style="padding: 12px 16px; display: flex; align-items: center; justify-content: space-between"
+    >
       <strong>Inbox</strong>
       <u-icon-button onclick="document.getElementById('list-detail-nav').close()">
         <span class="material-symbols-outlined">close</span>
@@ -18,39 +27,70 @@
     </u-list>
   </u-pane>
 
-  <u-pane mode="fixed" variant="filled" style="flex: 1 1 0; min-width: 0;">
-    <div slot="header" style="display: flex; align-items: center; gap: 8px; padding: 10px 12px;">
+  <u-pane
+    variant="filled"
+    mode="fixed"
+    style="flex: 1 1 0; min-width: 0"
+  >
+    <div
+      slot="header"
+      style="display: flex; align-items: center; gap: 8px; padding: 10px 12px"
+    >
       <u-icon-button onclick="document.getElementById('list-detail-nav').show()">
         <span class="material-symbols-outlined">menu</span>
       </u-icon-button>
-      <strong style="font-size: 14px;">Primary · 5 messages</strong>
+      <strong style="font-size: 14px">Primary · 5 messages</strong>
     </div>
     <u-list>
-      <u-list-item selectable onclick="openMessage('Welcome to Material 3', 'Design Team', 'A short note about the new release and what to look out for.')">
+      <u-list-item
+        selectable
+        onclick="openMessage('Welcome to Material 3', 'Design Team', 'A short note about the new release and what to look out for.')"
+      >
         Welcome to Material 3
         <span slot="supporting-text">Design Team · A short note about the new release.</span>
       </u-list-item>
-      <u-list-item selectable onclick="openMessage('Sprint planning Thursday', 'Project Lead', 'Agenda attached — please review priorities before the call.')">
+      <u-list-item
+        selectable
+        onclick="openMessage('Sprint planning Thursday', 'Project Lead', 'Agenda attached — please review priorities before the call.')"
+      >
         Sprint planning Thursday
         <span slot="supporting-text">Project Lead · Agenda attached for the call.</span>
       </u-list-item>
-      <u-list-item selectable onclick="openMessage('Your invoice is ready', 'Billing', 'Invoice #482 covers the month of May and is available to download.')">
+      <u-list-item
+        selectable
+        onclick="openMessage('Your invoice is ready', 'Billing', 'Invoice #482 covers the month of May and is available to download.')"
+      >
         Your invoice is ready
         <span slot="supporting-text">Billing · Invoice #482 for May.</span>
       </u-list-item>
-      <u-list-item selectable onclick="openMessage('You have 3 new followers', 'Social', 'Tap to see who connected with you this week.')">
+      <u-list-item
+        selectable
+        onclick="openMessage('You have 3 new followers', 'Social', 'Tap to see who connected with you this week.')"
+      >
         You have 3 new followers
         <span slot="supporting-text">Social · Three new connections this week.</span>
       </u-list-item>
-      <u-list-item selectable onclick="openMessage('Build #4821 passed', 'CI', 'main · 6m 12s · staging deploy queued.')">
+      <u-list-item
+        selectable
+        onclick="openMessage('Build #4821 passed', 'CI', 'main · 6m 12s · staging deploy queued.')"
+      >
         Build #4821 passed
         <span slot="supporting-text">CI · main · 6m 12s · staging deploy queued.</span>
       </u-list-item>
     </u-list>
   </u-pane>
 
-  <u-pane mode="fullscreen" mode-md="fixed" variant="filled" id="list-detail-message" style="flex: 1 1 0; min-width: 0;">
-    <div slot="header" style="display: flex; align-items: center; gap: 4px; padding: 8px 12px;">
+  <u-pane
+    id="list-detail-message"
+    variant="filled"
+    mode="fullscreen"
+    mode-md="fixed"
+    style="flex: 1 1 0; min-width: 0"
+  >
+    <div
+      slot="header"
+      style="display: flex; align-items: center; gap: 4px; padding: 8px 12px"
+    >
       <u-icon-button onclick="document.getElementById('list-detail-message').close()">
         <span class="material-symbols-outlined">arrow_back</span>
       </u-icon-button>
@@ -59,19 +99,35 @@
       <u-icon-button><span class="material-symbols-outlined">delete</span></u-icon-button>
       <u-icon-button><span class="material-symbols-outlined">more_vert</span></u-icon-button>
     </div>
-    <div style="padding: 0 24px 24px;">
-      <h3 id="list-detail-subject" style="margin: 0 0 12px; font-size: 20px;">Select a message</h3>
-      <p id="list-detail-sender" style="margin: 0 0 4px; font-size: 13px; color: var(--u-color-on-surface-variant);">—</p>
-      <p id="list-detail-body" style="margin: 16px 0 0; line-height: 1.6;">Pick a message from the list to read it here. On narrow viewports (≤ 840px) this pane will take over the scaffold — the back button slides it away.</p>
+    <div style="padding: 0 24px 24px">
+      <h3
+        id="list-detail-subject"
+        style="margin: 0 0 12px; font-size: 20px"
+      >
+        Select a message
+      </h3>
+      <p
+        id="list-detail-sender"
+        style="margin: 0 0 4px; font-size: 13px; color: var(--u-color-on-surface-variant)"
+      >
+        —
+      </p>
+      <p
+        id="list-detail-body"
+        style="margin: 16px 0 0; line-height: 1.6"
+      >
+        Pick a message from the list to read it here. On narrow viewports (≤ 840px) this pane will take over the
+        scaffold — the back button slides it away.
+      </p>
     </div>
   </u-pane>
 </u-scaffold>
 
 <script>
   function openMessage(subject, sender, body) {
-    document.getElementById('list-detail-subject').textContent = subject;
-    document.getElementById('list-detail-sender').textContent = sender;
-    document.getElementById('list-detail-body').textContent = body;
-    document.getElementById('list-detail-message').show();
+    document.getElementById("list-detail-subject").textContent = subject;
+    document.getElementById("list-detail-sender").textContent = sender;
+    document.getElementById("list-detail-body").textContent = body;
+    document.getElementById("list-detail-message").show();
   }
 </script>

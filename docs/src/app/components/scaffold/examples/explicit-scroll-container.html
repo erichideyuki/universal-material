@@ -1,4 +1,6 @@
-<u-scaffold style="height: 480px; border: 1px solid var(--u-color-outline-variant, rgba(0,0,0,.12)); border-radius: 12px;">
+<u-scaffold
+  style="height: 480px; border: 1px solid var(--u-color-outline-variant, rgba(0, 0, 0, 0.12)); border-radius: 12px"
+>
   <u-top-app-bar
     slot="top-bar"
     size="small"
@@ -10,8 +12,15 @@
     </u-icon-button>
   </u-top-app-bar>
 
-  <div id="explicit-scroll-body" style="padding: 16px 24px; overflow: auto;">
-    <p>The scaffold no longer publishes a scroll-container via Lit context. By default the top app bar listens to the window — point it at a specific element with <code>scrollContainer</code> (here, this <code>&lt;div&gt;</code>) when you want it to react to in-scaffold scroll instead.</p>
+  <div
+    id="explicit-scroll-body"
+    style="padding: 16px 24px; overflow: auto"
+  >
+    <p>
+      The scaffold no longer publishes a scroll-container via Lit context. By default the top app bar listens to the
+      window — point it at a specific element with <code>scrollContainer</code> (here, this <code>&lt;div&gt;</code>)
+      when you want it to react to in-scaffold scroll instead.
+    </p>
     <p>Try <code>scrollContainer="none"</code> if you want to disable scroll reactivity entirely.</p>
     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
     <p>Aenean commodo ligula eget dolor. Aenean massa.</p>
@@ -24,7 +33,10 @@
     <p>Curabitur ullamcorper ultricies nisi. Nam eget dui.</p>
   </div>
 
-  <u-fab slot="fab" color="secondary">
+  <u-fab
+    slot="fab"
+    color="secondary"
+  >
     <span class="material-symbols-outlined">add</span>
   </u-fab>
 </u-scaffold>

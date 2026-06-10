@@ -10,20 +10,18 @@ A container for related content. Three visual variants — `filled` (default), `
 
 `<u-card>` wraps the default slot in an internal padded region automatically. It exposes three slots:
 
-| Slot | Purpose |
-| --- | --- |
+| Slot             | Purpose                                                                                                                 |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | `before-content` | Banner / media / hero placed flush to the card edges (no padding). Use for `<u-card-media>` or any custom hero element. |
-| default | Body content. Gets the standard 16dp padding from the card itself. |
-| `after-content` | Footer placed flush to the bottom edge (no padding). Use for full-bleed action bars. |
+| default          | Body content. Gets the standard 16dp padding from the card itself.                                                      |
+| `after-content`  | Footer placed flush to the bottom edge (no padding). Use for full-bleed action bars.                                    |
 
 ## Basic
 
 ```html
 <u-card>
   <div class="u-title-l">Article title</div>
-  <div class="u-body-m u-text-low-emphasis">
-    Supporting paragraph with a short summary of the article content.
-  </div>
+  <div class="u-body-m u-text-low-emphasis">Supporting paragraph with a short summary of the article content.</div>
 </u-card>
 ```
 
@@ -32,7 +30,8 @@ Body content goes **directly** inside `<u-card>`. The card pads it for you.
 ## Variants
 
 ```html
-<u-card variant="filled">…</u-card>     <!-- default -->
+<u-card variant="filled">…</u-card>
+<!-- default -->
 <u-card variant="outlined">…</u-card>
 <u-card variant="elevated">…</u-card>
 ```
@@ -71,7 +70,10 @@ Place `<u-card-media>` in `slot="before-content"` so it sits flush against the c
 ```html
 <u-card variant="outlined">
   <u-card-media slot="before-content">
-    <img src="…" alt="" />
+    <img
+      src="…"
+      alt=""
+    />
   </u-card-media>
 
   <div class="u-title-l">Card with media</div>
@@ -82,24 +84,42 @@ Place `<u-card-media>` in `slot="before-content"` so it sits flush against the c
 `<u-card-media>` defaults to a square aspect ratio. Add the `wide` attribute for 16:9:
 
 ```html
-<u-card-media wide slot="before-content">
-  <img src="…" alt="" />
+<u-card-media
+  slot="before-content"
+  wide
+>
+  <img
+    src="…"
+    alt=""
+  />
 </u-card-media>
 ```
 
-**Banner caveat:** `wide` sets a 16:9 *aspect ratio*, so at full container width the media becomes very tall (≈1200px on a wide page; the default square is worse). For a profile/detail **banner**, set an explicit height instead of `wide`:
+**Banner caveat:** `wide` sets a 16:9 _aspect ratio_, so at full container width the media becomes very tall (≈1200px on a wide page; the default square is worse). For a profile/detail **banner**, set an explicit height instead of `wide`:
 
 ```html
-<u-card-media slot="before-content" style="height: 180px">…</u-card-media>
+<u-card-media
+  slot="before-content"
+  style="height: 180px"
+  >…</u-card-media
+>
 ```
 
 For a profile header (banner with an avatar straddling its bottom edge), pull the body up over the flush media with a negative top margin:
 
 ```html
 <u-card variant="outlined">
-  <u-card-media slot="before-content" style="height: 160px">…</u-card-media>
+  <u-card-media
+    slot="before-content"
+    style="height: 160px"
+    >…</u-card-media
+  >
   <div style="display: flex; align-items: flex-end; gap: 16px; margin-top: -48px">
-    <span class="avatar" style="border: 4px solid var(--u-color-surface)">AB</span>
+    <span
+      class="avatar"
+      style="border: 4px solid var(--u-color-surface)"
+      >AB</span
+    >
     <div class="u-title-l">Name</div>
   </div>
 </u-card>
@@ -112,9 +132,7 @@ Put action buttons inside a `<u-button-set>` at the bottom of the card:
 ```html
 <u-card variant="outlined">
   <div class="u-title-l">Confirm subscription</div>
-  <p class="u-body-m u-text-low-emphasis">
-    You'll receive weekly updates by email.
-  </p>
+  <p class="u-body-m u-text-low-emphasis">You'll receive weekly updates by email.</p>
   <u-button-set>
     <u-button variant="text">Not now</u-button>
     <u-button>Subscribe</u-button>
@@ -129,7 +147,10 @@ For full-bleed footers (e.g. a divider + action bar that touches both card edges
   <div class="u-title-l">Card with full-bleed footer</div>
   <p class="u-body-m">Body content with the standard padding.</p>
 
-  <div slot="after-content" style="border-top: 1px solid var(--u-color-outline-variant); padding: 12px 16px;">
+  <div
+    slot="after-content"
+    style="border-top: 1px solid var(--u-color-outline-variant); padding: 12px 16px;"
+  >
     <u-button variant="text">Action</u-button>
   </div>
 </u-card>
@@ -141,10 +162,21 @@ When you need a chip, badge or icon overlaid on the media, wrap your media in a 
 
 ```html
 <u-card>
-  <u-card-media wide slot="before-content">
+  <u-card-media
+    slot="before-content"
+    wide
+  >
     <div style="position: relative; width: 100%; height: 100%;">
-      <img src="…" alt="" style="width: 100%; height: 100%; object-fit: cover;" />
-      <u-chip elevated style="position: absolute; top: 8px; left: 8px;">New</u-chip>
+      <img
+        src="…"
+        alt=""
+        style="width: 100%; height: 100%; object-fit: cover;"
+      />
+      <u-chip
+        elevated
+        style="position: absolute; top: 8px; left: 8px;"
+        >New</u-chip
+      >
     </div>
   </u-card-media>
 

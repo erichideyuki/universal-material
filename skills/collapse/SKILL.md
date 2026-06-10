@@ -13,17 +13,26 @@ A primitive wrapper that animates its `max-height` between `0` and the slotted c
 </u-collapse>
 
 <script type="module">
-  const btn = document.getElementById('toggle');
-  const collapse = document.getElementById('demo');
-  btn.addEventListener('click', () => { collapse.open = !collapse.open; });
+  const btn = document.getElementById("toggle");
+  const collapse = document.getElementById("demo");
+  btn.addEventListener("click", () => {
+    collapse.open = !collapse.open;
+  });
 </script>
 ```
 
 Compose with other surfaces:
 
 ```html
-<u-card variant="outlined" style="padding: 1rem;">
-  <u-button variant="text" onclick="this.nextElementSibling.open = !this.nextElementSibling.open">More</u-button>
+<u-card
+  variant="outlined"
+  style="padding: 1rem;"
+>
+  <u-button
+    variant="text"
+    onclick="this.nextElementSibling.open = !this.nextElementSibling.open"
+    >More</u-button
+  >
   <u-collapse>
     <div style="padding-top: .5rem;">Reveal-on-demand content.</div>
   </u-collapse>

@@ -21,8 +21,7 @@
   chipField.formatter = formatter;
 
   const typeahead = document.querySelector("u-typeahead");
-  typeahead.source = (term) =>
-    states.filter((s) => s.name.toLowerCase().includes(term.toLowerCase()));
+  typeahead.source = (term) => states.filter((s) => s.name.toLowerCase().includes(term.toLowerCase()));
   typeahead.formatter = formatter;
 
   // The typeahead dispatches a `selected` event — listen for it (do NOT assign a

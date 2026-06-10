@@ -1,5 +1,8 @@
 <u-scaffold>
-  <u-top-app-bar slot="top-bar" headline="End pane — fullscreen collapse">
+  <u-top-app-bar
+    slot="top-bar"
+    headline="End pane — fullscreen collapse"
+  >
     <u-icon-button
       slot="leading-icon"
       routerLink="/components/scaffold"
@@ -10,12 +13,24 @@
   </u-top-app-bar>
 
   <div class="screen-content">
-    <p>Below <code>md</code> the pane covers the scaffold. DOM order puts it after the body, so the slide-in animates from the trailing edge.</p>
+    <p>
+      Below <code>md</code> the pane covers the scaffold. DOM order puts it after the body, so the slide-in animates
+      from the trailing edge.
+    </p>
     <u-button (click)="$any(pane).show()">Open editor</u-button>
   </div>
 
-  <u-pane mode="fullscreen" mode-md="fixed" variant="filled" #pane style="width: 360px;">
-    <div slot="header" class="pane-header">
+  <u-pane
+    variant="filled"
+    mode="fullscreen"
+    mode-md="fixed"
+    #pane
+    style="width: 360px"
+  >
+    <div
+      class="pane-header"
+      slot="header"
+    >
       <strong>Editor</strong>
       <u-icon-button (click)="$any(pane).close()">
         <span class="material-symbols-outlined">close</span>

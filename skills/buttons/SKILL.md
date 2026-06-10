@@ -22,7 +22,11 @@ With an icon (default position: before the label):
 
 ```html
 <u-button>
-  <span class="material-symbols-outlined" slot="icon">save</span>
+  <span
+    class="material-symbols-outlined"
+    slot="icon"
+    >save</span
+  >
   Save
 </u-button>
 ```
@@ -32,7 +36,11 @@ Trailing icon:
 ```html
 <u-button trailing-icon>
   Open
-  <span class="material-symbols-outlined" slot="icon">arrow_outward</span>
+  <span
+    class="material-symbols-outlined"
+    slot="icon"
+    >arrow_outward</span
+  >
 </u-button>
 ```
 
@@ -52,9 +60,21 @@ Trailing icon:
 ## Toggling
 
 ```html
-<u-button toggle [selected]="favorited" (change)="favorited = $event.target.selected">
-  <span class="material-symbols-outlined" slot="icon">favorite_border</span>
-  <span class="material-symbols-outlined" slot="icon-selected">favorite</span>
+<u-button
+  toggle
+  [selected]="favorited"
+  (change)="favorited = $event.target.selected"
+>
+  <span
+    class="material-symbols-outlined"
+    slot="icon"
+    >favorite_border</span
+  >
+  <span
+    class="material-symbols-outlined"
+    slot="icon-selected"
+    >favorite</span
+  >
   Favorite
 </u-button>
 ```
@@ -72,7 +92,10 @@ Use `toggle-shape` to morph between `round` and `square` when toggled.
   <span class="material-symbols-outlined">favorite</span>
 </u-icon-button>
 
-<u-icon-button variant="filled" color="primary">
+<u-icon-button
+  variant="filled"
+  color="primary"
+>
   <span class="material-symbols-outlined">add</span>
 </u-icon-button>
 ```
@@ -84,7 +107,11 @@ For toggle icon buttons, use the `selected` slot for the "active" icon:
 ```html
 <u-icon-button toggle>
   <span class="material-symbols-outlined">favorite_border</span>
-  <span class="material-symbols-outlined" slot="selected">favorite</span>
+  <span
+    class="material-symbols-outlined"
+    slot="selected"
+    >favorite</span
+  >
 </u-icon-button>
 ```
 

@@ -38,7 +38,10 @@ Inside a `<u-scaffold>`, drop the FAB in the `fab` slot — it's anchored to the
 ```html
 <u-scaffold>
   <!-- … top-bar, content, bottom-bar … -->
-  <u-fab slot="fab" color="primary">
+  <u-fab
+    slot="fab"
+    color="primary"
+  >
     <span class="material-symbols-outlined">edit</span>
   </u-fab>
 </u-scaffold>
@@ -52,7 +55,11 @@ A FAB that toggles into multiple `<u-fab-menu-item>`s when clicked:
 
 ```html
 <u-fab-menu color="primary">
-  <span class="material-symbols-outlined" slot="icon">add</span>
+  <span
+    class="material-symbols-outlined"
+    slot="icon"
+    >add</span
+  >
 
   <u-fab-menu-item label="New doc">
     <span class="material-symbols-outlined">description</span>
@@ -67,6 +74,7 @@ A FAB that toggles into multiple `<u-fab-menu-item>`s when clicked:
 ```
 
 Slots on `<u-fab-menu>`:
+
 - `icon` — the closed-state icon (e.g. `add`),
 - `close-icon` — the open-state icon (defaults to an "×").
 

@@ -2,11 +2,9 @@
   kind="foundation"
   title="Using with Vue 3"
 >
-  Vue 3 consumes the <code>&lt;u-*&gt;</code> elements natively — there is
-  <strong>no runtime wrapper</strong> to install. The one mandatory step is
-  telling the template compiler that <code>u-*</code> tags are custom elements
-  via <code>isCustomElement</code>; prop binding, event listening and
-  <code>v-model</code> then work out of the box.
+  Vue 3 consumes the <code>&lt;u-*&gt;</code> elements natively — there is <strong>no runtime wrapper</strong> to
+  install. The one mandatory step is telling the template compiler that <code>u-*</code> tags are custom elements via
+  <code>isCustomElement</code>; prop binding, event listening and <code>v-model</code> then work out of the box.
 </docs-title>
 
 <docs-example
@@ -15,11 +13,9 @@
   [html]="viteConfigHtml"
   [language]="'typescript'"
 >
-  Without this, Vue logs <code>Failed to resolve component: u-button</code>.
-  <code>isCustomElement</code> is a <strong>compile-time</strong> option, so it
-  must go in the build config (Vite / Vue CLI), not
-  <code>app.config.compilerOptions</code>. Prefer the precise
-  <code>tag.startsWith('u-')</code> predicate over the broad
+  Without this, Vue logs <code>Failed to resolve component: u-button</code>. <code>isCustomElement</code> is a
+  <strong>compile-time</strong> option, so it must go in the build config (Vite / Vue CLI), not
+  <code>app.config.compilerOptions</code>. Prefer the precise <code>tag.startsWith('u-')</code> predicate over the broad
   <code>tag.includes('-')</code>.
 </docs-example>
 
@@ -29,8 +25,8 @@
   [html]="mainImportHtml"
   [language]="'typescript'"
 >
-  Import <code>&#64;universal-material/web</code> once for its side effect — that
-  runs every <code>&#64;customElement('u-…')</code> registration.
+  Import <code>&#64;universal-material/web</code> once for its side effect — that runs every
+  <code>&#64;customElement('u-…')</code> registration.
 </docs-example>
 
 <docs-example
@@ -40,9 +36,8 @@
   [language]="'html'"
 >
   Vue checks whether a binding key exists as a DOM property on the element (an
-  <code>in</code> check) and sets it as a property when it does, else an
-  attribute. Use <code>.prop</code> to force a property and <code>.attr</code> to
-  force an attribute when the heuristic guesses wrong. Listen with
+  <code>in</code> check) and sets it as a property when it does, else an attribute. Use <code>.prop</code> to force a
+  property and <code>.attr</code> to force an attribute when the heuristic guesses wrong. Listen with
   <code>&#64;event</code> and read the payload off the native event.
 </docs-example>
 
@@ -53,17 +48,14 @@
   [stackblitz]="{ framework: 'vue' }"
   [language]="'html'"
 >
-  Because a tag matched by <code>isCustomElement</code> is a plain element, Vue
-  uses the <strong>native</strong> <code>v-model</code> expansion (<code>:value</code>
-  + <code>@input</code>), not the component
+  Because a tag matched by <code>isCustomElement</code> is a plain element, Vue uses the <strong>native</strong>
+  <code>v-model</code> expansion (<code>:value</code> + <code>&#64;input</code>), not the component
   <code>modelValue</code>/<code>update:modelValue</code> expansion.
 
   <p>
-    <strong>Mental model:</strong> on a <code>u-*</code> element,
-    <code>v-model="x"</code> ≡
-    <code>:value="x" &#64;input="x = $event.target.value"</code>. When the
-    component doesn't expose <code>value</code> + <code>input</code>, bind
-    <code>:prop</code> and <code>@event</code> explicitly.
+    <strong>Mental model:</strong> on a <code>u-*</code> element, <code>v-model="x"</code> ≡
+    <code>:value="x" &#64;input="x = $event.target.value"</code>. When the component doesn't expose <code>value</code> +
+    <code>input</code>, bind <code>:prop</code> and <code>&#64;event</code> explicitly.
   </p>
 
   <table class="u-table">
@@ -92,13 +84,13 @@
         <td><code>u-select</code></td>
         <td><code>value: string</code></td>
         <td><code>input</code> + <code>change</code> (not composed); <code>$event.target.value</code></td>
-        <td><code>v-model="choice"</code> or <code>:value</code> + <code>@change</code></td>
+        <td><code>v-model="choice"</code> or <code>:value</code> + <code>&#64;change</code></td>
       </tr>
       <tr>
         <td><code>u-checkbox</code>, <code>u-switch</code>, <code>u-radio</code></td>
         <td><code>checked: boolean</code></td>
         <td><code>change</code>; value on <code>$event.target.checked</code></td>
-        <td><code>:checked</code> + <code>@change="x = $event.target.checked"</code></td>
+        <td><code>:checked</code> + <code>&#64;change="x = $event.target.checked"</code></td>
       </tr>
       <tr>
         <td><code>u-slider</code></td>
@@ -110,13 +102,15 @@
         <td><code>u-chip-field</code></td>
         <td><code>value: any[]</code></td>
         <td><code>change</code> (array, not at <code>target.value</code>… read <code>$event.target.value</code>)</td>
-        <td><code>:value</code> + <code>@change="rows = $event.target.value"</code></td>
+        <td><code>:value</code> + <code>&#64;change="rows = $event.target.value"</code></td>
       </tr>
       <tr>
         <td><code>u-typeahead</code></td>
         <td><code>value: any</code></td>
         <td><code>input</code> + <code>change</code> + <code>selected</code> (<code>CustomEvent</code>)</td>
-        <td><code>:value</code> + <code>@input</code>; <code>@selected</code> reads <code>$event.detail</code></td>
+        <td>
+          <code>:value</code> + <code>&#64;input</code>; <code>&#64;selected</code> reads <code>$event.detail</code>
+        </td>
       </tr>
       <tr>
         <td><code>u-button-field</code></td>
@@ -134,12 +128,10 @@
   [html]="typescriptHtml"
   [language]="'typescript'"
 >
-  Augment Vue's <code>GlobalComponents</code> with the
-  <code>DefineCustomElement&lt;&gt;</code> helper so <code>&lt;u-*&gt;</code>
-  tags get autocomplete and type-checking in templates. Pass the element class
-  (the Lit <code>Button</code>, <code>Select</code>, …) so its
-  <code>&#64;property</code> fields become typed template props. Without it the
-  tags still render — you just lose IntelliSense.
+  Augment Vue's <code>GlobalComponents</code> with the <code>DefineCustomElement&lt;&gt;</code> helper so
+  <code>&lt;u-*&gt;</code> tags get autocomplete and type-checking in templates. Pass the element class (the Lit
+  <code>Button</code>, <code>Select</code>, …) so its <code>&#64;property</code> fields become typed template props.
+  Without it the tags still render — you just lose IntelliSense.
 </docs-example>
 
 <docs-example
@@ -148,10 +140,8 @@
   [html]="mainImportHtml"
   [language]="'typescript'"
 >
-  Custom elements aren't defined on the server (<code>customElements</code> is
-  undefined in Node). Import the library and render <code>u-*</code> tags
-  <strong>client-side only</strong> — a Nuxt <code>.client.ts</code> plugin with
-  <code>&lt;ClientOnly&gt;</code> or an <code>import.meta.client</code> guard —
-  or you'll hit <code>customElements is not defined</code> / hydration
-  mismatches.
+  Custom elements aren't defined on the server (<code>customElements</code> is undefined in Node). Import the library
+  and render <code>u-*</code> tags <strong>client-side only</strong> — a Nuxt <code>.client.ts</code> plugin with
+  <code>&lt;ClientOnly&gt;</code> or an <code>import.meta.client</code> guard — or you'll hit
+  <code>customElements is not defined</code> / hydration mismatches.
 </docs-example>

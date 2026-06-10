@@ -1,5 +1,8 @@
 <u-scaffold>
-  <u-top-app-bar slot="top-bar" headline="End pane — sidebar collapse">
+  <u-top-app-bar
+    slot="top-bar"
+    headline="End pane — sidebar collapse"
+  >
     <u-icon-button
       slot="leading-icon"
       routerLink="/components/scaffold"
@@ -10,12 +13,24 @@
   </u-top-app-bar>
 
   <div class="screen-content">
-    <p>On a viewport ≥ 1200px (<code>lg</code>) the end pane is permanent on the right. Below that, it opens as a modal sidebar from the trailing edge — DOM order (pane after body) drives the slide direction.</p>
+    <p>
+      On a viewport ≥ 1200px (<code>lg</code>) the end pane is permanent on the right. Below that, it opens as a modal
+      sidebar from the trailing edge — DOM order (pane after body) drives the slide direction.
+    </p>
     <u-button (click)="$any(pane).show()">Open details</u-button>
   </div>
 
-  <u-pane mode="sidebar" mode-lg="fixed" variant="filled" #pane style="width: 280px;">
-    <div slot="header" class="pane-header">
+  <u-pane
+    variant="filled"
+    mode="sidebar"
+    mode-lg="fixed"
+    #pane
+    style="width: 280px"
+  >
+    <div
+      class="pane-header"
+      slot="header"
+    >
       <strong>Inspector</strong>
       <u-icon-button (click)="$any(pane).close()">
         <span class="material-symbols-outlined">close</span>

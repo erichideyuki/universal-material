@@ -15,15 +15,27 @@ A floating surface anchored to a trigger. Open with `.show()`/`.toggle()`/`.clos
 
 <u-menu #menu>
   <u-menu-item>
-    <span class="material-symbols-outlined" slot="leading-icon">edit</span>
+    <span
+      class="material-symbols-outlined"
+      slot="leading-icon"
+      >edit</span
+    >
     Edit
   </u-menu-item>
   <u-menu-item>
-    <span class="material-symbols-outlined" slot="leading-icon">content_copy</span>
+    <span
+      class="material-symbols-outlined"
+      slot="leading-icon"
+      >content_copy</span
+    >
     Duplicate
   </u-menu-item>
   <u-menu-item>
-    <span class="material-symbols-outlined" slot="leading-icon">delete</span>
+    <span
+      class="material-symbols-outlined"
+      slot="leading-icon"
+      >delete</span
+    >
     Delete
   </u-menu-item>
 </u-menu>
@@ -43,7 +55,11 @@ menu.anchorElement = triggerButton;
 For a dropdown right under the trigger, the defaults work. For a "more" menu in a top app bar, use `anchor-corner="end-end"`:
 
 ```html
-<u-menu anchor-corner="end-end" direction="down-start">…</u-menu>
+<u-menu
+  anchor-corner="end-end"
+  direction="down-start"
+  >…</u-menu
+>
 ```
 
 ## Clipped containers
@@ -80,7 +96,10 @@ A horizontal row of `<u-overflow-menu-item>`s that automatically collapses items
   </u-overflow-menu-item>
 
   <!-- Items marked collapse="always" never render inline -->
-  <u-overflow-menu-item label="Delete" collapse="always">
+  <u-overflow-menu-item
+    label="Delete"
+    collapse="always"
+  >
     <span class="material-symbols-outlined">delete</span>
   </u-overflow-menu-item>
 </u-overflow-menu>
@@ -98,15 +117,27 @@ Mark every item `collapse="always"` so nothing renders inline and only the "more
 
 ```html
 <u-overflow-menu menuPositioning="fixed">
-  <u-overflow-menu-item label="Ver" collapse="always"><span class="material-symbols-outlined">visibility</span></u-overflow-menu-item>
-  <u-overflow-menu-item label="Editar" collapse="always"><span class="material-symbols-outlined">edit</span></u-overflow-menu-item>
-  <u-overflow-menu-item label="Excluir" collapse="always"><span class="material-symbols-outlined">delete</span></u-overflow-menu-item>
+  <u-overflow-menu-item
+    label="Ver"
+    collapse="always"
+    ><span class="material-symbols-outlined">visibility</span></u-overflow-menu-item
+  >
+  <u-overflow-menu-item
+    label="Editar"
+    collapse="always"
+    ><span class="material-symbols-outlined">edit</span></u-overflow-menu-item
+  >
+  <u-overflow-menu-item
+    label="Excluir"
+    collapse="always"
+    ><span class="material-symbols-outlined">delete</span></u-overflow-menu-item
+  >
 </u-overflow-menu>
 
 <script>
-  table.addEventListener('click', (e) => {
-    const item = e.target.closest('u-overflow-menu-item');
-    if (item) doAction(item.getAttribute('label'), e.target.closest('tr'));
+  table.addEventListener("click", (e) => {
+    const item = e.target.closest("u-overflow-menu-item");
+    if (item) doAction(item.getAttribute("label"), e.target.closest("tr"));
   });
 </script>
 ```

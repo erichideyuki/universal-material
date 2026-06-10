@@ -1,14 +1,13 @@
 <u-button (click)="askConfirm()">Delete item</u-button>
 
 <script type="module">
-  import { Dialog } from '@universal-material/web';
+  import { Dialog } from "@universal-material/web";
 
   async function askConfirm() {
-    const ok = await Dialog
-      .confirm('This action cannot be undone. Continue?')
-      .headline('Delete item')
-      .confirmButton({ label: 'Delete', variant: 'filled', color: 'error' })
-      .cancelButton({ label: 'Keep it' })
+    const ok = await Dialog.confirm("This action cannot be undone. Continue?")
+      .headline("Delete item")
+      .confirmButton({ label: "Delete", variant: "filled", color: "error" })
+      .cancelButton({ label: "Keep it" })
       .show();
 
     if (ok) {

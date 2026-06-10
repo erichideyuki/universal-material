@@ -1,6 +1,17 @@
-<u-scaffold style="height: 480px; border: 1px solid var(--u-color-outline-variant, rgba(0,0,0,.12)); border-radius: 12px;">
-  <u-pane mode="sidebar" mode-lg="fixed" variant="filled" id="start-sidebar-pane" style="width: 220px;">
-    <div slot="header" style="padding: 12px 16px; display: flex; align-items: center; justify-content: space-between;">
+<u-scaffold
+  style="height: 480px; border: 1px solid var(--u-color-outline-variant, rgba(0, 0, 0, 0.12)); border-radius: 12px"
+>
+  <u-pane
+    id="start-sidebar-pane"
+    variant="filled"
+    mode="sidebar"
+    mode-lg="fixed"
+    style="width: 220px"
+  >
+    <div
+      slot="header"
+      style="padding: 12px 16px; display: flex; align-items: center; justify-content: space-between"
+    >
       <strong>Navigation</strong>
       <u-icon-button onclick="document.getElementById('start-sidebar-pane').close()">
         <span class="material-symbols-outlined">close</span>
@@ -13,8 +24,11 @@
     </u-list>
   </u-pane>
 
-  <div style="padding: 16px 24px;">
-    <p>On a viewport ≥ 1200px (<code>lg</code>) the pane is permanent and joins the flex row. Shrink the window below <code>lg</code> to see it collapse to a sidebar overlay — open it with the button below.</p>
+  <div style="padding: 16px 24px">
+    <p>
+      On a viewport ≥ 1200px (<code>lg</code>) the pane is permanent and joins the flex row. Shrink the window below
+      <code>lg</code> to see it collapse to a sidebar overlay — open it with the button below.
+    </p>
     <u-button onclick="document.getElementById('start-sidebar-pane').show()">Open start pane</u-button>
   </div>
 </u-scaffold>

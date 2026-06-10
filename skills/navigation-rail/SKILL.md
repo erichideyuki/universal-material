@@ -17,40 +17,75 @@ description: Build a Material 3 responsive navigation rail — hidden on mobile,
 ```html
 <u-navigation-rail id="nav">
   <!-- Collapsed: short list of primary destinations -->
-  <u-navigation-rail-item slot="rail" active>
-    <span class="material-symbols-outlined" slot="icon">home</span>
+  <u-navigation-rail-item
+    slot="rail"
+    active
+  >
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >home</span
+    >
     Home
   </u-navigation-rail-item>
   <u-navigation-rail-item slot="rail">
-    <span class="material-symbols-outlined" slot="icon">explore</span>
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >explore</span
+    >
     Browse
   </u-navigation-rail-item>
   <u-navigation-rail-item slot="rail">
-    <span class="material-symbols-outlined" slot="icon">library_music</span>
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >library_music</span
+    >
     Library
   </u-navigation-rail-item>
 
   <!-- Expanded: full menu, grouped with headlines -->
   <u-navigation-rail-headline slot="expanded">Library</u-navigation-rail-headline>
-  <u-navigation-rail-item slot="expanded" active>
-    <span class="material-symbols-outlined" slot="icon">home</span>
+  <u-navigation-rail-item
+    slot="expanded"
+    active
+  >
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >home</span
+    >
     Home
   </u-navigation-rail-item>
   <u-navigation-rail-item slot="expanded">
-    <span class="material-symbols-outlined" slot="icon">explore</span>
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >explore</span
+    >
     Browse
   </u-navigation-rail-item>
 
   <u-navigation-rail-headline slot="expanded">Recents</u-navigation-rail-headline>
   <u-navigation-rail-item slot="expanded">
-    <span class="material-symbols-outlined" slot="icon">favorite</span>
+    <span
+      class="material-symbols-outlined"
+      slot="icon"
+      >favorite</span
+    >
     Favorites
   </u-navigation-rail-item>
 
   <u-scaffold>
-    <u-top-app-bar slot="top-bar" headline="Mail">
-      <u-icon-button slot="leading-icon"
-        onclick="const r = this.closest('u-navigation-rail'); r.toggleDrawer = !r.toggleDrawer;">
+    <u-top-app-bar
+      slot="top-bar"
+      headline="Mail"
+    >
+      <u-icon-button
+        slot="leading-icon"
+        onclick="const r = this.closest('u-navigation-rail'); r.toggleDrawer = !r.toggleDrawer;"
+      >
         <span class="material-symbols-outlined">menu</span>
       </u-icon-button>
     </u-top-app-bar>
@@ -61,13 +96,13 @@ description: Build a Material 3 responsive navigation rail — hidden on mobile,
 
 ## Slots on `<u-navigation-rail>`
 
-| Slot | Content | Shown when |
-| --- | --- | --- |
-| `rail` | Primary destinations (`<u-navigation-rail-item>`s). | Collapsed state (mobile is hidden; md is permanent; lg shows when `toggle-drawer` is set). |
-| `expanded` | Full destination list — items + `<u-navigation-rail-headline>`s. | Expanded state (lg without `toggle-drawer`). Falls back to `rail` when empty. |
-| `top` | Menu button, brand mark, or other top-pinned content. | Always (within visible rail). |
-| `bottom` | FAB or secondary action pinned to the bottom. | Always (within visible rail). |
-| default | Page content (typically `<u-scaffold>`). | Always. |
+| Slot       | Content                                                          | Shown when                                                                                 |
+| ---------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `rail`     | Primary destinations (`<u-navigation-rail-item>`s).              | Collapsed state (mobile is hidden; md is permanent; lg shows when `toggle-drawer` is set). |
+| `expanded` | Full destination list — items + `<u-navigation-rail-headline>`s. | Expanded state (lg without `toggle-drawer`). Falls back to `rail` when empty.              |
+| `top`      | Menu button, brand mark, or other top-pinned content.            | Always (within visible rail).                                                              |
+| `bottom`   | FAB or secondary action pinned to the bottom.                    | Always (within visible rail).                                                              |
+| default    | Page content (typically `<u-scaffold>`).                         | Always.                                                                                    |
 
 The rail crossfades (200ms) between the `rail` and `expanded` layers when its state changes.
 
@@ -81,8 +116,15 @@ The rail sets the item's `variant` automatically based on which slot it lives in
 Slots: default (label), `icon` (24dp icon), `badge` (optional `<u-badge>`).
 
 ```html
-<u-navigation-rail-item slot="expanded" active>
-  <span class="material-symbols-outlined" slot="icon">inbox</span>
+<u-navigation-rail-item
+  slot="expanded"
+  active
+>
+  <span
+    class="material-symbols-outlined"
+    slot="icon"
+    >inbox</span
+  >
   Inbox
   <u-badge slot="badge">12</u-badge>
 </u-navigation-rail-item>
@@ -109,11 +151,12 @@ Sources: `md.comp.nav-rail`, `md.comp.nav-rail-collapsed`, `md.comp.nav-rail-exp
 
 ## The two slots are the SAME navigation at two detail levels — not two different menus
 
-`slot="rail"` (collapsed) and `slot="expanded"` are the **same destination set** shown at two levels of detail: collapsed = icons only; expanded = icons + labels grouped under headlines. They are *not* a place to put two different navigations.
+`slot="rail"` (collapsed) and `slot="expanded"` are the **same destination set** shown at two levels of detail: collapsed = icons only; expanded = icons + labels grouped under headlines. They are _not_ a place to put two different navigations.
 
-A tempting-but-wrong idea: make the collapsed rail the product nav (Mail, Chat, Meet) and the expanded rail the current section's sub-navigation (mail folders — Inbox, Starred, Sent…). This breaks the user's mental model: toggling the rail should reveal *more detail about the same destinations*, not **swap** what the rail navigates. A user who expands the rail expecting fuller product labels instead finds an unrelated folder list. Don't do this.
+A tempting-but-wrong idea: make the collapsed rail the product nav (Mail, Chat, Meet) and the expanded rail the current section's sub-navigation (mail folders — Inbox, Starred, Sent…). This breaks the user's mental model: toggling the rail should reveal _more detail about the same destinations_, not **swap** what the rail navigates. A user who expands the rail expecting fuller product labels instead finds an unrelated folder list. Don't do this.
 
 Where section sub-navigation belongs instead:
+
 - **A small set of peer views** (e.g. "All / Unread / Starred"): a `u-chip-set` or `u-tab-bar` in the list header.
 - **A genuinely large folder tree** that warrants its own surface: a separate `<u-pane>` with a `<u-drawer>` — but first ask whether the screen actually needs it. A CRM "inbox" is a list of conversations; it usually does **not** need Gmail-style Sent/Drafts/Trash folders at all. Cut the layer rather than house it.
 

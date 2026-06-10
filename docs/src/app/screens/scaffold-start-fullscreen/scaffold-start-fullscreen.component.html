@@ -1,5 +1,8 @@
 <u-scaffold>
-  <u-top-app-bar slot="top-bar" headline="Start pane — fullscreen collapse">
+  <u-top-app-bar
+    slot="top-bar"
+    headline="Start pane — fullscreen collapse"
+  >
     <u-icon-button
       slot="leading-icon"
       routerLink="/components/scaffold"
@@ -9,15 +12,27 @@
     </u-icon-button>
   </u-top-app-bar>
 
-  <u-pane mode="fullscreen" mode-lg="fixed" variant="filled" #pane style="width: 260px;">
-    <div slot="header" class="pane-header">
+  <u-pane
+    variant="filled"
+    mode="fullscreen"
+    mode-lg="fixed"
+    #pane
+    style="width: 260px"
+  >
+    <div
+      class="pane-header"
+      slot="header"
+    >
       <strong>Browse</strong>
       <u-icon-button (click)="$any(pane).close()">
         <span class="material-symbols-outlined">close</span>
       </u-icon-button>
     </div>
     <div class="pane-body">
-      <p>This pane takes over the entire viewport when collapsed on mobile. Useful for richer browse / picker experiences.</p>
+      <p>
+        This pane takes over the entire viewport when collapsed on mobile. Useful for richer browse / picker
+        experiences.
+      </p>
     </div>
   </u-pane>
 

@@ -2,11 +2,10 @@
   kind="foundation"
   title="Using with SolidJS"
 >
-  SolidJS consumes the <code>&lt;u-*&gt;</code> elements natively — it scores a
-  perfect 16/16 on Custom Elements Everywhere. There is <strong>no runtime
-  wrapper</strong> (<code>solid-element</code> is for <em>authoring</em> web
-  components, not consuming them). Two gotchas matter: camelCase prop keys get
-  lowercased, and genuine custom events need <code>on:exact-name</code>.
+  SolidJS consumes the <code>&lt;u-*&gt;</code> elements natively — it scores a perfect 16/16 on Custom Elements
+  Everywhere. There is <strong>no runtime wrapper</strong> (<code>solid-element</code> is for <em>authoring</em> web
+  components, not consuming them). Two gotchas matter: camelCase prop keys get lowercased, and genuine custom events
+  need <code>on:exact-name</code>.
 </docs-title>
 
 <docs-example
@@ -15,9 +14,8 @@
   [html]="mainImportHtml"
   [language]="'typescript'"
 >
-  The bare side-effecting <code>import</code> runs every
-  <code>customElements.define</code>. It has side effects, so it won't be
-  tree-shaken away.
+  The bare side-effecting <code>import</code> runs every <code>customElements.define</code>. It has side effects, so it
+  won't be tree-shaken away.
 </docs-example>
 
 <docs-example
@@ -26,11 +24,9 @@
   [html]="propsVsAttrsHtml"
   [language]="'typescript'"
 >
-  On a custom element, <code>foo={{ '{' }}x{{ '}' }}</code> sets a JS
-  <strong>property</strong> by default — exactly right for Lit. But Solid
-  lowercases the bare prop key, so <strong>use <code>prop:camelCaseName</code></strong>
-  for any camelCase or non-string property; bare <code>kebab-case</code> is fine
-  for plain string attributes.
+  On a custom element, <code>foo={{ "{" }}x{{ "}" }}</code> sets a JS <strong>property</strong> by default — exactly
+  right for Lit. But Solid lowercases the bare prop key, so <strong>use <code>prop:camelCaseName</code></strong> for any
+  camelCase or non-string property; bare <code>kebab-case</code> is fine for plain string attributes.
 
   <table class="u-table">
     <thead>
@@ -66,12 +62,12 @@
   [html]="eventsHtml"
   [language]="'typescript'"
 >
-  Native <code>input</code>/<code>change</code> are in Solid's delegated set, so
-  <code>onInput</code>/<code>onChange</code> work (value on
-  <code>e.currentTarget.value</code>). Genuine <code>CustomEvent</code>s are NOT
-  delegated and the delegated handlers lowercase names — so use <code>on:</code>
-  with the <strong>exact, case-sensitive</strong> event name. Shadow-DOM events
-  must be <code>composed: true</code> to escape (ours are).
+  Native <code>input</code>/<code>change</code> are in Solid's delegated set, so <code>onInput</code>/<code
+    >onChange</code
+  >
+  work (value on <code>e.currentTarget.value</code>). Genuine <code>CustomEvent</code>s are NOT delegated and the
+  delegated handlers lowercase names — so use <code>on:</code> with the <strong>exact, case-sensitive</strong> event
+  name. Shadow-DOM events must be <code>composed: true</code> to escape (ours are).
 </docs-example>
 
 <docs-example
@@ -81,11 +77,9 @@
   [stackblitz]="{ framework: 'solid' }"
   [language]="'typescript'"
 >
-  Solid has no <code>v-model</code> sugar — binding is explicit.
-  <strong>Mental model:</strong> two-way <code>value</code> ≡
-  <code>prop:value={{ '{' }}x(){{ '}' }}</code> in +
-  <code>on:input</code>/<code>on:change</code> reading
-  <code>e.currentTarget.value</code> out.
+  Solid has no <code>v-model</code> sugar — binding is explicit. <strong>Mental model:</strong> two-way
+  <code>value</code> ≡ <code>prop:value={{ "{" }}x(){{ "}" }}</code> in + <code>on:input</code>/<code>on:change</code>
+  reading <code>e.currentTarget.value</code> out.
 
   <table class="u-table">
     <thead>
@@ -129,7 +123,10 @@
       <tr>
         <td><code>u-typeahead</code></td>
         <td><code>value: any</code></td>
-        <td><code>input</code>/<code>change</code> → <code>e.target.value</code>; <code>selected</code> is a <code>CustomEvent</code></td>
+        <td>
+          <code>input</code>/<code>change</code> → <code>e.target.value</code>; <code>selected</code> is a
+          <code>CustomEvent</code>
+        </td>
       </tr>
       <tr>
         <td><code>u-button-field</code></td>
@@ -146,11 +143,9 @@
   [html]="typescriptHtml"
   [language]="'typescript'"
 >
-  Augment <code>solid-js</code>' <code>JSX.IntrinsicElements</code> with one entry
-  per <code>u-*</code> element. The augmentation can be hand-written or
-  code-generated from <code>dist/custom-elements.json</code>. Type the genuine
-  <code>CustomEvent</code> handlers (<code>on:selected</code> on typeahead,
-  <code>on:remove</code> on chip field).
+  Augment <code>solid-js</code>' <code>JSX.IntrinsicElements</code> with one entry per <code>u-*</code> element. The
+  augmentation can be hand-written or code-generated from <code>dist/custom-elements.json</code>. Type the genuine
+  <code>CustomEvent</code> handlers (<code>on:selected</code> on typeahead, <code>on:remove</code> on chip field).
 </docs-example>
 
 <docs-example
@@ -159,7 +154,6 @@
   [html]="mainImportHtml"
   [language]="'typescript'"
 >
-  <code>customElements</code> is undefined on the server, so register
-  client-side only — import in a client-only entry or guard the registration
-  import behind an <code>isServer</code> check in Solid Start.
+  <code>customElements</code> is undefined on the server, so register client-side only — import in a client-only entry
+  or guard the registration import behind an <code>isServer</code> check in Solid Start.
 </docs-example>
