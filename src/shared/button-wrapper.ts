@@ -3,6 +3,7 @@ import { CSSResultGroup } from '@lit/reactive-element/css-tag';
 import { html, HTMLTemplateResult, LitElement, nothing } from 'lit';
 import { property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { Ripple } from '../ripple/ripple.js';
 import { styles as baseStyles } from './base.styles.js';
@@ -86,7 +87,7 @@ export abstract class ButtonWrapper extends LitElement {
       <a
         id="link"
         class="button"
-        href=${this.disabled ? nothing : this.href}
+        href=${this.disabled ? nothing : ifDefined(this.href)}
         aria-disabled=${this.disabled || nothing}
         aria-label=${this.ariaLabel || nothing}
         aria-labelledby="${this.ariaLabel ? nothing : 'text'}"

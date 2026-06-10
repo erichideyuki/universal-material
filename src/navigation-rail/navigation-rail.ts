@@ -1,13 +1,12 @@
 import { html, HTMLTemplateResult, LitElement } from 'lit';
 import { customElement, property, query, queryAssignedElements } from 'lit/decorators.js';
 
-import { styles as baseStyles } from '../shared/base.styles.js';
-import { styles } from './navigation-rail.styles.js';
-
 import '../elevation/elevation.js';
+import { styles as baseStyles } from '../shared/base.styles.js';
 import './navigation-rail-headline.js';
 import './navigation-rail-item.js';
 import type { NavigationRailItem } from './navigation-rail-item.js';
+import { styles } from './navigation-rail.styles.js';
 
 /**
  * Material 3 navigation rail — a responsive primary navigation surface that
@@ -15,30 +14,30 @@ import type { NavigationRailItem } from './navigation-rail-item.js';
  * sets:
  *
  * - **Mobile (< 840px)**: rail is hidden. `toggleDrawer` slides the
- *   expanded rail in from the left as a **modal** over the content (with
- *   scrim).
+ * expanded rail in from the left as a **modal** over the content (with
+ * scrim).
  * - **Medium (840–1199px)**: a permanent 96dp **collapsed** sidebar shows
- *   `slot="rail"` items. `toggleDrawer` slides the expanded rail in over
- *   it as a **modal** (with scrim).
+ * `slot="rail"` items. `toggleDrawer` slides the expanded rail in over
+ * it as a **modal** (with scrim).
  * - **Large (≥ 1200px)**: the expanded rail is permanent (no modal,
- *   no scrim). `toggleDrawer` slides it back off the leading edge,
- *   revealing the collapsed bar underneath.
+ * no scrim). `toggleDrawer` slides it back off the leading edge,
+ * revealing the collapsed bar underneath.
  *
  * The expanded panel animates exactly like the side-navigation drawer:
  * `inset-inline-start` transitions 375ms with the project's awesome cubic
  * bezier easing.
  *
  * Slots:
- *  - `rail`: primary destinations shown in the permanent collapsed bar
- *    (`u-navigation-rail-item`s, no headlines).
- *  - `expanded`: full destination list shown in the expanded panel —
- *    `u-navigation-rail-item`s grouped by optional
- *    `u-navigation-rail-headline`s.
- *  - `top`: optional area pinned to the top of the rail (menu button,
- *    brand mark, etc.).
- *  - `bottom`: optional area pinned to the bottom of the rail (FAB,
- *    secondary action, etc.).
- *  - default: page content.
+ * - `rail`: primary destinations shown in the permanent collapsed bar
+ * (`u-navigation-rail-item`s, no headlines).
+ * - `expanded`: full destination list shown in the expanded panel —
+ * `u-navigation-rail-item`s grouped by optional
+ * `u-navigation-rail-headline`s.
+ * - `top`: optional area pinned to the top of the rail (menu button,
+ * brand mark, etc.).
+ * - `bottom`: optional area pinned to the bottom of the rail (FAB,
+ * secondary action, etc.).
+ * - default: page content.
  */
 @customElement('u-navigation-rail')
 export class NavigationRail extends LitElement {
@@ -48,9 +47,9 @@ export class NavigationRail extends LitElement {
    * Toggle the rail's secondary state:
    *
    * - On mobile/medium: slides the expanded rail in from the left as a
-   *   modal overlay (with scrim). Click on the scrim to close.
+   * modal overlay (with scrim). Click on the scrim to close.
    * - On large: slides the expanded rail off, revealing the collapsed
-   *   96dp bar underneath.
+   * 96dp bar underneath.
    */
   @property({ type: Boolean, attribute: 'toggle-drawer', reflect: true }) toggleDrawer = false;
 

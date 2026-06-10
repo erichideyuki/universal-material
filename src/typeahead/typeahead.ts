@@ -100,7 +100,7 @@ export class Typeahead extends LitElement {
   /**
    * The value for the `spellcheck` attribute for the target element.
    */
-  @property({ reflect: true }) override spellcheck = false;
+  @property({ type: Boolean, reflect: true }) override spellcheck = false;
 
   /**
    * Whether the suggestions menu should match the target element's width

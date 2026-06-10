@@ -14,9 +14,9 @@ export type NavRailItemVariant = 'collapsed' | 'expanded';
  * on `variant`:
  *
  * - `collapsed` (default): vertical — a 56×32dp pill around the 24dp icon
- *   with the label stacked below in label-medium type.
+ * with the label stacked below in label-medium type.
  * - `expanded`: horizontal — a full-width pill wraps icon + label inline
- *   (icon at the leading edge, label-large to its right), 56dp tall.
+ * (icon at the leading edge, label-large to its right), 56dp tall.
  *
  * Hover/focus/pressed feedback (state layer + ripple) is confined to the
  * active-indicator pill, never the full square. The click target itself
@@ -27,9 +27,9 @@ export type NavRailItemVariant = 'collapsed' | 'expanded';
  * breakpoint and toggle state — consumers don't usually need to set it.
  *
  * Slots:
- *  - default: the destination label.
- *  - `icon`: the destination icon (24dp).
- *  - `badge`: an optional `u-badge` placed at the top-right of the icon.
+ * - default: the destination label.
+ * - `icon`: the destination icon (24dp).
+ * - `badge`: an optional `u-badge` placed at the top-right of the icon.
  */
 @customElement('u-navigation-rail-item')
 export class NavigationRailItem extends ButtonWrapper {

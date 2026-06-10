@@ -66,7 +66,7 @@ export class Dialog extends LitElement {
    * The external element that drives the top/bottom scroll dividers.
    * When not set, the dialog's own content element is used.
    */
-  @property()
+  @property({ attribute: false })
   get scrollContainer(): HTMLElement {
     return this.#scrollContainer ?? this.content;
   }

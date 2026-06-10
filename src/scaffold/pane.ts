@@ -17,13 +17,13 @@ const MODAL_MODES: ReadonlySet<PaneMode> = new Set<PaneMode>(['sidebar', 'fullsc
  *
  * - `fixed` (default): always visible as a flex item. `open` is ignored.
  * - `collapsible`: a flex item while `open=true`; removed from the flow
- *   when `open=false` (animated via `transition-behavior: allow-discrete`).
+ * when `open=false` (animated via `transition-behavior: allow-discrete`).
  * - `sidebar`: a modal drawer overlay anchored to the scaffold. Slides in
- *   from the leading or trailing edge (the scaffold tags each pane with
- *   `data-align="start|end"` based on its DOM position relative to the
- *   body content) and shows a scrim. Closed by default.
+ * from the leading or trailing edge (the scaffold tags each pane with
+ * `data-align="start|end"` based on its DOM position relative to the
+ * body content) and shows a scrim. Closed by default.
  * - `fullscreen`: same overlay semantics as `sidebar` but full-width,
- *   sits above the top app bar, no scrim. Closed by default.
+ * sits above the top app bar, no scrim. Closed by default.
  *
  * Modes can vary per Material 3 breakpoint via the `mode-sm`, `mode-md`,
  * `mode-lg` and `mode-xl` attributes — the larger breakpoint wins via

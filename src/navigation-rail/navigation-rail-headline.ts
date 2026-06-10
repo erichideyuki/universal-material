@@ -14,7 +14,7 @@ import { styles } from './navigation-rail-headline.styles.js';
  * destinations, so headlines never appear in narrow layouts.
  *
  * Slots:
- *  - default: the headline text.
+ * - default: the headline text.
  */
 @customElement('u-navigation-rail-headline')
 export class NavigationRailHeadline extends LitElement {

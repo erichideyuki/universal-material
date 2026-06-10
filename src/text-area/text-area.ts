@@ -2,6 +2,7 @@ import { CSSResultGroup } from '@lit/reactive-element/css-tag';
 
 import { html, HTMLTemplateResult, nothing } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 import { live } from 'lit/directives/live.js';
 
 import { NativeTextFieldWrapper } from '../shared/char-count-text-field/native-text-field-wrapper.js';
@@ -29,7 +30,7 @@ export class TextArea extends NativeTextFieldWrapper {
           aria-describedBy="supporting-text"
           ?disabled=${this.disabled}
           spellcheck=${this.spellcheck}
-          autocomplete=${this.autocomplete}
+          autocomplete=${ifDefined(this.autocomplete)}
           autocapitalize=${this.autocapitalize}
           role=${this.role ?? nothing}
           maxlength=${this.maxlength ?? nothing}

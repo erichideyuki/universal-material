@@ -25,7 +25,7 @@ import { styles } from './scaffold.styles.js';
  *
  * @slot top-bar - the top app bar.
  * @slot - panes (`u-pane`) and the page content as siblings. Non-pane
- *   children act as the body and flex to fill the remaining space.
+ * children act as the body and flex to fill the remaining space.
  * @slot bottom-bar - the navigation bar (or any bottom-anchored bar).
  * @slot fab - floating action button area, anchored above the bottom bar.
  *
@@ -95,10 +95,10 @@ export class Scaffold extends LitElement {
    * on each `u-pane` based on its position in the body row.
    *
    * - If non-pane body content is present: panes appearing before it are
-   *   `start`, panes appearing after are `end`.
+   * `start`, panes appearing after are `end`.
    * - If there is no body content: the last pane is `end` (so a trailing
-   *   detail pane animates from the correct side in modal modes), and
-   *   every other pane is `start`. A single pane stays `start`.
+   * detail pane animates from the correct side in modal modes), and
+   * every other pane is `start`. A single pane stays `start`.
    *
    * The pane's CSS uses `data-align` as the default slide direction for
    * `animation="exit"` (the default). Consumers can override per-pane

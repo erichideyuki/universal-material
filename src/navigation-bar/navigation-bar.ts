@@ -17,7 +17,7 @@ import { styles } from './navigation-bar.styles.js';
  * flow so content under it does not get obscured.
  *
  * Slots:
- *  - default: destination items (e.g. `u-icon-button`s).
+ * - default: destination items (e.g. `u-icon-button`s).
  */
 @customElement('u-navigation-bar')
 export class NavigationBar extends LitElement {

@@ -12,9 +12,9 @@ export type NavBarItemVariant = 'vertical' | 'horizontal';
  * the destination label.
  *
  * Slots:
- *  - default: the destination label.
- *  - `icon`: the destination icon (24dp).
- *  - `badge`: an optional `u-badge` placed at the top-right of the icon.
+ * - default: the destination label.
+ * - `icon`: the destination icon (24dp).
+ * - `badge`: an optional `u-badge` placed at the top-right of the icon.
  */
 @customElement('u-navigation-bar-item')
 export class NavigationBarItem extends ButtonWrapper {

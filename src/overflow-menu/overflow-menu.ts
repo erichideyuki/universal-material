@@ -28,7 +28,7 @@ export class OverflowMenu extends LitElement {
   @query('u-menu') menu?: Menu;
 
   #anchor: HTMLElement | null = null;
-  @property()
+  @property({ attribute: false })
   set anchor(value) {
     this.#anchor = value;
 

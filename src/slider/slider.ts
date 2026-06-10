@@ -430,7 +430,9 @@ export class Slider extends LitElement {
     // the focus ring on click. The user must Tab to the slider for keyboard control.
     try {
       this._container.setPointerCapture(e.pointerId);
-    } catch { /* */ }
+    } catch {
+      /* */
+    }
 
     this._container.addEventListener('pointermove', this.#handleDragMove);
     this._container.addEventListener('pointerup', this.#handleDragEnd, { once: true });
