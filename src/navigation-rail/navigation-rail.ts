@@ -115,10 +115,12 @@ export class NavigationRail extends LitElement {
   // every scroll event).
   #setupScrollThumb(container: HTMLElement, thumb: HTMLElement, parent: HTMLElement): void {
     const minThumbHeight = 24;
+
     // Inset from the trailing rounded corners, matching the radius so the
     // thumb visually sits inside the curve.
     const trackInset = (): number => {
-      const v = getComputedStyle(parent).getPropertyValue('--_nav-rail-expanded-corner-shape').trim();
+      const v = getComputedStyle(parent).getPropertyValue('--_nav-rail-expanded-corner-shape')
+        .trim();
       const n = parseFloat(v);
       return Number.isFinite(n) ? n : 16;
     };
@@ -126,10 +128,12 @@ export class NavigationRail extends LitElement {
     const update = (): void => {
       const ch = container.clientHeight;
       const sh = container.scrollHeight;
+
       if (sh <= ch + 1 || ch === 0) {
         thumb.style.display = 'none';
         return;
       }
+
       thumb.style.display = '';
       const inset = trackInset();
       const trackH = Math.max(0, ch - inset * 2);
@@ -158,16 +162,17 @@ export class NavigationRail extends LitElement {
     slot?.addEventListener('slotchange', () => requestAnimationFrame(update));
   }
 
-  #handleScrimClick = (): void => {
+  readonly #handleScrimClick = (): void => {
     this.toggleDrawer = false;
   };
 
-  #handleCollapsedSlotChange = (): void => {
+  readonly #handleCollapsedSlotChange = (): void => {
     if (this.assignedCollapsedItems.length > 0) {
       this.setAttribute('has-rail-items', '');
     } else {
       this.removeAttribute('has-rail-items');
     }
+
     for (const item of this.assignedCollapsedItems) {
       if (this.#isRailItem(item)) {
         item.variant = 'collapsed';
@@ -175,12 +180,13 @@ export class NavigationRail extends LitElement {
     }
   };
 
-  #handleExpandedSlotChange = (): void => {
+  readonly #handleExpandedSlotChange = (): void => {
     if (this.assignedExpandedElements.length > 0) {
       this.setAttribute('has-expanded-items', '');
     } else {
       this.removeAttribute('has-expanded-items');
     }
+
     for (const el of this.assignedExpandedElements) {
       if (this.#isRailItem(el)) {
         el.variant = 'expanded';
@@ -188,7 +194,7 @@ export class NavigationRail extends LitElement {
     }
   };
 
-  #handleTopSlotChange = (): void => {
+  readonly #handleTopSlotChange = (): void => {
     if (this.assignedTop.length > 0) {
       this.setAttribute('has-top', '');
     } else {
@@ -196,7 +202,7 @@ export class NavigationRail extends LitElement {
     }
   };
 
-  #handleBottomSlotChange = (): void => {
+  readonly #handleBottomSlotChange = (): void => {
     if (this.assignedBottom.length > 0) {
       this.setAttribute('has-bottom', '');
     } else {

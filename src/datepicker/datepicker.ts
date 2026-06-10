@@ -8,7 +8,6 @@ import { Calendar } from '../calendar/calendar.js';
 import { Menu } from '../menu/menu.js';
 import { NativeTextFieldWrapper } from '../shared/char-count-text-field/native-text-field-wrapper.js';
 import { TextFieldBase } from '../shared/text-field-base/text-field-base.js';
-
 import { styles as textFieldStyles } from '../text-field/text-field.styles.js';
 import { styles } from './datepicker.styles.js';
 import { DatepickerFormat, formatIsoDate } from './format.js';
@@ -62,9 +61,9 @@ export class Datepicker extends NativeTextFieldWrapper {
   @property({ reflect: true, attribute: 'menu-positioning' }) menuPositioning: 'relative' | 'fixed' = 'relative';
 
   @query('input') input!: HTMLInputElement;
-  @query('u-menu', true) private _menu!: Menu;
-  @query('u-calendar', true) private _calendar!: Calendar;
-  @query('.trailing-icon', true) private _trailingSlot!: HTMLSlotElement;
+  @query('u-menu', true) private readonly _menu!: Menu;
+  @query('u-calendar', true) private readonly _calendar!: Calendar;
+  @query('.trailing-icon', true) private readonly _trailingSlot!: HTMLSlotElement;
 
   protected override renderControl(): HTMLTemplateResult {
     const displayValue = this.editable
@@ -159,7 +158,7 @@ export class Datepicker extends NativeTextFieldWrapper {
     this.dispatchEvent(new InputEvent('input', { bubbles: true, composed: true }));
   }
 
-  #handleKeyDown = (e: KeyboardEvent): void => {
+  readonly #handleKeyDown = (e: KeyboardEvent): void => {
     if (e.key === 'ArrowDown' && !this._menu.open) {
       e.preventDefault();
       this._menu.show();
@@ -175,7 +174,7 @@ export class Datepicker extends NativeTextFieldWrapper {
     this._handleKeyDown(e);
   };
 
-  #handleCalendarInput = (e: Event): void => {
+  readonly #handleCalendarInput = (e: Event): void => {
     e.stopPropagation();
     const value = (e.target as Calendar).value;
     this.value = value;
@@ -184,14 +183,15 @@ export class Datepicker extends NativeTextFieldWrapper {
     this._menu.close();
   };
 
-  #stopPropagation = (e: Event): void => {
+  readonly #stopPropagation = (e: Event): void => {
     e.stopPropagation();
   };
 
-  #toggleMenu = (): void => {
+  readonly #toggleMenu = (): void => {
     if (this.disabled) {
       return;
     }
+
     this._menu.toggle();
   };
 

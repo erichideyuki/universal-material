@@ -1,4 +1,5 @@
 import { PropertyValues } from '@lit/reactive-element';
+
 import { html, HTMLTemplateResult, LitElement } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 
@@ -50,8 +51,11 @@ export class Collapse extends LitElement {
     this.#resizeObserver = null;
   }
 
-  #applyMaxHeight = () => {
-    if (!this._content) return;
+  readonly #applyMaxHeight = () => {
+    if (!this._content) {
+      return;
+    }
+
     this.style.maxHeight = this.open ? `${this._content.scrollHeight}px` : '0';
   };
 }

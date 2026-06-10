@@ -127,30 +127,33 @@ export class NavigationRailItem extends ButtonWrapper {
     `;
   }
 
-  #handleIconSlotChange = (): void => {
+  readonly #handleIconSlotChange = (): void => {
     this._hasIcon = this.assignedIcons.length > 0;
   };
 
-  #handleLabelSlotChange = (): void => {
+  readonly #handleLabelSlotChange = (): void => {
     this._hasLabel = this.assignedLabelNodes.some(node => {
       if (node.nodeType === Node.TEXT_NODE) {
         return !!node.textContent?.trim();
       }
+
       return true;
     });
   };
 
-  #handlePillMouseDown = (e: MouseEvent): void => {
+  readonly #handlePillMouseDown = (e: MouseEvent): void => {
     if (this.disabled || !this._pillRipple) {
       return;
     }
+
     this._pillRipple.createRipple(e.clientX, e.clientY, 'mouseup');
   };
 
-  #handlePillTouchStart = (e: TouchEvent): void => {
+  readonly #handlePillTouchStart = (e: TouchEvent): void => {
     if (this.disabled || !this._pillRipple || !e.touches[0]) {
       return;
     }
+
     this._pillRipple.createRipple(e.touches[0].clientX, e.touches[0].clientY, 'touchend');
   };
 }

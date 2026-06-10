@@ -8,7 +8,6 @@ import { RangeCalendar } from '../calendar/range-calendar.js';
 import { Menu } from '../menu/menu.js';
 import { NativeTextFieldWrapper } from '../shared/char-count-text-field/native-text-field-wrapper.js';
 import { TextFieldBase } from '../shared/text-field-base/text-field-base.js';
-
 import { styles as textFieldStyles } from '../text-field/text-field.styles.js';
 import { styles } from './datepicker.styles.js';
 import { DatepickerFormat, formatIsoDateRange } from './format.js';
@@ -60,9 +59,9 @@ export class RangeDatepicker extends NativeTextFieldWrapper {
   @property({ reflect: true, attribute: 'menu-positioning' }) menuPositioning: 'relative' | 'fixed' = 'relative';
 
   @query('input') input!: HTMLInputElement;
-  @query('u-menu', true) private _menu!: Menu;
-  @query('u-range-calendar', true) private _calendar!: RangeCalendar;
-  @query('.trailing-icon', true) private _trailingSlot!: HTMLSlotElement;
+  @query('u-menu', true) private readonly _menu!: Menu;
+  @query('u-range-calendar', true) private readonly _calendar!: RangeCalendar;
+  @query('.trailing-icon', true) private readonly _trailingSlot!: HTMLSlotElement;
 
   protected override renderControl(): HTMLTemplateResult {
     const displayValue = this.editable
@@ -158,7 +157,7 @@ export class RangeDatepicker extends NativeTextFieldWrapper {
     this.dispatchEvent(new InputEvent('input', { bubbles: true, composed: true }));
   }
 
-  #handleKeyDown = (e: KeyboardEvent): void => {
+  readonly #handleKeyDown = (e: KeyboardEvent): void => {
     if (e.key === 'ArrowDown' && !this._menu.open) {
       e.preventDefault();
       this._menu.show();
@@ -174,14 +173,14 @@ export class RangeDatepicker extends NativeTextFieldWrapper {
     this._handleKeyDown(e);
   };
 
-  #handleCalendarInput = (e: Event): void => {
+  readonly #handleCalendarInput = (e: Event): void => {
     e.stopPropagation();
     const value = (e.target as RangeCalendar).value ?? '';
     this.value = value;
     this.dispatchEvent(new InputEvent('input', { bubbles: true, composed: true }));
   };
 
-  #handleCalendarChange = (e: Event): void => {
+  readonly #handleCalendarChange = (e: Event): void => {
     e.stopPropagation();
 
     if (!ISO_DATE_RANGE.test(this._value)) {
@@ -192,14 +191,15 @@ export class RangeDatepicker extends NativeTextFieldWrapper {
     this._menu.close();
   };
 
-  #stopPropagation = (e: Event): void => {
+  readonly #stopPropagation = (e: Event): void => {
     e.stopPropagation();
   };
 
-  #toggleMenu = (): void => {
+  readonly #toggleMenu = (): void => {
     if (this.disabled) {
       return;
     }
+
     this._menu.toggle();
   };
 

@@ -179,6 +179,7 @@ export class Pane extends LitElement {
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
+
     if (this.#keydownAttached) {
       document.removeEventListener('keydown', this.#onKeydown);
       this.#keydownAttached = false;
@@ -193,6 +194,7 @@ export class Pane extends LitElement {
     // would never see "open" change on a pure mode flip). Toggle the
     // attribute ourselves whenever the effective value drifts.
     const isOpen = this.open;
+
     if (this.#lastReflectedOpen !== isOpen) {
       this.toggleAttribute('open', isOpen);
       this.#lastReflectedOpen = isOpen;
@@ -201,6 +203,7 @@ export class Pane extends LitElement {
     // Escape key closes any modal-mode pane while open. We attach the
     // listener lazily so non-modal panes never touch `document`.
     const wantsKeydown = isOpen && MODAL_MODES.has(this.mode);
+
     if (wantsKeydown && !this.#keydownAttached) {
       document.addEventListener('keydown', this.#onKeydown);
       this.#keydownAttached = true;

@@ -141,6 +141,7 @@ export class Scaffold extends LitElement {
       }
 
       const child = children[i];
+
       if (child.getAttribute('data-align') !== align) {
         child.setAttribute('data-align', align);
       }

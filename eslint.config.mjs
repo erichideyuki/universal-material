@@ -30,6 +30,9 @@ export default [{
     "dist/*",
     "**/*.js",
     "**/*.styles.ts",
+    // Test files are excluded from tsconfig.json's program, so the type-aware
+    // parser cannot resolve them — keep them out of the type-aware lint.
+    "**/*.test.ts",
   ],
 }, ...compat.extends(
   "plugin:@angular-eslint/recommended",
@@ -59,7 +62,6 @@ export default [{
 
     parserOptions: {
       project: ["tsconfig.json"],
-      createDefaultProgram: true,
     },
   },
 

@@ -186,6 +186,7 @@ export class TopAppBar extends LitElement {
     super.connectedCallback();
 
     const attr = this.attributes.getNamedItem('scrollContainer')?.value;
+
     if (attr !== undefined && this.#explicitScrollContainer === undefined) {
       this.#explicitScrollContainer = attr;
     }

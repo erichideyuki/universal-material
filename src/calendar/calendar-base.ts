@@ -298,7 +298,7 @@ export abstract class CalendarBase extends LitElement {
     };
   }
 
-  #toggleYearView = (): void => {
+  readonly #toggleYearView = (): void => {
     if (this.view === 'day') {
       this._yearPageStart = this.#computeYearPageStart(this.year);
       this.view = 'year';
@@ -314,7 +314,7 @@ export abstract class CalendarBase extends LitElement {
     this.view = 'day';
   };
 
-  #handlePrevClick = (): void => {
+  readonly #handlePrevClick = (): void => {
     if (this.view === 'year') {
       this._yearPageStart -= this.yearRange;
       return;
@@ -328,7 +328,7 @@ export abstract class CalendarBase extends LitElement {
     this.#addMonth(-1);
   };
 
-  #handleNextClick = (): void => {
+  readonly #handleNextClick = (): void => {
     if (this.view === 'year') {
       this._yearPageStart += this.yearRange;
       return;

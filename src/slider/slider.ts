@@ -1,4 +1,5 @@
 import { PropertyValues } from '@lit/reactive-element';
+
 import { html, HTMLTemplateResult, LitElement, nothing } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
@@ -15,9 +16,9 @@ export type SliderSize = 'extra-small' | 'small' | 'medium' | 'large' | 'extra-l
 
 // Px distance from handle center to track-segment edge: handle-width/2 + 6dp handle-gap.
 const SIZE_GAP_PX: Record<SliderSize, number> = {
-  'extra-small': 8,  // 4/2 + 6
+  'extra-small': 8, // 4/2 + 6
   small: 8,
-  medium: 9,         // 6/2 + 6
+  medium: 9, // 6/2 + 6
   large: 9,
   'extra-large': 10, // 8/2 + 6
 };
@@ -90,7 +91,7 @@ export class Slider extends LitElement {
   @property({ reflect: true }) size: SliderSize = 'extra-small';
 
   /** Custom formatter for the floating value indicator. */
-  @property({ attribute: false }) labelFormat: LabelFormat = (v) => String(v);
+  @property({ attribute: false }) labelFormat: LabelFormat = v => String(v);
 
   @state() private _dragging = false;
   @state() private _activeThumb: Thumb | null = null;
@@ -112,8 +113,14 @@ export class Slider extends LitElement {
     }
 
     if (this.range) {
-      if (this.valueStart === undefined) this.valueStart = this.min;
-      if (this.valueEnd === undefined) this.valueEnd = this.max;
+      if (this.valueStart === undefined) {
+        this.valueStart = this.min;
+      }
+
+      if (this.valueEnd === undefined) {
+        this.valueEnd = this.max;
+      }
+
       if (this.valueStart > this.valueEnd) {
         [this.valueStart, this.valueEnd] = [this.valueEnd, this.valueStart];
       }
@@ -310,11 +317,13 @@ export class Slider extends LitElement {
   #activeRadius(collapseStart: boolean, collapseEnd: boolean): string {
     const fullR = 'calc(var(--_track-height) / 2)';
     const innerR = 'var(--_inner-corner)';
+
     if (this.range) {
       const sR = collapseStart ? fullR : innerR;
       const eR = collapseEnd ? fullR : innerR;
       return `${sR} ${eR} ${eR} ${sR}`;
     }
+
     const eR = collapseEnd ? fullR : innerR;
     return `${fullR} ${eR} ${eR} ${fullR}`;
   }
@@ -323,6 +332,7 @@ export class Slider extends LitElement {
     const ticks = [];
     const trackWidth = this.offsetWidth || 200;
     const gapPct = (gapPx / trackWidth) * 100;
+
     for (let i = 0; i < count; i++) {
       const pct = (i / (count - 1)) * 100;
       const inActive = pct >= startPct && pct <= endPct;
@@ -333,12 +343,19 @@ export class Slider extends LitElement {
         style=${styleMap({ insetInlineStart: `${pct}%` })}
       ></span>`);
     }
+
     return html`<div class="ticks">${ticks}</div>`;
   }
 
   #renderValueIndicator(thumb: Thumb, value: number): HTMLTemplateResult | typeof nothing {
-    if (!this.discrete) return nothing;
-    if (!this._dragging || this._activeThumb !== thumb) return nothing;
+    if (!this.discrete) {
+      return nothing;
+    }
+
+    if (!this._dragging || this._activeThumb !== thumb) {
+      return nothing;
+    }
+
     return html`<div class="value-indicator" part="value-indicator">${this.labelFormat(value)}</div>`;
   }
 
@@ -359,7 +376,10 @@ export class Slider extends LitElement {
   }
 
   #snap(value: number): number {
-    if (!this.step || this.step <= 0) return value;
+    if (!this.step || this.step <= 0) {
+      return value;
+    }
+
     const steps = Math.round((value - this.min) / this.step);
     return Math.max(this.min, Math.min(this.max, this.min + steps * this.step));
   }
@@ -372,57 +392,80 @@ export class Slider extends LitElement {
   }
 
   #closestThumb(value: number): Thumb {
-    if (!this.range) return 'end';
+    if (!this.range) {
+      return 'end';
+    }
+
     const startDist = Math.abs(value - (this.valueStart ?? this.min));
     const endDist = Math.abs(value - (this.valueEnd ?? this.max));
+
     // Bias to 'end' when distances tie and pointer is to the right of midpoint,
     // so clicking past either thumb still moves the natural one.
     if (startDist === endDist) {
       const mid = ((this.valueStart ?? this.min) + (this.valueEnd ?? this.max)) / 2;
       return value < mid ? 'start' : 'end';
     }
+
     return startDist <= endDist ? 'start' : 'end';
   }
 
-  #handleContainerPointerDown = (e: PointerEvent) => {
-    if (this.disabled) return;
+  readonly #handleContainerPointerDown = (e: PointerEvent) => {
+    if (this.disabled) {
+      return;
+    }
+
     // Ignore non-primary buttons.
-    if (e.button !== undefined && e.button !== 0) return;
+    if (e.button !== undefined && e.button !== 0) {
+      return;
+    }
+
     e.preventDefault();
     const value = this.#pointerToValue(e.clientX);
     const thumb = this.#closestThumb(value);
     this.#beginDrag(thumb);
     this.#setThumbValue(thumb, value);
+
     // Intentionally do NOT focus the input on pointer interaction — that would inherit
     // an active :focus-visible state from prior keyboard navigation and incorrectly show
     // the focus ring on click. The user must Tab to the slider for keyboard control.
-    try { this._container.setPointerCapture(e.pointerId); } catch { /* */ }
+    try {
+      this._container.setPointerCapture(e.pointerId);
+    } catch { /* */ }
+
     this._container.addEventListener('pointermove', this.#handleDragMove);
     this._container.addEventListener('pointerup', this.#handleDragEnd, { once: true });
     this._container.addEventListener('pointercancel', this.#handleDragEnd, { once: true });
   };
 
-  #handleDragMove = (e: PointerEvent) => {
-    if (!this._dragging || !this._activeThumb) return;
+  readonly #handleDragMove = (e: PointerEvent) => {
+    if (!this._dragging || !this._activeThumb) {
+      return;
+    }
+
     const value = this.#pointerToValue(e.clientX);
     this.#setThumbValue(this._activeThumb, value);
   };
 
-  #handleDragEnd = () => {
+  readonly #handleDragEnd = () => {
     this._container.removeEventListener('pointermove', this.#handleDragMove);
     this.#endDrag();
     this.#handleChange();
   };
 
   // Hover tracking — light up the state layer of the thumb nearest the pointer.
-  #handleHoverMove = (e: PointerEvent) => {
-    if (this.disabled || this._dragging) return;
+  readonly #handleHoverMove = (e: PointerEvent) => {
+    if (this.disabled || this._dragging) {
+      return;
+    }
+
     const value = this.#pointerToValue(e.clientX);
     this._hoveredThumb = this.#closestThumb(value);
   };
 
-  #handleHoverLeave = () => {
-    if (!this._dragging) this._hoveredThumb = null;
+  readonly #handleHoverLeave = () => {
+    if (!this._dragging) {
+      this._hoveredThumb = null;
+    }
   };
 
   #setThumbValue(thumb: Thumb, value: number) {
@@ -435,6 +478,7 @@ export class Slider extends LitElement {
     } else {
       this.value = value;
     }
+
     this.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
   }
 
@@ -444,28 +488,28 @@ export class Slider extends LitElement {
     this._hoveredThumb = thumb;
   }
 
-  #endDrag = () => {
+  readonly #endDrag = () => {
     this._dragging = false;
     this._activeThumb = null;
   };
 
   // Keyboard input on the native range inputs still updates the bound value.
-  #handleSingleInput = () => {
+  readonly #handleSingleInput = () => {
     this.value = this._input.valueAsNumber;
     this.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
   };
 
-  #handleStartInput = () => {
+  readonly #handleStartInput = () => {
     this.valueStart = Math.min(this._input.valueAsNumber, this.valueEnd!);
     this.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
   };
 
-  #handleEndInput = () => {
+  readonly #handleEndInput = () => {
     this.valueEnd = Math.max(this._inputEnd!.valueAsNumber, this.valueStart!);
     this.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
   };
 
-  #handleChange = () => {
+  readonly #handleChange = () => {
     this.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
   };
 
@@ -474,6 +518,7 @@ export class Slider extends LitElement {
       this.elementInternals.setFormValue(null);
       return;
     }
+
     if (this.range) {
       const data = new FormData();
       data.append(`${this.name}-start`, String(this.valueStart ?? this.min));
@@ -481,6 +526,7 @@ export class Slider extends LitElement {
       this.elementInternals.setFormValue(data);
       return;
     }
+
     this.elementInternals.setFormValue(String(this.value ?? ''));
   }
 }

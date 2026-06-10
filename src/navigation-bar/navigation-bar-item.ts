@@ -92,15 +92,16 @@ export class NavigationBarItem extends ButtonWrapper {
     `;
   }
 
-  #handleIconSlotChange = (): void => {
+  readonly #handleIconSlotChange = (): void => {
     this._hasIcon = this.assignedIcons.length > 0;
   };
 
-  #handleLabelSlotChange = (): void => {
+  readonly #handleLabelSlotChange = (): void => {
     this._hasLabel = this.assignedLabelNodes.some(node => {
       if (node.nodeType === Node.TEXT_NODE) {
         return !!node.textContent?.trim();
       }
+
       return true;
     });
   };

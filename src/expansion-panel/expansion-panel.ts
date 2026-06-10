@@ -33,6 +33,7 @@ export class ExpansionPanel extends LitElement {
     const old = this.#expanded;
     this.#expanded = value;
     this.requestUpdate('expanded', old);
+
     if (old !== value) {
       this.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
     }
@@ -50,7 +51,10 @@ export class ExpansionPanel extends LitElement {
 
   /** Toggles `expanded`. No-op when `disabled`. */
   toggle(): void {
-    if (this.disabled) return;
+    if (this.disabled) {
+      return;
+    }
+
     this.expanded = !this.expanded;
   }
 
@@ -75,7 +79,7 @@ export class ExpansionPanel extends LitElement {
     `;
   }
 
-  #handleHeaderClick = () => {
+  readonly #handleHeaderClick = () => {
     this.toggle();
   };
 }

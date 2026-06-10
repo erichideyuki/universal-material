@@ -2,8 +2,8 @@ import { html, HTMLTemplateResult, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
 import { styles as baseStyles } from '../shared/base.styles.js';
-import { ExpansionPanel } from './expansion-panel.js';
 import { styles } from './expansion-panel-container.styles.js';
+import { ExpansionPanel } from './expansion-panel.js';
 
 /**
  * Coordinates a group of `<u-expansion-panel>` children. When `multi` is `false`
@@ -34,10 +34,17 @@ export class ExpansionPanelContainer extends LitElement {
     return html`<slot></slot>`;
   }
 
-  #handlePanelChange = (event: Event) => {
-    if (this.multi) return;
+  readonly #handlePanelChange = (event: Event) => {
+    if (this.multi) {
+      return;
+    }
+
     const target = event.target as ExpansionPanel | null;
-    if (!(target instanceof ExpansionPanel) || !target.expanded) return;
+
+    if (!(target instanceof ExpansionPanel) || !target.expanded) {
+      return;
+    }
+
     for (const panel of this.querySelectorAll<ExpansionPanel>('u-expansion-panel')) {
       if (panel !== target && panel.expanded) {
         panel.expanded = false;

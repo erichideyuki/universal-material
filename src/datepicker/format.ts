@@ -37,6 +37,7 @@ export function formatIsoDate(
   }
 
   const date = parseIsoDate(value);
+
   if (!date) {
     return value;
   }
@@ -63,6 +64,7 @@ export function formatIsoDateRange(
   }
 
   const parts = value.split(' - ');
+
   if (parts.length !== 2) {
     return value;
   }
