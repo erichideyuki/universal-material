@@ -101,6 +101,24 @@ In editable mode the browser's native date-format mask is hidden until the user 
 ></u-datepicker>
 ```
 
+## Min and max dates
+
+`min`/`max` (ISO `YYYY-MM-DD`) bound what the user can pick — out-of-range days, months, years and the nav arrows are disabled in the calendar:
+
+```html
+<u-datepicker
+  label="Date"
+  min="2026-06-05"
+  max="2026-06-25"
+></u-datepicker>
+<u-calendar
+  min="2026-06-05"
+  max="2026-06-25"
+></u-calendar>
+```
+
+They also drive constraint validation: a value before `min` reports `rangeUnderflow`, after `max` reports `rangeOverflow` (surfaced by `checkValidity()`/`reportValidity()`/`validity` and blocking native form submit). On `<u-range-datepicker>`, `min` applies to the range start and `max` to the range end. In editable mode the bounds are also forwarded to the native `<input type="date">`.
+
 ## Range
 
 ```html

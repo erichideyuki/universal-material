@@ -12,6 +12,7 @@ import { UmTypeaheadControlValueAccessor } from './value-accessors/typeahead-con
 import { UmSelectControlValueAccessor, UmSelectOption } from './value-accessors/select-control-value-accessor';
 import { UmSliderControlValueAccessor } from './value-accessors/slider-control-value-accessor';
 import { UmDatepickerControlValueAccessor } from './value-accessors/datepicker-control-value-accessor';
+import { UmDatepickerMaxValidator, UmDatepickerMinValidator } from './validators/datepicker-validators';
 import { TabBarDirective } from './tab-bar/tab-bar.directive';
 import { FloatingActionBehaviorDirective } from './floating-action-behavior/floating-action-behavior.directive';
 
@@ -34,6 +35,8 @@ const FormComponents = [
   UmSelectOption,
   UmSliderControlValueAccessor,
   UmDatepickerControlValueAccessor,
+  UmDatepickerMinValidator,
+  UmDatepickerMaxValidator,
 ];
 
 export { RippleModule } from './ripple/ripple.module';
@@ -68,6 +71,7 @@ export * from './value-accessors/typeahead-control-value-accessor';
 export * from './value-accessors/select-control-value-accessor';
 export * from './value-accessors/slider-control-value-accessor';
 export * from './value-accessors/datepicker-control-value-accessor';
+export * from './validators/datepicker-validators';
 
 @NgModule({
   declarations: FormComponents,

@@ -60,6 +60,58 @@ suite('u-calendar', () => {
     });
   });
 
+  suite('min/max', () => {
+    const navButtonOf = (el: Calendar, selector: string) =>
+      el.shadowRoot!.querySelector<HTMLElement & { disabled: boolean }>(selector)!;
+
+    const juneFixture = async (min: string | null, max: string | null) => {
+      const el = await fixture<Calendar>(html`<u-calendar></u-calendar>`);
+      el.min = min;
+      el.max = max;
+      el.month = 5;
+      el.year = 2025;
+      await el.updateComplete;
+      return el;
+    };
+
+    test('marks dates outside [min, max] as disabled', async () => {
+      const el = await juneFixture('2025-06-10', '2025-06-20');
+      const disabled = el.shadowRoot!.querySelectorAll('.calendar-item.disabled');
+      expect(disabled.length).to.be.greaterThan(0);
+    });
+
+    test('clicking a disabled date does not select it', async () => {
+      const el = await juneFixture('2025-06-10', '2025-06-20');
+      const disabledItem = el.shadowRoot!.querySelector<HTMLElement>('.calendar-item.disabled')!;
+      disabledItem.click();
+      expect(el.value).to.equal('');
+    });
+
+    test('clicking an in-range date selects it', async () => {
+      const el = await juneFixture('2025-06-10', '2025-06-20');
+      const items = [...el.shadowRoot!.querySelectorAll<HTMLElement>('.calendar-item:not(.disabled)')];
+      const inRange = items.find((item) => item.querySelector('.date')?.textContent?.trim() === '15')!;
+      inRange.click();
+      expect(el.value).to.equal('2025-06-15');
+    });
+
+    test('disables the previous-month nav button on the min month', async () => {
+      const el = await juneFixture('2025-06-01', null);
+      expect(navButtonOf(el, '.previous-month-button').disabled).to.be.true;
+    });
+
+    test('disables the next-month nav button on the max month', async () => {
+      const el = await juneFixture(null, '2025-06-30');
+      expect(navButtonOf(el, '.previous-month-button ~ u-icon-button').disabled).to.be.true;
+    });
+
+    test('keeps nav buttons enabled away from the bounds', async () => {
+      const el = await juneFixture('2025-01-01', '2025-12-31');
+      expect(navButtonOf(el, '.previous-month-button').disabled).to.be.false;
+      expect(navButtonOf(el, '.previous-month-button ~ u-icon-button').disabled).to.be.false;
+    });
+  });
+
   suite('input/change events', () => {
     test('selecting a date fires input then change', async () => {
       const el = await fixture<Calendar>(html`<u-calendar></u-calendar>`);

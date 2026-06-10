@@ -80,3 +80,18 @@
 .date-out-of-month {
   color: var(--u-calendar-date-color, #{functions.get-color-var(on-surface-variant)});
 }
+
+// md.comp.date-picker.modal.date — disabled dates use on-surface at 38% opacity
+.disabled {
+  pointer-events: none;
+
+  .date,
+  .month-label,
+  .year-label {
+    color: var(--u-calendar-disabled-color, #{functions.get-color-transparency-mix(functions.get-color-var(on-surface), var(--u-calendar-disabled-opacity, 38%))});
+  }
+
+  .date {
+    border-color: var(--u-calendar-disabled-color, #{functions.get-color-transparency-mix(functions.get-color-var(on-surface), var(--u-calendar-disabled-opacity, 38%))});
+  }
+}

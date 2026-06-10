@@ -7,7 +7,7 @@ import { live } from 'lit/directives/live.js';
 import { Calendar } from '../calendar/calendar.js';
 import { Menu } from '../menu/menu.js';
 import { NativeTextFieldWrapper } from '../shared/char-count-text-field/native-text-field-wrapper.js';
-import { TextFieldBase } from '../shared/text-field-base/text-field-base.js';
+import { FieldValidity, TextFieldBase } from '../shared/text-field-base/text-field-base.js';
 import { styles as textFieldStyles } from '../text-field/text-field.styles.js';
 import { styles } from './datepicker.styles.js';
 import { DatepickerFormat, formatIsoDate } from './format.js';
@@ -60,6 +60,20 @@ export class Datepicker extends NativeTextFieldWrapper {
    */
   @property({ reflect: true, attribute: 'menu-positioning' }) menuPositioning: 'relative' | 'fixed' = 'relative';
 
+  /**
+   * The earliest acceptable date as an ISO `YYYY-MM-DD` string. Earlier dates
+   * are disabled in the calendar popover and fail constraint validation with
+   * `rangeUnderflow`. When `null`, there is no lower bound.
+   */
+  @property() min: string | null = null;
+
+  /**
+   * The latest acceptable date as an ISO `YYYY-MM-DD` string. Later dates
+   * are disabled in the calendar popover and fail constraint validation with
+   * `rangeOverflow`. When `null`, there is no upper bound.
+   */
+  @property() max: string | null = null;
+
   @query('input') input!: HTMLInputElement;
   @query('u-menu', true) private readonly _menu!: Menu;
   @query('u-calendar', true) private readonly _calendar!: Calendar;
@@ -94,6 +108,8 @@ export class Datepicker extends NativeTextFieldWrapper {
           ?readonly=${this.readOnly || !this.editable}
           ?disabled=${this.disabled}
           placeholder=${this.placeholder ?? nothing}
+          min=${(this.editable && this.min) || nothing}
+          max=${(this.editable && this.max) || nothing}
           .value=${live(displayValue)}
           @input=${this._handleInput}
           @keydown=${this.#handleKeyDown} />
@@ -134,6 +150,8 @@ export class Datepicker extends NativeTextFieldWrapper {
         <u-calendar
           .value=${this._value}
           .locale=${this.locale}
+          .min=${this.min}
+          .max=${this.max}
           @input=${this.#handleCalendarInput}></u-calendar>
       </u-menu>
     `;
@@ -157,6 +175,32 @@ export class Datepicker extends NativeTextFieldWrapper {
     }
 
     this.dispatchEvent(new InputEvent('input', { bubbles: true, composed: true }));
+  }
+
+  protected override _getValidity(): FieldValidity {
+    const validity = super._getValidity();
+
+    if (validity.flags.valueMissing || !ISO_DATE.test(this._value)) {
+      return validity;
+    }
+
+    if (this.min && ISO_DATE.test(this.min) && this._value < this.min) {
+      return {
+        flags: { rangeUnderflow: true },
+        message: `Value must be ${formatIsoDate(this.min, this.format, this.locale)} or later.`,
+        anchor: this.input ?? undefined,
+      };
+    }
+
+    if (this.max && ISO_DATE.test(this.max) && this._value > this.max) {
+      return {
+        flags: { rangeOverflow: true },
+        message: `Value must be ${formatIsoDate(this.max, this.format, this.locale)} or earlier.`,
+        anchor: this.input ?? undefined,
+      };
+    }
+
+    return validity;
   }
 
   readonly #handleKeyDown = (e: KeyboardEvent): void => {

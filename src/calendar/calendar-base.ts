@@ -28,6 +28,20 @@ export abstract class CalendarBase extends LitElement {
    */
   @property({ type: Number, attribute: 'year-range' }) yearRange = 24;
 
+  /**
+   * The earliest selectable date as an ISO `YYYY-MM-DD` string.
+   * Earlier dates are disabled and cannot be selected.
+   * When `null`, there is no lower bound.
+   */
+  @property() min: string | null = null;
+
+  /**
+   * The latest selectable date as an ISO `YYYY-MM-DD` string.
+   * Later dates are disabled and cannot be selected.
+   * When `null`, there is no upper bound.
+   */
+  @property() max: string | null = null;
+
   get year(): number {
     return this._displayingMonthDate.getFullYear();
   }
@@ -56,6 +70,9 @@ export abstract class CalendarBase extends LitElement {
   @property() locale: string | null = null;
   _innerLocale: string = navigator.language;
   adapter = new DefaultCalendarAdapter();
+
+  #minDate: Date | null = null;
+  #maxDate: Date | null = null;
 
   protected constructor() {
     super();
@@ -89,6 +106,14 @@ export abstract class CalendarBase extends LitElement {
       this._innerLocale = this.locale ?? navigator.language;
       this.#setLocaleDependantProperties();
     }
+
+    if (changed.has('min')) {
+      this.#minDate = this._getDateFromString(this.min ?? '');
+    }
+
+    if (changed.has('max')) {
+      this.#maxDate = this._getDateFromString(this.max ?? '');
+    }
   }
 
   override render(): HTMLTemplateResult {
@@ -107,7 +132,10 @@ export abstract class CalendarBase extends LitElement {
               <path d="M480-360 280-560h400L480-360Z" />
             </svg>
           </u-button>
-          <u-icon-button class="previous-month-button" @click=${this.#handlePrevClick}>
+          <u-icon-button
+            class="previous-month-button"
+            ?disabled=${this.#isPrevDisabled()}
+            @click=${this.#handlePrevClick}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               height="1em"
@@ -117,7 +145,9 @@ export abstract class CalendarBase extends LitElement {
               <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z" />
             </svg>
           </u-icon-button>
-          <u-icon-button @click=${this.#handleNextClick}>
+          <u-icon-button
+            ?disabled=${this.#isNextDisabled()}
+            @click=${this.#handleNextClick}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               height="1em"
@@ -182,6 +212,7 @@ export abstract class CalendarBase extends LitElement {
     for (let row = 0; row < 6; row++) {
       for (let i = 0; i < 7; i++) {
         const dateOutsideMonth = date.getMonth() !== month;
+        const disabled = this.#isDateDisabled(date);
 
         const dateClasses = this._getSelectedDateClasses(date);
 
@@ -193,12 +224,16 @@ export abstract class CalendarBase extends LitElement {
           dateClasses['date-outside-month'] = true;
         }
 
+        if (disabled) {
+          dateClasses['disabled'] = true;
+        }
+
         const classes = classMap(dateClasses);
 
         const renderDate = !dateOutsideMonth || this.dateOutsideMonth;
         const dateTemplate = renderDate
           ? html`
-              <u-ripple></u-ripple>
+              ${disabled ? null : html`<u-ripple></u-ripple>`}
               <span class="date">
                 ${this.dateRenderer
                   ? this.dateRenderer(new Date(date), this.adapter.getDay(date))
@@ -207,7 +242,7 @@ export abstract class CalendarBase extends LitElement {
             `
           : null;
 
-        const click = renderDate ? this.#handleDateClick(new Date(date)) : null;
+        const click = renderDate && !disabled ? this.#handleDateClick(new Date(date)) : null;
 
         daysTemplates.push(html`
           <div
@@ -231,16 +266,18 @@ export abstract class CalendarBase extends LitElement {
 
     for (let i = 0; i < this.yearRange; i++) {
       const year = this._yearPageStart + i;
+      const disabled = this.#isYearDisabled(year);
       const classes = classMap({
         'year-cell': true,
         'current-year': year === currentYear && year !== selectedYear,
         'selected-year': year === selectedYear,
+        disabled,
       });
 
       templates.push(html`
-        <div class=${classes} @click=${this.#handleYearClick(year)}>
+        <div class=${classes} @click=${disabled ? null : this.#handleYearClick(year)}>
           <span class="year-label">
-            <u-ripple></u-ripple>
+            ${disabled ? null : html`<u-ripple></u-ripple>`}
             ${year}
           </span>
         </div>
@@ -260,17 +297,19 @@ export abstract class CalendarBase extends LitElement {
     for (let month = 0; month < 12; month++) {
       const isCurrent = displayedYear === currentYear && month === currentMonth;
       const isSelected = month === selectedMonth;
+      const disabled = this.#isMonthDisabled(month);
 
       const classes = classMap({
         'month-cell': true,
         'current-month': isCurrent && !isSelected,
         'selected-month': isSelected,
+        disabled,
       });
 
       templates.push(html`
-        <div class=${classes} @click=${this.#handleMonthClick(month)}>
+        <div class=${classes} @click=${disabled ? null : this.#handleMonthClick(month)}>
           <span class="month-label">
-            <u-ripple></u-ripple>
+            ${disabled ? null : html`<u-ripple></u-ripple>`}
             ${this.adapter.getMonthShort(month, this._innerLocale)}
           </span>
         </div>
@@ -315,6 +354,10 @@ export abstract class CalendarBase extends LitElement {
   };
 
   readonly #handlePrevClick = (): void => {
+    if (this.#isPrevDisabled()) {
+      return;
+    }
+
     if (this.view === 'year') {
       this._yearPageStart -= this.yearRange;
       return;
@@ -329,6 +372,10 @@ export abstract class CalendarBase extends LitElement {
   };
 
   readonly #handleNextClick = (): void => {
+    if (this.#isNextDisabled()) {
+      return;
+    }
+
     if (this.view === 'year') {
       this._yearPageStart += this.yearRange;
       return;
@@ -344,6 +391,58 @@ export abstract class CalendarBase extends LitElement {
 
   #computeYearPageStart(year: number): number {
     return year - Math.floor(this.yearRange / 2);
+  }
+
+  #isDateDisabled(date: Date): boolean {
+    return (!!this.#minDate && date < this.#minDate)
+      || (!!this.#maxDate && date > this.#maxDate);
+  }
+
+  #isMonthDisabled(month: number): boolean {
+    const firstDayOfMonth = new Date(this.year, month, 1);
+    const lastDayOfMonth = new Date(this.year, month + 1, 0);
+
+    return (!!this.#minDate && lastDayOfMonth < this.#minDate)
+      || (!!this.#maxDate && firstDayOfMonth > this.#maxDate);
+  }
+
+  #isYearDisabled(year: number): boolean {
+    return (!!this.#minDate && year < this.#minDate.getFullYear())
+      || (!!this.#maxDate && year > this.#maxDate.getFullYear());
+  }
+
+  #isPrevDisabled(): boolean {
+    if (!this.#minDate) {
+      return false;
+    }
+
+    if (this.view === 'year') {
+      return this._yearPageStart - 1 < this.#minDate.getFullYear();
+    }
+
+    if (this.view === 'month') {
+      return this.year - 1 < this.#minDate.getFullYear();
+    }
+
+    const lastDayOfPreviousMonth = new Date(this.year, this.month, 0);
+    return lastDayOfPreviousMonth < this.#minDate;
+  }
+
+  #isNextDisabled(): boolean {
+    if (!this.#maxDate) {
+      return false;
+    }
+
+    if (this.view === 'year') {
+      return this._yearPageStart + this.yearRange > this.#maxDate.getFullYear();
+    }
+
+    if (this.view === 'month') {
+      return this.year + 1 > this.#maxDate.getFullYear();
+    }
+
+    const firstDayOfNextMonth = new Date(this.year, this.month + 1, 1);
+    return firstDayOfNextMonth > this.#maxDate;
   }
 
   protected _getCalendarClassMap(): DirectiveResult<typeof ClassMapDirective> | null {

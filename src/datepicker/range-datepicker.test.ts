@@ -113,6 +113,49 @@ suite('u-range-datepicker', () => {
     });
   });
 
+  suite('min/max constraint validation', () => {
+    test('min and max default to null', async () => {
+      const el = await fixture<RangeDatepicker>(html`<u-range-datepicker></u-range-datepicker>`);
+      expect(el.min).to.equal(null);
+      expect(el.max).to.equal(null);
+    });
+
+    test('a range starting before min reports rangeUnderflow', async () => {
+      const el = await fixture<RangeDatepicker>(html`
+        <u-range-datepicker min="2025-03-10" .value=${'2025-03-05 - 2025-03-15'}></u-range-datepicker>
+      `);
+      await el.updateComplete;
+      expect(el.checkValidity()).to.be.false;
+      expect(el.validity.rangeUnderflow).to.be.true;
+    });
+
+    test('a range ending after max reports rangeOverflow', async () => {
+      const el = await fixture<RangeDatepicker>(html`
+        <u-range-datepicker max="2025-03-20" .value=${'2025-03-12 - 2025-03-25'}></u-range-datepicker>
+      `);
+      await el.updateComplete;
+      expect(el.checkValidity()).to.be.false;
+      expect(el.validity.rangeOverflow).to.be.true;
+    });
+
+    test('a range inside [min, max] is valid', async () => {
+      const el = await fixture<RangeDatepicker>(html`
+        <u-range-datepicker min="2025-03-10" max="2025-03-20" .value=${'2025-03-12 - 2025-03-18'}></u-range-datepicker>
+      `);
+      await el.updateComplete;
+      expect(el.checkValidity()).to.be.true;
+    });
+
+    test('forwards min/max to the range calendar popover', async () => {
+      const el = await fixture<RangeDatepicker>(html`
+        <u-range-datepicker min="2025-03-10" max="2025-03-20"></u-range-datepicker>
+      `);
+      const calendar = el.shadowRoot!.querySelector('u-range-calendar')!;
+      expect(calendar.min).to.equal('2025-03-10');
+      expect(calendar.max).to.equal('2025-03-20');
+    });
+  });
+
   suite('form association', () => {
     test('submits the current range with the form', async () => {
       const formEl = await fixture<HTMLFormElement>(html`

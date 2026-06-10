@@ -67,6 +67,31 @@
   </div>
 </docs-example>
 <docs-example
+  sectionTitle="Min and max"
+  [html]="minMaxHtml"
+  [renderExample]="false"
+>
+  <p>
+    Dates outside <code>[min, max]</code> are disabled in the calendar, and a value outside the bounds fails constraint
+    validation with <code>rangeUnderflow</code>/<code>rangeOverflow</code>. In this demo the range goes from 5 days ago
+    to 15 days from now.
+  </p>
+  <div
+    class="u-column"
+    example
+  >
+    <u-datepicker
+      label="Date"
+      [attr.min]="minDate"
+      [attr.max]="maxDate"
+    ></u-datepicker>
+    <u-calendar
+      [attr.min]="minDate"
+      [attr.max]="maxDate"
+    ></u-calendar>
+  </div>
+</docs-example>
+<docs-example
   sectionTitle="Range datepicker"
   [html]="rangeDatepickerHtml"
   [renderExample]="false"

@@ -118,6 +118,55 @@ suite('u-datepicker', () => {
     });
   });
 
+  suite('min/max constraint validation', () => {
+    test('min and max default to null', async () => {
+      const el = await fixture<Datepicker>(html`<u-datepicker></u-datepicker>`);
+      expect(el.min).to.equal(null);
+      expect(el.max).to.equal(null);
+    });
+
+    test('a value before min reports rangeUnderflow', async () => {
+      const el = await fixture<Datepicker>(html`<u-datepicker min="2025-03-10" .value=${'2025-03-05'}></u-datepicker>`);
+      await el.updateComplete;
+      expect(el.checkValidity()).to.be.false;
+      expect(el.validity.rangeUnderflow).to.be.true;
+    });
+
+    test('a value after max reports rangeOverflow', async () => {
+      const el = await fixture<Datepicker>(html`<u-datepicker max="2025-03-20" .value=${'2025-03-25'}></u-datepicker>`);
+      await el.updateComplete;
+      expect(el.checkValidity()).to.be.false;
+      expect(el.validity.rangeOverflow).to.be.true;
+    });
+
+    test('a value inside [min, max] is valid', async () => {
+      const el = await fixture<Datepicker>(html`
+        <u-datepicker min="2025-03-10" max="2025-03-20" .value=${'2025-03-15'}></u-datepicker>
+      `);
+      await el.updateComplete;
+      expect(el.checkValidity()).to.be.true;
+    });
+
+    test('an empty value is valid when not required', async () => {
+      const el = await fixture<Datepicker>(html`<u-datepicker min="2025-03-10" max="2025-03-20"></u-datepicker>`);
+      await el.updateComplete;
+      expect(el.checkValidity()).to.be.true;
+    });
+
+    test('forwards min/max to the native input when editable', async () => {
+      const el = await fixture<Datepicker>(html`<u-datepicker editable min="2025-03-10" max="2025-03-20"></u-datepicker>`);
+      expect(inputOf(el).min).to.equal('2025-03-10');
+      expect(inputOf(el).max).to.equal('2025-03-20');
+    });
+
+    test('forwards min/max to the calendar popover', async () => {
+      const el = await fixture<Datepicker>(html`<u-datepicker min="2025-03-10" max="2025-03-20"></u-datepicker>`);
+      const calendar = el.shadowRoot!.querySelector('u-calendar')!;
+      expect(calendar.min).to.equal('2025-03-10');
+      expect(calendar.max).to.equal('2025-03-20');
+    });
+  });
+
   suite('form association', () => {
     test('submits the current value with the form', async () => {
       const formEl = await fixture<HTMLFormElement>(html`

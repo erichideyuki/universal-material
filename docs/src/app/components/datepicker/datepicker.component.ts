@@ -14,6 +14,18 @@ import datepickerHtml from './examples/datepicker.html';
 import datepickerEditableHtml from './examples/datepicker-editable.html';
 import rangeDatepickerHtml from './examples/range-datepicker.html';
 import localeHtml from './examples/locale.html';
+import minMaxHtml from './examples/min-max.html';
+
+const isoDateWithOffset = (offsetDays: number): string => {
+  const date = new Date();
+  date.setDate(date.getDate() + offsetDays);
+
+  return new Intl.DateTimeFormat('en-CA', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(date);
+};
 
 @Component({
   selector: 'docs-datepicker',
@@ -37,6 +49,10 @@ export class DatepickerComponent {
   datepickerEditableHtml = datepickerEditableHtml;
   rangeDatepickerHtml = rangeDatepickerHtml;
   localeHtml = localeHtml;
+  minMaxHtml = minMaxHtml;
+
+  minDate = isoDateWithOffset(-5);
+  maxDate = isoDateWithOffset(15);
 
   selectedDate = '';
   selectedRange = '';
