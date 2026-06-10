@@ -8,3 +8,8 @@
 **/*.html
 **/*.json
 !/docs/**/*.html
+
+# Monorepo packages and the internal migration harness manage their own
+# formatting; they are not part of the web (root) package's lint surface.
+/planning/
+/packages/
