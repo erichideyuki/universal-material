@@ -1,3 +1,4 @@
+import { consume } from '@lit/context';
 import { CSSResultGroup } from '@lit/reactive-element/css-tag';
 
 import { html, HTMLTemplateResult, LitElement } from 'lit';
@@ -6,6 +7,7 @@ import { ClassMapDirective } from 'lit-html/directives/class-map';
 import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 
+import { localeContext } from '../shared/locale-context.js';
 import { styles } from './calendar-base.styles.js';
 import { DefaultCalendarAdapter } from './default-calendar-adapter.js';
 
@@ -73,9 +75,15 @@ export abstract class CalendarBase extends LitElement {
 
   /**
    * The BCP 47 locale tag used to format month names and weekdays.
-   * When `null`, falls back to the browser's `navigator.language`.
+   * When `null`, falls back to the surrounding `localeContext` and then
+   * to the browser's `navigator.language`.
    */
   @property() locale: string | null = null;
+
+  @consume({ context: localeContext, subscribe: true })
+  @state()
+  private readonly contextLocale: string | undefined;
+
   _innerLocale: string = navigator.language;
   adapter = new DefaultCalendarAdapter();
 
@@ -100,7 +108,7 @@ export abstract class CalendarBase extends LitElement {
     this.#setLocaleDependantProperties();
 
     window.addEventListener('languagechange', () => {
-      if (this.locale !== null) {
+      if (this.locale !== null || this.contextLocale !== undefined) {
         return;
       }
 
@@ -110,8 +118,8 @@ export abstract class CalendarBase extends LitElement {
   }
 
   override willUpdate(changed: Map<string, unknown>): void {
-    if (changed.has('locale')) {
-      this._innerLocale = this.locale ?? navigator.language;
+    if (changed.has('locale') || changed.has('contextLocale')) {
+      this._innerLocale = this.locale ?? this.contextLocale ?? navigator.language;
       this.#setLocaleDependantProperties();
     }
 

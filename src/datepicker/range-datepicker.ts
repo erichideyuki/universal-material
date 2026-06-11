@@ -1,13 +1,15 @@
+import { consume } from '@lit/context';
 import { CSSResultGroup } from '@lit/reactive-element/css-tag';
 
 import { html, HTMLTemplateResult, nothing, svg } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import { customElement, property, query, state } from 'lit/decorators.js';
 import { live } from 'lit/directives/live.js';
 
 import { CalendarValueType } from '../calendar/calendar-base.js';
 import { DateRangeValue, RangeCalendar } from '../calendar/range-calendar.js';
 import { Menu } from '../menu/menu.js';
 import { NativeTextFieldWrapper } from '../shared/char-count-text-field/native-text-field-wrapper.js';
+import { localeContext } from '../shared/locale-context.js';
 import { FieldValidity, TextFieldBase } from '../shared/text-field-base/text-field-base.js';
 import { styles as textFieldStyles } from '../text-field/text-field.styles.js';
 import { styles } from './datepicker.styles.js';
@@ -28,9 +30,18 @@ export class RangeDatepicker extends NativeTextFieldWrapper<string | DateRangeVa
   /**
    * The BCP 47 locale tag forwarded to the underlying range calendar and used
    * for non-editable display formatting.
-   * When `null`, the calendar falls back to the browser's `navigator.language`.
+   * When `null`, falls back to the surrounding `localeContext` and then to
+   * the browser's `navigator.language`.
    */
   @property() locale: string | null = null;
+
+  @consume({ context: localeContext, subscribe: true })
+  @state()
+  private readonly contextLocale: string | undefined;
+
+  get #resolvedLocale(): string | null {
+    return this.locale ?? this.contextLocale ?? null;
+  }
 
   /**
    * Format used when displaying the value while the field is not editable.
@@ -93,7 +104,7 @@ export class RangeDatepicker extends NativeTextFieldWrapper<string | DateRangeVa
   protected override renderControl(): HTMLTemplateResult {
     const displayValue = this.editable
       ? this._value
-      : formatIsoDateRange(this._value, this.format, this.locale);
+      : formatIsoDateRange(this._value, this.format, this.#resolvedLocale);
 
     return html`
       ${this.editable
@@ -231,7 +242,7 @@ export class RangeDatepicker extends NativeTextFieldWrapper<string | DateRangeVa
     if (this.min && ISO_DATE.test(this.min) && start < this.min) {
       return {
         flags: { rangeUnderflow: true },
-        message: `Value must be ${formatIsoDate(this.min, this.format, this.locale)} or later.`,
+        message: `Value must be ${formatIsoDate(this.min, this.format, this.#resolvedLocale)} or later.`,
         anchor: this.input ?? undefined,
       };
     }
@@ -239,7 +250,7 @@ export class RangeDatepicker extends NativeTextFieldWrapper<string | DateRangeVa
     if (this.max && ISO_DATE.test(this.max) && end > this.max) {
       return {
         flags: { rangeOverflow: true },
-        message: `Value must be ${formatIsoDate(this.max, this.format, this.locale)} or earlier.`,
+        message: `Value must be ${formatIsoDate(this.max, this.format, this.#resolvedLocale)} or earlier.`,
         anchor: this.input ?? undefined,
       };
     }

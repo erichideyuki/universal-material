@@ -118,6 +118,7 @@ export * from './ripple/ripple.js';
 export * from './scaffold/scaffold.js';
 export * from './scaffold/pane.js';
 export { scrollContainerContext } from './scaffold/scroll-container-context.js';
+export { localeContext, provideLocale } from './shared/locale-context.js';
 export * from './snackbar/snackbar.js';
 export * from './tab-bar/tab-bar.js';
 export * from './tab-bar/tab.js';

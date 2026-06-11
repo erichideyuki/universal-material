@@ -97,13 +97,13 @@ describe('UmDatepickerMinValidator / UmDatepickerMaxValidator', () => {
   it('flags a Date value before min with the min error', () => {
     const { host } = setup();
     host.control.setValue(new Date(2024, 0, 5) as any);
-    expect(host.control.errors?.min).toBeTruthy();
+    expect(host.control.errors?.['min']).toBeTruthy();
   });
 
   it('flags a { start, end } range of Dates outside the bounds', () => {
     const { host } = setup();
     host.control.setValue({ start: new Date(2024, 0, 12), end: new Date(2024, 0, 25) } as any);
-    expect(host.control.errors?.max).toBeTruthy();
+    expect(host.control.errors?.['max']).toBeTruthy();
   });
 
   it('accepts a Date value inside [min, max]', () => {
