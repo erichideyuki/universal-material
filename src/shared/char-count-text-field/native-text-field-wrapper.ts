@@ -2,22 +2,21 @@ import { property } from 'lit/decorators.js';
 
 import { TextFieldBase } from '../text-field-base/text-field-base.js';
 
-export abstract class NativeTextFieldWrapper extends TextFieldBase {
+export abstract class NativeTextFieldWrapper<TValue = string> extends TextFieldBase {
   protected _value = '';
 
   /**
-   * The current text value of the field, submitted with the associated form
+   * The current value of the field. The canonical string form is submitted
+   * with the associated form; subclasses may expose a converted public type
+   * via `_getPublicValue`/`_coerceValue`.
    */
   @property()
-  get value() {
-    return this._value;
+  get value(): TValue {
+    return this._getPublicValue();
   }
 
-  set value(value: string) {
-    this._value = value;
-    this.empty = !value;
-    this.elementInternals.setFormValue(value);
-    this.#updateCounter();
+  set value(value: TValue) {
+    this._setValue(this._coerceValue(value));
   }
 
   /**
@@ -52,6 +51,23 @@ export abstract class NativeTextFieldWrapper extends TextFieldBase {
 
   abstract input: HTMLInputElement | HTMLTextAreaElement;
 
+  /** Maps the canonical string value to the public `value` type. */
+  protected _getPublicValue(): TValue {
+    return this._value as TValue;
+  }
+
+  /** Maps a publicly assigned value to the canonical string form. */
+  protected _coerceValue(value: TValue): string {
+    return (value as unknown as string) ?? '';
+  }
+
+  protected _setValue(value: string) {
+    this._value = value;
+    this.empty = !value;
+    this.elementInternals.setFormValue(value);
+    this.#updateCounter();
+  }
+
   protected _handleKeyDown(e: KeyboardEvent) {
     if (e.key === 'Enter') {
       this.elementInternals.form?.requestSubmit();
@@ -59,13 +75,12 @@ export abstract class NativeTextFieldWrapper extends TextFieldBase {
   }
 
   protected _handleInput() {
-    this.value = this.input.value;
-    this.#updateCounter();
+    this._setValue(this.input.value);
   }
 
   #updateCounter() {
     if (this.maxlength) {
-      this._innerCounter = `${this.value.length}/${this.maxlength}`;
+      this._innerCounter = `${this._value.length}/${this.maxlength}`;
       return;
     }
 

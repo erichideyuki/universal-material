@@ -65,6 +65,7 @@ export * from './button/button-set.js';
 export * from './button/fab.js';
 export * from './button/icon-button.js';
 export * from './button-field/button-field.js';
+export * from './calendar/calendar-base.js';
 export * from './calendar/calendar.js';
 export * from './calendar/range-calendar.js';
 export * from './datepicker/datepicker.js';

@@ -94,6 +94,24 @@ describe('UmDatepickerMinValidator / UmDatepickerMaxValidator', () => {
     expect(el.max).toBe('2024-01-20');
   });
 
+  it('flags a Date value before min with the min error', () => {
+    const { host } = setup();
+    host.control.setValue(new Date(2024, 0, 5) as any);
+    expect(host.control.errors?.min).toBeTruthy();
+  });
+
+  it('flags a { start, end } range of Dates outside the bounds', () => {
+    const { host } = setup();
+    host.control.setValue({ start: new Date(2024, 0, 12), end: new Date(2024, 0, 25) } as any);
+    expect(host.control.errors?.max).toBeTruthy();
+  });
+
+  it('accepts a Date value inside [min, max]', () => {
+    const { host } = setup();
+    host.control.setValue(new Date(2024, 0, 15) as any);
+    expect(host.control.errors).toBeNull();
+  });
+
   it('removes the attributes when min/max are cleared', () => {
     const { fixture, host, el } = setup();
     host.min = null;

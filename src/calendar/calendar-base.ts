@@ -10,6 +10,7 @@ import { styles } from './calendar-base.styles.js';
 import { DefaultCalendarAdapter } from './default-calendar-adapter.js';
 
 export type CalendarView = 'day' | 'month' | 'year';
+export type CalendarValueType = 'iso' | 'date';
 
 export abstract class CalendarBase extends LitElement {
   static override styles: CSSResultGroup = [styles];
@@ -41,6 +42,13 @@ export abstract class CalendarBase extends LitElement {
    * When `null`, there is no upper bound.
    */
   @property() max: string | null = null;
+
+  /**
+   * Controls the type produced by the `value` getter. With `'iso'` (default)
+   * dates are read as ISO `YYYY-MM-DD` strings; with `'date'` they are read
+   * as `Date` objects. The setter accepts either form regardless.
+   */
+  @property({ attribute: 'value-type' }) valueType: CalendarValueType = 'iso';
 
   get year(): number {
     return this._displayingMonthDate.getFullYear();
@@ -487,6 +495,18 @@ export abstract class CalendarBase extends LitElement {
     }
 
     return this._getDateFromIsoDate(dateString);
+  }
+
+  protected _getDateFromValue(value: string | Date | null): Date | null {
+    if (!value) {
+      return null;
+    }
+
+    if (value instanceof Date) {
+      return new Date(value.getFullYear(), value.getMonth(), value.getDate());
+    }
+
+    return this._getDateFromString(value);
   }
 
   #addMonth(value: number): void {

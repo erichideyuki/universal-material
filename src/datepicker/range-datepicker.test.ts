@@ -113,6 +113,42 @@ suite('u-range-datepicker', () => {
     });
   });
 
+  suite('value-type', () => {
+    test('returns a { start, end } object of Dates when value-type="date"', async () => {
+      const el = await fixture<RangeDatepicker>(html`
+        <u-range-datepicker value-type="date" .value=${'2025-01-10 - 2025-02-20'}></u-range-datepicker>
+      `);
+
+      const value = el.value as { start: Date; end: Date };
+      expect(value.start.getTime()).to.equal(new Date(2025, 0, 10).getTime());
+      expect(value.end.getTime()).to.equal(new Date(2025, 1, 20).getTime());
+    });
+
+    test('returns null when empty and value-type="date"', async () => {
+      const el = await fixture<RangeDatepicker>(html`<u-range-datepicker value-type="date"></u-range-datepicker>`);
+      expect(el.value).to.equal(null);
+    });
+
+    test('accepts a { start, end } object of Dates regardless of value-type', async () => {
+      const el = await fixture<RangeDatepicker>(html`<u-range-datepicker></u-range-datepicker>`);
+      el.value = { start: new Date(2025, 0, 10), end: new Date(2025, 1, 20) };
+      expect(el.value).to.equal('2025-01-10 - 2025-02-20');
+    });
+
+    test('still submits the ISO string with the form when value-type="date"', async () => {
+      const formEl = await fixture<HTMLFormElement>(html`
+        <form>
+          <u-range-datepicker
+            value-type="date"
+            name="r"
+            .value=${{ start: new Date(2025, 0, 10), end: new Date(2025, 1, 20) }}></u-range-datepicker>
+        </form>
+      `);
+      const data = new FormData(formEl);
+      expect(data.get('r')).to.equal('2025-01-10 - 2025-02-20');
+    });
+  });
+
   suite('min/max constraint validation', () => {
     test('min and max default to null', async () => {
       const el = await fixture<RangeDatepicker>(html`<u-range-datepicker></u-range-datepicker>`);

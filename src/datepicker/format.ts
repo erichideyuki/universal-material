@@ -23,6 +23,18 @@ export const parseIsoDate = (iso: string): Date | null => {
 };
 
 /**
+ * Formats a `Date` as an ISO `YYYY-MM-DD` string using its local calendar
+ * parts — the inverse of `parseIsoDate`.
+ */
+export const toIsoDate = (date: Date): string => {
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString()
+    .padStart(2, '0');
+
+  return `${date.getFullYear()}-${month}-${day}`;
+};
+
+/**
  * Formats an ISO date string (`YYYY-MM-DD`) for display, following the
  * datepicker `format` property. Non-ISO inputs are passed through
  * unchanged so partially-typed values aren't mangled.

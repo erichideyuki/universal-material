@@ -4,13 +4,14 @@ import { html, HTMLTemplateResult, nothing, svg } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { live } from 'lit/directives/live.js';
 
-import { RangeCalendar } from '../calendar/range-calendar.js';
+import { CalendarValueType } from '../calendar/calendar-base.js';
+import { DateRangeValue, RangeCalendar } from '../calendar/range-calendar.js';
 import { Menu } from '../menu/menu.js';
 import { NativeTextFieldWrapper } from '../shared/char-count-text-field/native-text-field-wrapper.js';
 import { FieldValidity, TextFieldBase } from '../shared/text-field-base/text-field-base.js';
 import { styles as textFieldStyles } from '../text-field/text-field.styles.js';
 import { styles } from './datepicker.styles.js';
-import { DatepickerFormat, formatIsoDate, formatIsoDateRange } from './format.js';
+import { DatepickerFormat, formatIsoDate, formatIsoDateRange, parseIsoDate, toIsoDate } from './format.js';
 
 import '../button/icon-button.js';
 import '../calendar/range-calendar.js';
@@ -21,7 +22,7 @@ const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 const ISO_DATE_RANGE = /^\d{4}-\d{2}-\d{2} - \d{4}-\d{2}-\d{2}$/;
 
 @customElement('u-range-datepicker')
-export class RangeDatepicker extends NativeTextFieldWrapper {
+export class RangeDatepicker extends NativeTextFieldWrapper<string | DateRangeValue | null> {
   static override styles: CSSResultGroup = [TextFieldBase.styles, textFieldStyles, styles];
 
   /**
@@ -74,6 +75,15 @@ export class RangeDatepicker extends NativeTextFieldWrapper {
    * upper bound.
    */
   @property() max: string | null = null;
+
+  /**
+   * Controls the type produced by the `value` getter. With `'iso'` (default)
+   * the range is read as a `YYYY-MM-DD - YYYY-MM-DD` string; with `'date'` it
+   * is read as a `{ start, end }` object of `Date`s (`null` when empty). The
+   * setter accepts either form regardless; the form always submits the
+   * ISO string.
+   */
+  @property({ attribute: 'value-type' }) valueType: CalendarValueType = 'iso';
 
   @query('input') input!: HTMLInputElement;
   @query('u-menu', true) private readonly _menu!: Menu;
@@ -165,6 +175,38 @@ export class RangeDatepicker extends NativeTextFieldWrapper {
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     this._trailingSlot?.removeEventListener('click', this.#toggleMenu);
+  }
+
+  protected override _getPublicValue(): string | DateRangeValue | null {
+    if (this.valueType === 'date') {
+      if (!this._value) {
+        return null;
+      }
+
+      const [start, end] = this._value.split(' - ');
+
+      return {
+        start: parseIsoDate(start ?? ''),
+        end: parseIsoDate(end ?? ''),
+      };
+    }
+
+    return this._value;
+  }
+
+  protected override _coerceValue(value: string | DateRangeValue | null): string {
+    if (!value) {
+      return '';
+    }
+
+    if (typeof value === 'string') {
+      return value;
+    }
+
+    const start = value.start ? toIsoDate(value.start) : '';
+    const end = value.end ? toIsoDate(value.end) : '';
+
+    return !start && !end ? '' : `${start} - ${end}`;
   }
 
   protected override _handleInput(): void {

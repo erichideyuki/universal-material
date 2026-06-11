@@ -1,6 +1,6 @@
 import { Directive, ElementRef, forwardRef, inject, OnDestroy, Provider, Renderer2 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { RangeDatepicker } from '@universal-material/web';
+import { DateRangeValue, RangeDatepicker } from '@universal-material/web';
 
 /**
  * Coordinates the `uStartDate`/`uEndDate` value accessors of a
@@ -18,15 +18,32 @@ export class UmRangeDatepickerDirective {
   private readonly _renderer = inject(Renderer2);
   private readonly _disabledParts = [false, false];
 
-  getPart(index: 0 | 1): string {
-    const parts = (this.element.value ?? '').split(' - ');
+  getPart(index: 0 | 1): string | Date | null {
+    if (this.element.valueType === 'date') {
+      const value = this.element.value as DateRangeValue | null;
+
+      return (index === 0 ? value?.start : value?.end) ?? null;
+    }
+
+    const parts = ((this.element.value as string) ?? '').split(' - ');
 
     return parts.length === 2 ? parts[index] : '';
   }
 
-  setPart(index: 0 | 1, value: string | null): void {
-    const parts = [this.getPart(0), this.getPart(1)];
-    parts[index] = value ?? '';
+  setPart(index: 0 | 1, value: string | Date | null): void {
+    if (this.element.valueType === 'date') {
+      const current = (this.element.value ?? { start: null, end: null }) as DateRangeValue;
+      const next: DateRangeValue = {
+        start: index === 0 ? (value as Date | null) : current.start,
+        end: index === 1 ? (value as Date | null) : current.end,
+      };
+
+      this._renderer.setProperty(this.element, 'value', !next.start && !next.end ? null : next);
+      return;
+    }
+
+    const parts = [this.getPart(0) as string, this.getPart(1) as string];
+    parts[index] = (value as string) ?? '';
 
     const combined = !parts[0] && !parts[1] ? '' : `${parts[0]} - ${parts[1]}`;
     this._renderer.setProperty(this.element, 'value', combined);

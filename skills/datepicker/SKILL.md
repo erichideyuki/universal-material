@@ -15,7 +15,7 @@ description: Use u-datepicker and u-range-datepicker — calendar popover for si
 ></u-datepicker>
 ```
 
-The value is always ISO `YYYY-MM-DD` (suitable for form submission). The displayed value is formatted per the `format` prop.
+By default the value reads as ISO `YYYY-MM-DD` (suitable for form submission) — see "Value type" below to read `Date` objects instead. The displayed value is formatted per the `format` prop.
 
 ## Display formats
 
@@ -119,6 +119,23 @@ In editable mode the browser's native date-format mask is hidden until the user 
 
 They also drive constraint validation: a value before `min` reports `rangeUnderflow`, after `max` reports `rangeOverflow` (surfaced by `checkValidity()`/`reportValidity()`/`validity` and blocking native form submit). On `<u-range-datepicker>`, `min` applies to the range start and `max` to the range end. In editable mode the bounds are also forwarded to the native `<input type="date">`.
 
+## Value type: ISO strings or Date objects
+
+By default `value` reads as an ISO string (`'iso'`). With `value-type="date"` it reads as `Date` objects instead — `Date | null` on `<u-datepicker>`/`<u-calendar>`, and `{ start: Date | null, end: Date | null } | null` on the range components:
+
+```html
+<u-datepicker
+  value-type="date"
+  label="Date"
+></u-datepicker>
+<u-range-datepicker
+  value-type="date"
+  label="Stay"
+></u-range-datepicker>
+```
+
+The setter accepts either form regardless of `value-type` (an ISO string, a `Date`, or `{ start, end }` for ranges; time parts are dropped). Forms always submit the ISO string. `min`/`max` stay ISO strings in both modes.
+
 ## Range
 
 ```html
@@ -149,7 +166,7 @@ Value format is `YYYY-MM-DD - YYYY-MM-DD`. Same `format`/`locale`/`editable`/`re
 
 Inline-calendar gotchas (not obvious):
 
-- `value` is an ISO string (get/set). A day click fires **both** `input` and `change`, with `e.target.value` = the ISO date.
+- `value` is an ISO string by default (`value-type="date"` switches it to `Date` objects). A day click fires **both** `input` and `change`, with `e.target.value` = the value in the configured type.
 - Setting `.value` does **not** move the displayed month — set `.month` / `.year` separately to open on a specific month.
 - `locale` drives the month/weekday labels (defaults to `navigator.language`; use `locale="pt-BR"` for Portuguese).
 
@@ -166,6 +183,6 @@ Inline-calendar gotchas (not obvious):
 
 ## Caveats
 
-- `value` is always ISO. Format strings only affect display.
+- `value` is ISO by default; `value-type="date"` switches reads to `Date` objects, but the form still submits the ISO string. Format strings only affect display.
 - In editable mode the field uses the browser's native `<input type="date">`, which means OS-level keyboard handling and locale conventions for the typing UX.
 - The popover opens below the field with `direction="down-end"`. Use `menu-positioning="fixed"` if the field is in a scaffold scroll area to avoid being clipped.

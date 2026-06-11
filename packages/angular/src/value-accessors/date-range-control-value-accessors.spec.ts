@@ -111,4 +111,30 @@ describe('UmStartDateControlValueAccessor / UmEndDateControlValueAccessor', () =
     const inputs = (fixture.nativeElement as HTMLElement).querySelectorAll('input');
     inputs.forEach((input) => expect(input.hasAttribute('hidden')).toBeTrue());
   });
+
+  describe('value-type="date"', () => {
+    it('combines Date control values into a { start, end } object', async () => {
+      const { fixture, host, el } = setup();
+      el.valueType = 'date';
+
+      host.start.setValue(new Date(2024, 0, 10) as any);
+      host.end.setValue(new Date(2024, 0, 20) as any);
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      expect(el.value.start.getTime()).toBe(new Date(2024, 0, 10).getTime());
+      expect(el.value.end.getTime()).toBe(new Date(2024, 0, 20).getTime());
+    });
+
+    it('propagates a range change to both controls as Dates', () => {
+      const { host, el } = setup();
+      el.valueType = 'date';
+
+      el.value = { start: new Date(2024, 1, 5), end: new Date(2024, 1, 15) };
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+
+      expect((host.start.value as unknown as Date).getTime()).toBe(new Date(2024, 1, 5).getTime());
+      expect((host.end.value as unknown as Date).getTime()).toBe(new Date(2024, 1, 15).getTime());
+    });
+  });
 });

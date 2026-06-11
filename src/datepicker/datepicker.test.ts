@@ -118,6 +118,48 @@ suite('u-datepicker', () => {
     });
   });
 
+  suite('value-type', () => {
+    test('defaults to iso', async () => {
+      const el = await fixture<Datepicker>(html`<u-datepicker .value=${'2025-03-15'}></u-datepicker>`);
+      expect(el.valueType).to.equal('iso');
+      expect(el.value).to.equal('2025-03-15');
+    });
+
+    test('returns a Date object when value-type="date"', async () => {
+      const el = await fixture<Datepicker>(html`<u-datepicker value-type="date" .value=${'2025-03-15'}></u-datepicker>`);
+      expect(el.value).to.be.instanceOf(Date);
+      expect((el.value as Date).getTime()).to.equal(new Date(2025, 2, 15).getTime());
+    });
+
+    test('returns null when empty and value-type="date"', async () => {
+      const el = await fixture<Datepicker>(html`<u-datepicker value-type="date"></u-datepicker>`);
+      expect(el.value).to.equal(null);
+    });
+
+    test('accepts a Date object regardless of value-type', async () => {
+      const el = await fixture<Datepicker>(html`<u-datepicker></u-datepicker>`);
+      el.value = new Date(2025, 2, 15);
+      expect(el.value).to.equal('2025-03-15');
+    });
+
+    test('still submits the ISO string with the form when value-type="date"', async () => {
+      const formEl = await fixture<HTMLFormElement>(html`
+        <form><u-datepicker value-type="date" name="dt" .value=${new Date(2025, 2, 15)}></u-datepicker></form>
+      `);
+      const data = new FormData(formEl);
+      expect(data.get('dt')).to.equal('2025-03-15');
+    });
+
+    test('min/max validation keeps working with Date values', async () => {
+      const el = await fixture<Datepicker>(html`
+        <u-datepicker value-type="date" min="2025-03-10" .value=${new Date(2025, 2, 5)}></u-datepicker>
+      `);
+      await el.updateComplete;
+      expect(el.checkValidity()).to.be.false;
+      expect(el.validity.rangeUnderflow).to.be.true;
+    });
+  });
+
   suite('min/max constraint validation', () => {
     test('min and max default to null', async () => {
       const el = await fixture<Datepicker>(html`<u-datepicker></u-datepicker>`);

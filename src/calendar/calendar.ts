@@ -12,16 +12,21 @@ export class Calendar extends CalendarBase {
   @state() dateValue: Date | null = null;
 
   /**
-   * The selected date as an ISO date string (`YYYY-MM-DD`), or an empty
-   * string when no date is selected
+   * The selected date. Read as an ISO date string (`YYYY-MM-DD`, empty when
+   * no date is selected), or as a `Date` object (`null` when empty) when
+   * `value-type` is `'date'`. Accepts either form when set.
    */
   @property()
-  get value(): string {
+  get value(): string | Date | null {
+    if (this.valueType === 'date') {
+      return this.dateValue ? new Date(this.dateValue) : null;
+    }
+
     return this._getDateString(this.dateValue);
   }
 
-  set value(value: string) {
-    this.dateValue = this._getDateFromString(value);
+  set value(value: string | Date | null) {
+    this.dateValue = this._getDateFromValue(value);
   }
 
   protected override _selectDate(date: Date): void {

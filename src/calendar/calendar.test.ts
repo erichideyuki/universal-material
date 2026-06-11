@@ -60,6 +60,39 @@ suite('u-calendar', () => {
     });
   });
 
+  suite('value-type', () => {
+    test('defaults to iso', async () => {
+      const el = await fixture<Calendar>(html`<u-calendar></u-calendar>`);
+      el.value = '2025-03-15';
+      expect(el.valueType).to.equal('iso');
+      expect(el.value).to.equal('2025-03-15');
+    });
+
+    test('returns a Date object when value-type="date"', async () => {
+      const el = await fixture<Calendar>(html`<u-calendar value-type="date"></u-calendar>`);
+      el.value = '2025-03-15';
+      expect(el.value).to.be.instanceOf(Date);
+      expect((el.value as Date).getTime()).to.equal(new Date(2025, 2, 15).getTime());
+    });
+
+    test('returns null when empty and value-type="date"', async () => {
+      const el = await fixture<Calendar>(html`<u-calendar value-type="date"></u-calendar>`);
+      expect(el.value).to.equal(null);
+    });
+
+    test('accepts a Date object regardless of value-type', async () => {
+      const el = await fixture<Calendar>(html`<u-calendar></u-calendar>`);
+      el.value = new Date(2025, 2, 15, 13, 45);
+      expect(el.value).to.equal('2025-03-15');
+    });
+
+    test('normalizes the time part of an assigned Date', async () => {
+      const el = await fixture<Calendar>(html`<u-calendar value-type="date"></u-calendar>`);
+      el.value = new Date(2025, 2, 15, 23, 59);
+      expect((el.value as Date).getTime()).to.equal(new Date(2025, 2, 15).getTime());
+    });
+  });
+
   suite('min/max', () => {
     const navButtonOf = (el: Calendar, selector: string) =>
       el.shadowRoot!.querySelector<HTMLElement & { disabled: boolean }>(selector)!;
@@ -169,6 +202,28 @@ suite('u-range-calendar', () => {
       el.value = '2025-01-10';
       expect(el.startDateValue).to.equal(null);
       expect(el.endDateValue).to.equal(null);
+    });
+  });
+
+  suite('value-type', () => {
+    test('returns a { start, end } object of Dates when value-type="date"', async () => {
+      const el = await fixture<RangeCalendar>(html`<u-range-calendar value-type="date"></u-range-calendar>`);
+      el.value = '2025-01-10 - 2025-02-20';
+
+      const value = el.value as { start: Date; end: Date };
+      expect(value.start.getTime()).to.equal(new Date(2025, 0, 10).getTime());
+      expect(value.end.getTime()).to.equal(new Date(2025, 1, 20).getTime());
+    });
+
+    test('returns null when empty and value-type="date"', async () => {
+      const el = await fixture<RangeCalendar>(html`<u-range-calendar value-type="date"></u-range-calendar>`);
+      expect(el.value).to.equal(null);
+    });
+
+    test('accepts a { start, end } object of Dates regardless of value-type', async () => {
+      const el = await fixture<RangeCalendar>(html`<u-range-calendar></u-range-calendar>`);
+      el.value = { start: new Date(2025, 0, 10), end: new Date(2025, 1, 20) };
+      expect(el.value).to.equal('2025-01-10 - 2025-02-20');
     });
   });
 

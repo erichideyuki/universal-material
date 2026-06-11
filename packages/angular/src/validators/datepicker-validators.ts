@@ -4,28 +4,43 @@ import { AbstractControl, NG_VALIDATORS, ValidationErrors, Validator } from '@an
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 const ISO_DATE_RANGE = /^\d{4}-\d{2}-\d{2} - \d{4}-\d{2}-\d{2}$/;
 
-const getStartDate = (value: string): string | null => {
-  if (ISO_DATE.test(value)) {
-    return value;
+const getIsoDate = (value: unknown): string | null => {
+  if (value instanceof Date) {
+    const month = (value.getMonth() + 1).toString().padStart(2, '0');
+    const day = value.getDate().toString().padStart(2, '0');
+
+    return `${value.getFullYear()}-${month}-${day}`;
   }
 
-  if (ISO_DATE_RANGE.test(value)) {
-    return value.split(' - ')[0];
+  if (typeof value === 'string' && ISO_DATE.test(value)) {
+    return value;
   }
 
   return null;
 };
 
-const getEndDate = (value: string): string | null => {
-  if (ISO_DATE.test(value)) {
-    return value;
+const getStartDate = (value: unknown): string | null => {
+  if (typeof value === 'string' && ISO_DATE_RANGE.test(value)) {
+    return value.split(' - ')[0];
   }
 
-  if (ISO_DATE_RANGE.test(value)) {
+  if (value && typeof value === 'object' && !(value instanceof Date)) {
+    return getIsoDate((value as { start?: Date | null }).start);
+  }
+
+  return getIsoDate(value);
+};
+
+const getEndDate = (value: unknown): string | null => {
+  if (typeof value === 'string' && ISO_DATE_RANGE.test(value)) {
     return value.split(' - ')[1];
   }
 
-  return null;
+  if (value && typeof value === 'object' && !(value instanceof Date)) {
+    return getIsoDate((value as { end?: Date | null }).end);
+  }
+
+  return getIsoDate(value);
 };
 
 const DATEPICKER_MIN_VALIDATOR: Provider = {
@@ -60,7 +75,7 @@ export class UmDatepickerMinValidator implements Validator, OnChanges {
   }
 
   validate(control: AbstractControl): ValidationErrors | null {
-    const value = control.value as string | null;
+    const value = control.value;
 
     if (!value || !this.min || !ISO_DATE.test(this.min)) {
       return null;
@@ -112,7 +127,7 @@ export class UmDatepickerMaxValidator implements Validator, OnChanges {
   }
 
   validate(control: AbstractControl): ValidationErrors | null {
-    const value = control.value as string | null;
+    const value = control.value;
 
     if (!value || !this.max || !ISO_DATE.test(this.max)) {
       return null;

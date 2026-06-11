@@ -8,6 +8,11 @@ import { classMap } from 'lit/directives/class-map.js';
 import { CalendarBase } from './calendar-base.js';
 import { styles } from './range-calendar.styles.js';
 
+export interface DateRangeValue {
+  start: Date | null;
+  end: Date | null;
+}
+
 @customElement('u-range-calendar')
 export class RangeCalendar extends CalendarBase {
   static override styles: CSSResultGroup = [styles, CalendarBase.styles];
@@ -15,8 +20,25 @@ export class RangeCalendar extends CalendarBase {
   @state() startDateValue: Date | null = null;
   @state() endDateValue: Date | null = null;
 
+  /**
+   * The selected range. Read as a `YYYY-MM-DD - YYYY-MM-DD` string (empty
+   * when no range is selected), or as a `{ start, end }` object of `Date`s
+   * (`null` when empty) when `value-type` is `'date'`. Accepts either form
+   * when set.
+   */
   @property()
-  get value(): string | null {
+  get value(): string | DateRangeValue | null {
+    if (this.valueType === 'date') {
+      if (!this.startDateValue && !this.endDateValue) {
+        return null;
+      }
+
+      return {
+        start: this.startDateValue ? new Date(this.startDateValue) : null,
+        end: this.endDateValue ? new Date(this.endDateValue) : null,
+      };
+    }
+
     if (!this.startDateValue && !this.endDateValue) {
       return '';
     }
@@ -24,10 +46,16 @@ export class RangeCalendar extends CalendarBase {
     return `${this._getDateString(this.startDateValue)} - ${this._getDateString(this.endDateValue)}`;
   }
 
-  set value(value: string) {
+  set value(value: string | DateRangeValue | null) {
     if (!value) {
       this.startDateValue = null;
       this.endDateValue = null;
+      return;
+    }
+
+    if (typeof value === 'object') {
+      this.startDateValue = this._getDateFromValue(value.start);
+      this.endDateValue = this._getDateFromValue(value.end);
       return;
     }
 

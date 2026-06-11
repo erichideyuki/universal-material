@@ -4,13 +4,14 @@ import { html, HTMLTemplateResult, nothing, svg } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { live } from 'lit/directives/live.js';
 
+import { CalendarValueType } from '../calendar/calendar-base.js';
 import { Calendar } from '../calendar/calendar.js';
 import { Menu } from '../menu/menu.js';
 import { NativeTextFieldWrapper } from '../shared/char-count-text-field/native-text-field-wrapper.js';
 import { FieldValidity, TextFieldBase } from '../shared/text-field-base/text-field-base.js';
 import { styles as textFieldStyles } from '../text-field/text-field.styles.js';
 import { styles } from './datepicker.styles.js';
-import { DatepickerFormat, formatIsoDate } from './format.js';
+import { DatepickerFormat, formatIsoDate, parseIsoDate, toIsoDate } from './format.js';
 
 import '../button/icon-button.js';
 import '../calendar/calendar.js';
@@ -20,7 +21,7 @@ import '../ripple/ripple.js';
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 
 @customElement('u-datepicker')
-export class Datepicker extends NativeTextFieldWrapper {
+export class Datepicker extends NativeTextFieldWrapper<string | Date | null> {
   static override styles: CSSResultGroup = [TextFieldBase.styles, textFieldStyles, styles];
 
   /**
@@ -73,6 +74,14 @@ export class Datepicker extends NativeTextFieldWrapper {
    * `rangeOverflow`. When `null`, there is no upper bound.
    */
   @property() max: string | null = null;
+
+  /**
+   * Controls the type produced by the `value` getter. With `'iso'` (default)
+   * the value is read as an ISO `YYYY-MM-DD` string; with `'date'` it is read
+   * as a `Date` object (`null` when empty). The setter accepts either form
+   * regardless; the form always submits the ISO string.
+   */
+  @property({ attribute: 'value-type' }) valueType: CalendarValueType = 'iso';
 
   @query('input') input!: HTMLInputElement;
   @query('u-menu', true) private readonly _menu!: Menu;
@@ -165,6 +174,26 @@ export class Datepicker extends NativeTextFieldWrapper {
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     this._trailingSlot?.removeEventListener('click', this.#toggleMenu);
+  }
+
+  protected override _getPublicValue(): string | Date | null {
+    if (this.valueType === 'date') {
+      return parseIsoDate(this._value);
+    }
+
+    return this._value;
+  }
+
+  protected override _coerceValue(value: string | Date | null): string {
+    if (!value) {
+      return '';
+    }
+
+    if (value instanceof Date) {
+      return toIsoDate(value);
+    }
+
+    return value;
   }
 
   protected override _handleInput(): void {
