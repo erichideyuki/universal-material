@@ -2,6 +2,7 @@
   "name": "universal-material-angular",
   "version": "0.0.0",
   "scripts": {
+    "start": "ng serve demo --port 4280",
     "ng": "ng",
     "build": "ng build --project universal-material-angular",
     "watch": "ng build --watch --configuration development",

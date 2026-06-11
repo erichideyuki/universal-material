@@ -1,6 +1,6 @@
 {
   "name": "@universal-material/angular",
-  "version": "3.6.2",
+  "version": "3.7.1",
   "author": "https://github.com/universal-material/universal-material-angular/graphs/contributors",
   "repository": {
     "type": "git",
@@ -12,7 +12,7 @@
     "animated-scroll-to": "^2.3.0"
   },
   "peerDependencies": {
-    "@universal-material/web": "^3.10.0"
+    "@universal-material/web": "^3.9.0"
   },
   "sideEffects": false
 }
