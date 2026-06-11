@@ -2,6 +2,12 @@
   cursor: pointer;
 }
 
+// The calendar (7 × 48px columns) is wider than the menu's default 280px
+// cap — lift it so the popover fits the calendar instead of scrolling it.
+u-menu {
+  --u-menu-max-width: none;
+}
+
 // Invisible click target covering the whole field — used in non-editable mode
 // to open the calendar popover. Mirrors the pattern used by u-button-field.
 .trigger {
