@@ -140,6 +140,10 @@ export class Dialog extends LitElement {
     this.addEventListener('submit', this.#handleSubmit);
 
     setTimeout(() => {
+      if (!this.isConnected) {
+        return;
+      }
+
       this.#contentResizeObserver = new ResizeObserver(() => this.#setScrollDividers());
       this.#contentResizeObserver.observe(this.content);
     });
@@ -149,7 +153,7 @@ export class Dialog extends LitElement {
     super.disconnectedCallback();
     this.removeEventListener('submit', this.#handleSubmit);
 
-    this.#contentResizeObserver!.disconnect();
+    this.#contentResizeObserver?.disconnect();
     this.#contentResizeObserver = null;
   }
 
