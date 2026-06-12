@@ -20,7 +20,6 @@ import {
 import { UmDatepickerMaxValidator, UmDatepickerMinValidator } from './validators/datepicker-validators';
 import { TabBarDirective } from './tab-bar/tab-bar.directive';
 import { FloatingActionBehaviorDirective } from './floating-action-behavior/floating-action-behavior.directive';
-import { LocaleDirective } from './locale/locale.directive';
 
 const UniversalMaterialModules = [
   DialogModule,
@@ -29,7 +28,6 @@ const UniversalMaterialModules = [
   TextFieldModule,
   TabBarDirective,
   FloatingActionBehaviorDirective,
-  LocaleDirective,
 ];
 
 const FormComponents = [
@@ -73,7 +71,6 @@ export * from './snackbar/snackbar-config.model';
 export * from './floating-action-behavior/floating-action-behavior.directive';
 
 export * from './tab-bar/tab-bar.directive';
-export * from './locale/locale.directive';
 export * from './value-accessors/default-control-value-accessor';
 export * from './value-accessors/check-control-value-accessor';
 export * from './value-accessors/radio-control-value-accessor';
