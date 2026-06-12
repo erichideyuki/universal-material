@@ -112,13 +112,14 @@ export class RangeDatepicker extends NativeTextFieldWrapper<string | DateRangeVa
       ${this.editable
         ? nothing
         : html`
-          <button
-            class="trigger"
-            type="button"
-            aria-haspopup="dialog"
-            ?disabled=${this.disabled}
-            @click=${this.#toggleMenu}></button>
-          <u-ripple ?disabled=${this.disabled}></u-ripple>
+          <u-ripple ?disabled=${this.disabled}>
+            <button
+              class="trigger"
+              type="button"
+              aria-haspopup="dialog"
+              ?disabled=${this.disabled}
+              @click=${this.#toggleMenu}></button>
+          </u-ripple>
         `}
       <div class="input">
         <input
