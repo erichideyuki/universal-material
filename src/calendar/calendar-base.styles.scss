@@ -35,6 +35,14 @@
   color: var(--u-calendar-month-button-color, #{functions.get-color-var(on-surface-variant)});
 }
 
+.month-button-icon {
+  transition: transform 200ms;
+
+  &.open {
+    transform: rotate(180deg);
+  }
+}
+
 .previous-month-button {
   margin-inline-start: auto;
 }
@@ -79,6 +87,55 @@
 
 .date-out-of-month {
   color: var(--u-calendar-date-color, #{functions.get-color-var(on-surface-variant)});
+}
+
+.year-grid,
+.month-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 112px);
+  align-items: center;
+}
+
+.year-cell,
+.month-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--u-calendar-selection-cell-height, 52px);
+  cursor: pointer;
+}
+
+.year-label,
+.month-label {
+  --u-ripple-border-radius: 9999px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--u-calendar-selection-label-width, 72px);
+  height: var(--u-calendar-selection-label-height, 36px);
+  border-radius: var(--u-calendar-date-border-radius, 9999px);
+  color: var(--u-calendar-date-color, #{functions.get-color-var(on-surface)});
+}
+
+.year-label {
+  @include api.typo(body-l, calendar-year-label);
+}
+
+.month-label {
+  @include api.typo(body-l, calendar-month-label);
+}
+
+.current-year .year-label,
+.current-month .month-label {
+  border: 1px solid var(--u-calendar-current-date-color, #{functions.get-color-var(primary)});
+  color: var(--u-calendar-current-date-color, #{functions.get-color-var(primary)});
+}
+
+.selected-year .year-label,
+.selected-month .month-label {
+  background-color: var(--u-calendar-selected-date-background-color, #{functions.get-color-var(primary)});
+  color: var(--u-calendar-selected-date-color, #{functions.get-color-var(on-primary)});
 }
 
 // md.comp.date-picker.modal.date — disabled dates use on-surface at 38% opacity
