@@ -23,17 +23,6 @@ slot[name="leading-icon"]::slotted(u-icon-button) {
   background-color: var(--u-top-app-bar-on-scroll-container-color, #{api.get-color-var(surface-container)});
 }
 
-// At md+ the bar typically sits over a scaffold whose panes carry their
-// own card chrome — adding a scrolled tint on top would double-paint
-// the surface. Keep the on-scroll color only on compact viewports.
-// Override via `--u-top-app-bar-on-scroll-container-color: <color>` if
-// you need it back at large.
-@include api.media-breakpoint-up(md) {
-  .scrolled {
-    background-color: var(--u-top-app-bar-on-scroll-container-color, transparent);
-  }
-}
-
 .leading-icon,
 .trailing-icon {
   display: none;
