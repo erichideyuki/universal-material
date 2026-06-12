@@ -1,6 +1,6 @@
 {
   "name": "@universal-material/web",
-  "version": "3.9.3",
+  "version": "3.9.4",
   "description": "Material web components",
   "type": "module",
   "keywords": [
@@ -51,7 +51,7 @@
     "prettier": "prettier . --write",
     "publish": "npm run lint:eslint && cd dist && npm publish",
     "postinstall": "node ./change-compiler-to-add-custom-elements.js",
-    "build:all": "npm run build && npm run build -w @universal-material/angular --if-present && npm run build -w @universal-material/react --if-present",
+    "build:all": "npm run build && npm run build -w packages/angular --if-present && npm run build -w packages/react --if-present",
     "test:all": "npm test && npm test -ws --if-present",
     "lint:all": "npm run lint && npm run lint -ws --if-present",
     "changeset": "changeset",
