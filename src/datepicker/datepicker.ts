@@ -155,8 +155,7 @@ export class Datepicker extends NativeTextFieldWrapper<string | Date | null> {
           type="button"
           aria-haspopup="dialog"
           aria-label="Open calendar"
-          ?disabled=${this.disabled}
-          @click=${this.#toggleMenu}>${icon}</u-icon-button>`
+          ?disabled=${this.disabled}>${icon}</u-icon-button>`
       : icon;
   }
 
