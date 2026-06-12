@@ -69,6 +69,8 @@ export class Datepicker extends NativeTextFieldWrapper<string | Date | null> {
   /**
    * The positioning strategy used by the calendar popover. Use `'fixed'`
    * when the datepicker is rendered inside a clipped/scrollable container.
+   * Defaults to `'fixed'` automatically when the datepicker is inside a
+   * `u-dialog`, whose scrollable content would clip the popover.
    */
   @property({ reflect: true, attribute: 'menu-positioning' }) menuPositioning: 'relative' | 'fixed' = 'relative';
 
@@ -179,6 +181,11 @@ export class Datepicker extends NativeTextFieldWrapper<string | Date | null> {
 
   override connectedCallback(): void {
     super.connectedCallback();
+
+    if (!this.hasAttribute('menu-positioning') && this.closest('u-dialog')) {
+      this.menuPositioning = 'fixed';
+    }
+
     void this.#attach();
   }
 

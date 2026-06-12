@@ -4,6 +4,7 @@ import '../button/button-set.js';
 import '../button/button.js';
 import '../button/icon-button.js';
 import '../calendar/calendar.js';
+import '../dialog/dialog.js';
 import '../menu/menu-item.js';
 import '../menu/menu.js';
 import '../ripple/ripple.js';
@@ -50,6 +51,18 @@ suite('u-datepicker', () => {
 
     test('menuPositioning defaults to "relative"', async () => {
       const el = await fixture<Datepicker>(html`<u-datepicker></u-datepicker>`);
+      expect(el.menuPositioning).to.equal('relative');
+    });
+
+    test('menuPositioning defaults to "fixed" inside a dialog', async () => {
+      const dialog = await fixture<HTMLElement>(html`<u-dialog><u-datepicker></u-datepicker></u-dialog>`);
+      const el = dialog.querySelector<Datepicker>('u-datepicker')!;
+      expect(el.menuPositioning).to.equal('fixed');
+    });
+
+    test('an explicit menu-positioning wins over the dialog default', async () => {
+      const dialog = await fixture<HTMLElement>(html`<u-dialog><u-datepicker menu-positioning="relative"></u-datepicker></u-dialog>`);
+      const el = dialog.querySelector<Datepicker>('u-datepicker')!;
       expect(el.menuPositioning).to.equal('relative');
     });
   });
