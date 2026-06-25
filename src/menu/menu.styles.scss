@@ -41,6 +41,10 @@
     display: flex;
     visibility: hidden;
     pointer-events: none;
+    // Measure the natural size: neutralize the closed-state collapse
+    // (`scale3d(1, 0, 0)`), which getBoundingClientRect would otherwise
+    // report as height 0 and break the open-up/down auto-flip.
+    transform: none;
   }
   background: var(--u-menu-bg-color, #{functions.get-color-var(surface-container)});
   border-radius: var(--u-menu-shape-corner, #{functions.get-shape-corner-var(extra-small)});

@@ -160,6 +160,41 @@ suite('u-menu / u-menu-item', () => {
       expect(menu.anchorElement).to.equal(anchor);
     });
   });
+
+  suite('positioning auto-flip', () => {
+    const tallItems = Array.from({ length: 16 }, (_, i) => html`<u-menu-item>Item ${i}</u-menu-item>`);
+
+    test('opens upward when the anchor sits at the bottom of the viewport', async () => {
+      const wrap = await fixture<HTMLElement>(html`
+        <div style="position: fixed; bottom: 0; left: 0;">
+          <u-menu>${tallItems}</u-menu>
+        </div>
+      `);
+      const menu = wrap.querySelector('u-menu') as Menu;
+      menu.show();
+      await menu.updateComplete;
+
+      // Auto-flip relies on the measured menu height. If the height measured 0
+      // (e.g. the closed-state `scale3d(1, 0, 0)` leaking into `.measuring`),
+      // it would always open downward off-screen.
+      const inner = menu.shadowRoot!.querySelector<HTMLElement>('.menu')!;
+      expect(inner.classList.contains('up')).to.be.true;
+    });
+
+    test('opens downward when there is room below the anchor', async () => {
+      const wrap = await fixture<HTMLElement>(html`
+        <div style="position: fixed; top: 0; left: 0;">
+          <u-menu>${tallItems}</u-menu>
+        </div>
+      `);
+      const menu = wrap.querySelector('u-menu') as Menu;
+      menu.show();
+      await menu.updateComplete;
+
+      const inner = menu.shadowRoot!.querySelector<HTMLElement>('.menu')!;
+      expect(inner.classList.contains('up')).to.be.false;
+    });
+  });
 });
 
 suite('u-menu-item', () => {
