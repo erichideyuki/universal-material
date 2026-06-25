@@ -137,7 +137,7 @@ suite('u-option', () => {
     test('clicking a disabled option is a no-op', async () => {
       const select = await fixture<Select>(html`
         <u-select>
-          <u-option value="a">A</u-option>
+          <u-option value="a" selected>A</u-option>
           <u-option value="b" disabled>B</u-option>
         </u-select>
       `);

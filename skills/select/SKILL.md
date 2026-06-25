@@ -49,7 +49,7 @@ select.addEventListener("change", () => console.log(select.value));
 
 ## Initial selection (in markup)
 
-Like the native `<select>`, there is **no `value` attribute** — set the initial selection with `selected` on the option (or assign `.value` in JS after upgrade). With neither, the first enabled option is selected.
+There is **no `value` attribute** — set the initial selection with `selected` on the option (or assign `.value` in JS after upgrade). With neither, **nothing is selected**: the field starts empty, showing its label/placeholder until a value is picked. This differs from the native `<select>`, which auto-selects the first option.
 
 ```html
 <u-select label="Country">
@@ -122,7 +122,7 @@ When the select sits inside a scrollable/clipped wrapper, set `menu-positioning=
 
 ## Required / validation
 
-`required` participates in constraint validation and blocks native form submit. Because a select with options always has a selection, add an **empty-valued placeholder option** so "nothing chosen" is representable:
+`required` participates in constraint validation and blocks native form submit. Since the select starts with **nothing selected**, "nothing chosen" is already the initial state — `required` is unsatisfied until an option is picked (no empty-valued placeholder option needed):
 
 ```html
 <u-select
@@ -130,7 +130,6 @@ When the select sits inside a scrollable/clipped wrapper, set `menu-positioning=
   required
   error-text="Please choose a country"
 >
-  <u-option value="">Choose…</u-option>
   <u-option value="br">Brazil</u-option>
   <u-option value="us">United States</u-option>
 </u-select>
@@ -149,12 +148,12 @@ select.reportValidity(); // also shows the bubble + sets the visual `invalid` st
 
 ## SPA / framework binding
 
-The select keeps its selection when the framework **re-renders the `<u-option>` list** (e.g. an `*ngFor`/`v-for`). It remembers the last value you set (via `.value`/`.selectedIndex`, a click, or `<u-option selected>`) and re-applies it once the matching option is present — so you don't need to re-assign `.value` after the options change. Setting `.value` **before** the options exist (async load) also works: it applies when that option appears. The first-option default is _not_ sticky, matching the native `<select>`.
+The select keeps its selection when the framework **re-renders the `<u-option>` list** (e.g. an `*ngFor`/`v-for`). It remembers the last value you set (via `.value`/`.selectedIndex`, a click, or `<u-option selected>`) and re-applies it once the matching option is present — so you don't need to re-assign `.value` after the options change. Setting `.value` **before** the options exist (async load) also works: it applies when that option appears. If the value never matches an option (e.g. a `null`/empty model from a form binding), the select stays empty — it does **not** fall back to the first option.
 
 ## Caveats
 
 - The displayed value is the matching `<u-option>`'s text content. Keep option text concise. **An icon inside an option** (`<span slot="icon">`) shows in the dropdown but its ligature text leaks into the _closed_ select's displayed value (e.g. "groups Todos") — omit option icons when the value is shown as text.
 - **Single-select only** — there is no `multiple` attribute. For multiple values use `<u-chip-field>`.
-- `required` only triggers when the current value is empty; without an empty-valued option the select always has a non-empty value and so is always valid.
+- `required` triggers whenever the current value is empty — including the initial state, since the select starts with nothing selected.
 - For long lists, the menu virtualizes after a threshold but very large lists (1000+) feel sluggish — consider a typeahead instead.
 - Don't put non-`u-option` children inside `<u-select>` — they're ignored.

@@ -25,7 +25,7 @@ suite('u-select / u-option', () => {
   });
 
   suite('initial selection', () => {
-    test('selects the first enabled option when none has [selected]', async () => {
+    test('selects nothing when no option has [selected]', async () => {
       const el = await fixture<Select>(html`
         <u-select>
           <u-option value="a">A</u-option>
@@ -33,8 +33,8 @@ suite('u-select / u-option', () => {
         </u-select>
       `);
       await el.updateComplete;
-      expect(el.value).to.equal('a');
-      expect(el.selectedIndex).to.equal(0);
+      expect(el.value).to.equal('');
+      expect(el.selectedIndex).to.equal(-1);
     });
 
     test('selects the [selected] option when set in markup', async () => {
@@ -90,10 +90,10 @@ suite('u-select / u-option', () => {
         </u-select>
       `);
       await el.updateComplete;
-      // Like the native <select>, the value attribute is ignored: the first
-      // option is selected, not "b".
-      expect(el.value).to.equal('a');
-      expect(el.selectedIndex).to.equal(0);
+      // There is no `value` attribute and no auto-selection: with no
+      // `<u-option selected>`, nothing is selected — "b" is ignored.
+      expect(el.value).to.equal('');
+      expect(el.selectedIndex).to.equal(-1);
     });
 
     test('does not reflect the value to an attribute', async () => {
@@ -198,7 +198,7 @@ suite('u-select / u-option', () => {
       expect(el.value).to.equal('b');
     });
 
-    test('the first-option default is NOT sticky — reorder follows native', async () => {
+    test('stays empty across a reorder when nothing was selected', async () => {
       const el = await fixture<Select>(html`
         <u-select>
           <u-option value="a">A</u-option>
@@ -207,7 +207,7 @@ suite('u-select / u-option', () => {
         </u-select>
       `);
       await el.updateComplete;
-      expect(el.value).to.equal('a'); // first-enabled default, no intentional pick
+      expect(el.value).to.equal(''); // no auto-selection without an intentional pick
 
       el.innerHTML = `
         <u-option value="c">C</u-option>
@@ -216,7 +216,32 @@ suite('u-select / u-option', () => {
       `;
       await settle();
       await el.updateComplete;
-      expect(el.value).to.equal('c'); // new first, not the old default 'a'
+      expect(el.value).to.equal(''); // still nothing selected
+    });
+
+    test('an unmatched value stays deselected across an option re-render', async () => {
+      const el = await fixture<Select>(html`
+        <u-select>
+          <u-option value="a">A</u-option>
+          <u-option value="b">B</u-option>
+        </u-select>
+      `);
+      await el.updateComplete;
+      // Mirrors SelectControlValueAccessor writing a null model: the value
+      // doesn't match any option, so the select must stay deselected — not
+      // fall back to the first option when the framework re-projects the list.
+      el.value = 'null';
+      await el.updateComplete;
+      expect(el.selectedIndex).to.equal(-1);
+
+      el.innerHTML = `
+        <u-option value="a">A</u-option>
+        <u-option value="b">B</u-option>
+      `;
+      await settle();
+      await el.updateComplete;
+      expect(el.value).to.equal('');
+      expect(el.selectedIndex).to.equal(-1);
     });
   });
 

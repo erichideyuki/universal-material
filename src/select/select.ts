@@ -36,8 +36,8 @@ export class Select extends TextFieldBase implements MenuField {
   // `selectedIndex` setters, a user click, or an `<u-option selected>`). It is
   // re-applied whenever the options change so the selection survives a
   // framework re-rendering the `<u-option>` nodes — which otherwise drops the
-  // per-element `.selected` flag. `null` = no intentional selection yet (the
-  // first-enabled fallback is not sticky, preserving native parity).
+  // per-element `.selected` flag. `null` = no intentional selection yet, in
+  // which case the field stays empty (there is no first-option fallback).
   #desiredValue: string | null = null;
 
   @query('u-menu', true) _menu!: Menu;
@@ -257,9 +257,11 @@ export class Select extends TextFieldBase implements MenuField {
       return;
     }
 
-    // 3. First-enabled fallback: a default, not an intentional choice, so it is
-    //    left non-sticky — a later reorder/rebuild follows the native <select>.
-    this.#commitIndex(options.length ? options.findIndex(o => !o.disabled) : -1);
+    // 3. No selection by default. Unlike the native <select>, u-select does not
+    //    auto-select the first option — the field stays empty (showing its
+    //    label/placeholder) until a value is set via `value`/`selectedIndex`, a
+    //    user pick, or an `<u-option selected>`.
+    this.#commitIndex(-1);
   }
 
   #computeSignature(): string {
