@@ -1,0 +1,23 @@
+<!--
+  The `compact` attribute shrinks the chip height (32px → 28px). It is also
+  inherited from an app-wide `provideCompact(document.body)`.
+-->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start">
+  <div style="display: flex; flex-direction: column; gap: 1rem">
+    <h6 class="u-title-s">Default</h6>
+    <u-chip-set>
+      <u-chip>Nearby</u-chip>
+      <u-chip>Open now</u-chip>
+      <u-chip>Top rated</u-chip>
+    </u-chip-set>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 1rem">
+    <h6 class="u-title-s">Compact</h6>
+    <u-chip-set>
+      <u-chip compact>Nearby</u-chip>
+      <u-chip compact>Open now</u-chip>
+      <u-chip compact>Top rated</u-chip>
+    </u-chip-set>
+  </div>
+</div>

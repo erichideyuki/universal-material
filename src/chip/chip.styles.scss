@@ -9,15 +9,23 @@
   --_icon-size: var(--u-chip-icon-size, 1.125rem);
   --_remove-button-margin: var(--u-chip-remove-button-margin, 2px);
   --_remove-button-size: calc(var(--_height) - var(--_remove-button-margin) * 2);
+  --_padding: var(--u-chip-padding, 16px);
 
   --_selected-icon-color: var(--u-chip-selected-icon-color, #{api.get-color-var(on-secondary-container)});
   display: inline-block;
 }
 
+// Compact (desktop density): redirect the internal aliases to compact-specific
+// tokens. Icon/remove-button sizes derive from --_height, so they scale too.
+:host([data-compact]) {
+  --_height: var(--u-chip-compact-height, 28px);
+  --_padding: var(--u-chip-compact-padding, 12px);
+}
+
 .container {
   height: var(--_height);
   border-radius: var(--_shape);
-  padding-inline: var(--u-chip-padding, 16px);
+  padding-inline: var(--_padding);
 
   &:not(.clickable):not(.toggle) .button {
     cursor: auto;

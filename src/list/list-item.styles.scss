@@ -2,6 +2,12 @@
 
 :host {
   display: block;
+  --_min-height: var(--u-list-item-min-height, 56px);
+}
+
+// Compact (desktop density): redirect the internal alias to a compact token.
+:host([data-compact]) {
+  --_min-height: var(--u-list-item-compact-min-height, 40px);
 }
 
 * {
@@ -12,7 +18,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  min-height: var(--u-list-item-min-height, 56px);
+  min-height: var(--_min-height);
   padding-block: var(--u-list-item-block-padding, 8px);
   padding-inline: var(--u-list-item-inline-padding, 16px);
   gap: var(--u-list-item-gap, 16px);

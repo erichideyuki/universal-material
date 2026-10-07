@@ -57,6 +57,8 @@ Trailing icon:
 <u-button shape="round">Round (default)</u-button>
 ```
 
+In a compact app — enabled once with `provideCompact(document.body)` — a button with no explicit `size` defaults to `extra-small` instead of `small`. Buttons have no `compact` attribute of their own (unlike fields, list/menu items, chips, tabs and expansion panels, which take `compact`); set `size` to opt out.
+
 ## Toggling
 
 ```html

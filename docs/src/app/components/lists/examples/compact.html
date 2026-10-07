@@ -1,0 +1,23 @@
+<!--
+  The `compact` attribute shrinks the row height (56px → 40px). It is also
+  inherited from an app-wide `provideCompact(document.body)`.
+-->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start">
+  <div>
+    <h6 class="u-title-s">Default</h6>
+    <u-list>
+      <u-list-item selectable>Inbox</u-list-item>
+      <u-list-item selectable>Starred</u-list-item>
+      <u-list-item selectable>Sent</u-list-item>
+    </u-list>
+  </div>
+
+  <div>
+    <h6 class="u-title-s">Compact</h6>
+    <u-list>
+      <u-list-item compact selectable>Inbox</u-list-item>
+      <u-list-item compact selectable>Starred</u-list-item>
+      <u-list-item compact selectable>Sent</u-list-item>
+    </u-list>
+  </div>
+</div>

@@ -108,6 +108,10 @@ Fix it at the drawer: when the pane is the surface, make the drawer transparent 
 
 (The two custom properties are inherited, so setting them on the pane reaches the drawer.) Don't try to fix it by raising the _pane's_ `--u-pane-filled-bg-color` — the drawer still paints over it on desktop, so the column stays flat.
 
+## Compact density
+
+`<u-drawer-item>` takes a `compact` boolean attribute — or inherits it app-wide from `provideCompact(document.body)` — shrinking the row `56 → 44px`. Retune with `--u-drawer-item-compact-height`. See the **setup** skill for `provideCompact()`.
+
 ## Caveats
 
 - The drawer is a sibling of the page content inside `<u-side-navigation>`, not a child of the top bar. Don't nest it under the bar.

@@ -1,0 +1,98 @@
+@use '../../scss/functions';
+
+// The week — not the day — is the interactive unit, so the per-day circular
+// ripple is suppressed; interaction (hover, click, ripple) lives on the
+// per-week rows rendered over the grid (see `.week-row`).
+.calendar-item u-ripple {
+  display: none;
+}
+
+// One interaction row per displayed week, laid over the grid. Sized to the week
+// band so the ripple reads as a single pill spanning the whole week.
+.week-row {
+  position: absolute;
+  left: 0;
+  width: calc(7 * 48px);
+  height: 48px;
+  cursor: pointer;
+
+  // `u-ripple` is `position: absolute; inset: 0`, so it can't be flex-centered.
+  // Center it on the band (cell height 48px, band height `--_date-size`).
+  u-ripple {
+    display: block;
+    top: calc((48px - var(--_date-size)) / 2);
+    bottom: auto;
+    height: var(--_date-size);
+    --u-ripple-border-radius: 9999px;
+    // The whole-week band already signals hover; the ripple only adds the
+    // press feedback.
+    --u-ripple-hover-color: transparent;
+    --u-ripple-pressed-color: #{functions.get-color-var(on-secondary-container)};
+  }
+}
+
+// A selected/hovered week is exactly one grid row, so the band is drawn behind
+// each day of the week and joins seamlessly into a single pill across the row.
+// (The `.calendar-item` stacking context that lets the `z-index: -1` band show
+// lives in the shared calendar base.)
+%week-band {
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    margin-top: calc(var(--_date-size) * -.5);
+    height: var(--_date-size);
+    z-index: -1;
+    pointer-events: none;
+  }
+}
+
+%week-cap-start {
+  &::before {
+    border-top-left-radius: 9999px;
+    border-bottom-left-radius: 9999px;
+  }
+}
+
+%week-cap-end {
+  &::before {
+    border-top-right-radius: 9999px;
+    border-bottom-right-radius: 9999px;
+  }
+}
+
+// Hover preview — lower emphasis, suppressed on the already-selected week.
+.week-hover {
+  @extend %week-band;
+
+  &::before {
+    background: var(--u-calendar-week-hover-background-color, #{functions.get-color-var(surface-container-highest)});
+  }
+}
+
+.week-hover-start {
+  @extend %week-cap-start;
+}
+
+.week-hover-end {
+  @extend %week-cap-end;
+}
+
+// Selected week — secondary-container band (matches the range selection fill).
+.week {
+  @extend %week-band;
+
+  &::before {
+    background: var(--u-calendar-week-selected-background-color, #{functions.get-color-var(secondary-container)});
+  }
+}
+
+.week-start {
+  @extend %week-cap-start;
+}
+
+.week-end {
+  @extend %week-cap-end;
+}

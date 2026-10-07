@@ -3,11 +3,12 @@ import { customElement, property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 
 import { ButtonWrapper } from '../shared/button-wrapper.js';
+import { mixinCompact } from '../shared/compact-mixin.js';
 import { TabBar } from './tab-bar.js';
 import { styles } from './tab.styles.js';
 
 @customElement('u-tab')
-export class Tab extends ButtonWrapper {
+export class Tab extends mixinCompact(ButtonWrapper) {
   static override styles = [ButtonWrapper.styles, styles];
 
   _bar: TabBar | null = null;

@@ -4,6 +4,12 @@
   display: block;
 }
 
+// Compact (desktop density): redirect the internal alias to a compact token
+// (matches the extra-small icon buttons at 32px).
+:host([data-compact]) {
+  --_items-height: var(--u-overflow-menu-compact-items-height, 32px);
+}
+
 .empty-space {
   height: var(--_items-height);
 }

@@ -60,6 +60,21 @@ The library ships an opinionated stylesheet with utility classes (`u-headline-l`
 
 You can also `@import` the SCSS sources from `node_modules/@universal-material/web/scss/universal-material.scss` to opt into theme tokens at build time.
 
+## 5. Optional: desktop compact density
+
+Call `provideCompact()` once during setup to register a density provider on `document.body`, and every density-aware component switches to a denser desktop layout (buttons `small → extra-small`; fields `56 → 48px`; list/menu items `56 → 40px`; drawer items `56 → 44px`; chips `32 → 28px`; tabs `48/64 → 40/48px`; expansion-panel headers `48 → 40px`):
+
+```ts
+import { provideCompact } from "@universal-material/web";
+
+const density = provideCompact(); // document.body, compact = true
+density.setValue(false); // flip back to comfortable at runtime
+```
+
+Pass a narrower element to scope the density to a subtree (`provideCompact(myPanel)`), or `false` to start comfortable. Individual components override the inherited value with their own `compact` boolean attribute (`<u-list-item compact>`); buttons are the exception — they have no `compact` attribute and only follow the context via `size`.
+
+Each compact dimension is a dedicated CSS variable — `--u-<component>-compact-<prop>` (e.g. `--u-field-compact-min-height`, `--u-list-item-compact-min-height`, `--u-chip-compact-height`, `--u-tab-compact-height`) — so you can retune the compact sizes without touching the comfortable `--u-*` tokens.
+
 ## Caveats
 
 - Custom elements must be defined before they appear in HTML. If you parse HTML before the JS bundle loads, elements upgrade afterwards (Lit handles this gracefully, but property assignments before upgrade are not reactive).

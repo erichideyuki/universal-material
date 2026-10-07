@@ -18,7 +18,7 @@ export abstract class CalendarBase extends LitElement {
   static override styles: CSSResultGroup = [styles];
 
   @state() weekDays: string[] = [];
-  @state() private _firstDayOfWeek = 0;
+  @state() protected _firstDayOfWeek = 0;
   @state() dateRenderer: ((date: Date, day: string) => HTMLElement) | null = null;
   /**
    * Whether to render dates from the previous and next months that
@@ -189,7 +189,12 @@ export abstract class CalendarBase extends LitElement {
     }
 
     return html`
-      <div class="calendar ${this._getCalendarClassMap()}">${this.#renderWeekDays()}${this.#renderDays()}</div>
+      <div class="calendar-grid">
+        <div class="calendar ${this._getCalendarClassMap()}">
+          ${this.#renderWeekDays()}${this.#renderDays()}
+        </div>
+        ${this._renderGridOverlay()}
+      </div>
     `;
   }
 
@@ -337,6 +342,15 @@ export abstract class CalendarBase extends LitElement {
 
   #handleDateClick(date: Date): () => void {
     return () => this._selectDate(date);
+  }
+
+  /**
+   * Hook for subclasses to render an absolutely-positioned overlay on top of the
+   * day grid — e.g. the week calendar's per-week interaction rows (hover, click
+   * and a week-wide ripple). No-op here.
+   */
+  protected _renderGridOverlay(): HTMLTemplateResult | null {
+    return null;
   }
 
   #handleYearClick(year: number): () => void {

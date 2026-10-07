@@ -96,6 +96,10 @@ cb.checked = true;
 cb.addEventListener("change", () => console.log(cb.checked));
 ```
 
+## Compact density
+
+The list-item variants (`u-checkbox-list-item`, `u-radio-list-item`, `u-switch-list-item`) take a `compact` boolean attribute — or inherit it app-wide from `provideCompact(document.body)` — shrinking the row `56 → 40px` via the inner `u-list-item`. See the **setup** skill for `provideCompact()`.
+
 ## Caveats
 
 - `<u-checkbox>` and `<u-switch>` emit `change` on every toggle; `<u-radio>` emits `change` only on the newly-selected radio in a group (not on deselected siblings).

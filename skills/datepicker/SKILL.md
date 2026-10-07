@@ -1,5 +1,5 @@
 ---
-description: Use u-datepicker and u-range-datepicker — calendar popover for single or range date selection, with editable input mode, locales, and display formats.
+description: Use u-datepicker and u-range-datepicker — calendar popover for single or range date selection, with editable input mode, locales, and display formats. Includes inline u-calendar, u-range-calendar and u-week-calendar (whole-week selection).
 ---
 
 # Date picker
@@ -169,6 +169,29 @@ Inline-calendar gotchas (not obvious):
 - `value` is an ISO string by default (`value-type="date"` switches it to `Date` objects). A day click fires **both** `input` and `change`, with `e.target.value` = the value in the configured type.
 - Setting `.value` does **not** move the displayed month — set `.month` / `.year` separately to open on a specific month.
 - `locale` drives the month/weekday labels (defaults to `navigator.language`; use `locale="pt-BR"` for Portuguese).
+
+## Week calendar (inline, week selection)
+
+`<u-week-calendar>` selects a whole **week** at a time: clicking any day selects the week that contains it, the week is highlighted as a continuous band, and hovering a day previews its week. It extends the same base as `u-calendar` (so `locale`, `min`/`max`, `month`/`year`, `value-type`, `date-outside-month` all apply).
+
+The value is the week's **start date** (the first weekday, honoring the locale), not a range:
+
+```html
+<u-week-calendar
+  locale="pt-BR"
+  id="wk"
+></u-week-calendar>
+<script>
+  const wk = document.getElementById("wk");
+  wk.value = "2026-06-10"; // any in-week date → normalized to that week's start
+  console.log(wk.value); // "2026-06-08" (Monday, pt-BR) — week end = start + 6 days
+  wk.addEventListener("change", () => console.log(wk.value)); // a pick also fires `input`
+</script>
+```
+
+- `value` is the ISO `YYYY-MM-DD` of the week start by default; `value-type="date"` reads it as a `Date`. Setting **any** date within a week selects that week.
+- `date-outside-month` defaults to `true` here (so a week straddling a month boundary stays whole); the other calendars default it to `false`.
+- The first day of the week follows the `locale` (e.g. Monday for `pt-BR`, Sunday for `en-US`).
 
 ## Positioning inside clipped containers
 

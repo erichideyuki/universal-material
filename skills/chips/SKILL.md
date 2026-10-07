@@ -126,6 +126,10 @@ A text field where each typed value (separated by Enter or comma) becomes a remo
 
 For object-valued chips (e.g. typeahead-driven), set `.value` to `Array<{ value, label }>` and the field renders the label.
 
+## Compact density
+
+`<u-chip>` takes a `compact` boolean attribute — or inherits it app-wide from `provideCompact(document.body)` — shrinking it `32 → 28px`. Retune with `--u-chip-compact-height` / `--u-chip-compact-padding`. See the **setup** skill for `provideCompact()`.
+
 ## Caveats
 
 - Always include `<span slot="icon-selected">done</span>` on `clickable`/`toggle` chips so users see the check when selected.

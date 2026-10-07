@@ -6,11 +6,12 @@ import { property, query, queryAssignedElements, state } from 'lit/decorators.js
 import { classMap } from 'lit/directives/class-map.js';
 
 import { styles as baseStyles } from '../shared/base.styles.js';
+import { mixinCompact } from '../shared/compact-mixin.js';
 import { styles } from './field-base.styles.js';
 import { fieldDefaultsContext } from './field-defaults-context.js';
 import { FieldDefaults } from './field-defaults.js';
 
-export abstract class FieldBase extends LitElement {
+export abstract class FieldBase extends mixinCompact(LitElement) {
   static override styles: CSSResultGroup = [baseStyles, styles];
 
   @consume({ context: fieldDefaultsContext, subscribe: true })

@@ -10,6 +10,7 @@ import { SelectControlValueAccessor, SelectOption } from '@docs/components/selec
 
 import calendarHtml from './examples/calendar.html';
 import rangeCalendarHtml from './examples/range-calendar.html';
+import weekCalendarHtml from './examples/week-calendar.html';
 import datepickerHtml from './examples/datepicker.html';
 import datepickerEditableHtml from './examples/datepicker-editable.html';
 import rangeDatepickerHtml from './examples/range-datepicker.html';
@@ -45,6 +46,7 @@ const isoDateWithOffset = (offsetDays: number): string => {
 export class DatepickerComponent {
   calendarHtml = calendarHtml;
   rangeCalendarHtml = rangeCalendarHtml;
+  weekCalendarHtml = weekCalendarHtml;
   datepickerHtml = datepickerHtml;
   datepickerEditableHtml = datepickerEditableHtml;
   rangeDatepickerHtml = rangeDatepickerHtml;
@@ -56,6 +58,7 @@ export class DatepickerComponent {
 
   selectedDate = '';
   selectedRange = '';
+  selectedWeek = '';
   datepickerValue = '';
   rangeDatepickerValue = '';
 
@@ -82,6 +85,10 @@ export class DatepickerComponent {
 
   onRangeInput(event: Event): void {
     this.selectedRange = (event.target as HTMLElement & { value: string }).value;
+  }
+
+  onWeekInput(event: Event): void {
+    this.selectedWeek = (event.target as HTMLElement & { value: string }).value;
   }
 
   onDatepickerInput(event: Event): void {

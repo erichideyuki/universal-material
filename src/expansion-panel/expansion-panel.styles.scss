@@ -8,6 +8,14 @@
   color: var(--u-expansion-panel-color, #{functions.get-color-var(on-surface)});
   border-radius: var(--u-expansion-panel-shape-corner, #{functions.get-shape-corner-var(medium)});
   overflow: hidden;
+  --_header-min-height: var(--u-expansion-panel-header-min-height, 3rem);
+  --_header-padding: var(--u-expansion-panel-header-padding, .75rem 1rem);
+}
+
+// Compact (desktop density): redirect the internal aliases to compact tokens.
+:host([data-compact]) {
+  --_header-min-height: var(--u-expansion-panel-compact-header-min-height, 2.5rem);
+  --_header-padding: var(--u-expansion-panel-compact-header-padding, .5rem 1rem);
 }
 
 .header {
@@ -15,8 +23,8 @@
   display: flex;
   align-items: center;
   gap: var(--u-expansion-panel-header-gap, .75rem);
-  padding: var(--u-expansion-panel-header-padding, .75rem 1rem);
-  min-height: var(--u-expansion-panel-header-min-height, 3rem);
+  padding: var(--_header-padding);
+  min-height: var(--_header-min-height);
   cursor: pointer;
   user-select: none;
   @include mixins.typo(title-m);

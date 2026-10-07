@@ -1,0 +1,23 @@
+<!--
+  The `compact` attribute shrinks the tab height (48px → 40px, or 64px → 48px
+  with an icon). It is also inherited from an app-wide `provideCompact(document.body)`.
+-->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start">
+  <div>
+    <h6 class="u-title-s">Default</h6>
+    <u-tab-bar>
+      <u-tab active>Overview</u-tab>
+      <u-tab>Activity</u-tab>
+      <u-tab>Settings</u-tab>
+    </u-tab-bar>
+  </div>
+
+  <div>
+    <h6 class="u-title-s">Compact</h6>
+    <u-tab-bar>
+      <u-tab compact active>Overview</u-tab>
+      <u-tab compact>Activity</u-tab>
+      <u-tab compact>Settings</u-tab>
+    </u-tab-bar>
+  </div>
+</div>

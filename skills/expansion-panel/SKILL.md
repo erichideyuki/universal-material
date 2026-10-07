@@ -56,6 +56,10 @@ Add `multi` to keep multiple panels open simultaneously.
 - `hide-toggle` — hides the default chevron icon.
 - `multi` (container) — allow multiple panels open at once.
 
+## Compact density
+
+`<u-expansion-panel>` takes a `compact` boolean attribute — or inherits it app-wide from `provideCompact(document.body)` — shrinking the header `48 → 40px` and tightening its padding. Retune with `--u-expansion-panel-compact-header-min-height` / `--u-expansion-panel-compact-header-padding`. See the **setup** skill for `provideCompact()`.
+
 ## Caveats
 
 - Put the header content in `slot="header"`. The default slot is the panel body (wrapped internally in `u-collapse`).

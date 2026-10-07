@@ -2,10 +2,11 @@ import { html, HTMLTemplateResult } from 'lit';
 import { customElement, property, queryAssignedElements, state } from 'lit/decorators.js';
 
 import { ButtonWrapper } from '../shared/button-wrapper.js';
+import { mixinCompact } from '../shared/compact-mixin.js';
 import { styles } from './drawer-item.styles.js';
 
 @customElement('u-drawer-item')
-export class DrawerItem extends ButtonWrapper {
+export class DrawerItem extends mixinCompact(ButtonWrapper) {
 
   static override styles = [
     ButtonWrapper.styles,

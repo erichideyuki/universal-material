@@ -6,6 +6,7 @@ import '../button/icon-button.js';
 import '../ripple/ripple.js';
 import { Calendar } from './calendar.js';
 import { RangeCalendar } from './range-calendar.js';
+import { WeekCalendar } from './week-calendar.js';
 
 suite('u-calendar', () => {
   teardown(() => {
@@ -161,6 +162,17 @@ suite('u-calendar', () => {
       expect(changeFired).to.be.true;
     });
   });
+
+  suite('selection band stacking', () => {
+    // Regression: the selection band (range/week) is a `z-index: -1` ::before.
+    // Without an isolated stacking context on the cell it escapes behind the
+    // host surface and the selection becomes invisible.
+    test('calendar-item isolates its stacking context', async () => {
+      const el = await fixture<Calendar>(html`<u-calendar></u-calendar>`);
+      const item = el.shadowRoot!.querySelector<HTMLElement>('.calendar-item')!;
+      expect(getComputedStyle(item).isolation).to.equal('isolate');
+    });
+  });
 });
 
 suite('u-range-calendar', () => {
@@ -248,6 +260,143 @@ suite('u-range-calendar', () => {
       const secondEvent = await oneEvent(el, 'change');
       expect(secondEvent).to.exist;
       expect(el.endDateValue?.getTime()).to.equal(endDate.getTime());
+    });
+  });
+
+  suite('selection band', () => {
+    const selectedJune = async () => {
+      const el = await fixture<RangeCalendar>(html`<u-range-calendar></u-range-calendar>`);
+      el.value = '2026-06-09 - 2026-06-18';
+      el.month = 5;
+      el.year = 2026;
+      await el.updateComplete;
+      return el;
+    };
+
+    const cell = (el: RangeCalendar, day: string) =>
+      [...el.shadowRoot!.querySelectorAll<HTMLElement>('.calendar-item')]
+        .find((item) => item.querySelector('.date')?.textContent?.trim() === day)!;
+
+    test('paints the highlight band on a day between the range ends', async () => {
+      const el = await selectedJune();
+      // The band is a ::before pseudo-element; without the rule its content is `none`.
+      expect(getComputedStyle(cell(el, '12'), '::before').content).to.not.equal('none');
+    });
+
+    test('does not paint the band outside the range', async () => {
+      const el = await selectedJune();
+      expect(getComputedStyle(cell(el, '25'), '::before').content).to.equal('none');
+    });
+
+    test('the in-range cell isolates so the band is not hidden behind the host', async () => {
+      const el = await selectedJune();
+      expect(getComputedStyle(cell(el, '12')).isolation).to.equal('isolate');
+    });
+  });
+});
+
+suite('u-week-calendar', () => {
+  teardown(() => {
+    document.querySelectorAll('u-week-calendar').forEach((el) => el.remove());
+  });
+
+  // en-US starts the week on Sunday; 2025-06-10 is a Tuesday, so its week
+  // starts on Sunday 2025-06-08.
+  const make = () => fixture<WeekCalendar>(html`<u-week-calendar locale="en-US"></u-week-calendar>`);
+
+  suite('registration', () => {
+    test('is registered as u-week-calendar', () => {
+      expect(customElements.get('u-week-calendar')).to.equal(WeekCalendar);
+    });
+  });
+
+  suite('value', () => {
+    test('starts empty', async () => {
+      const el = await make();
+      expect(el.value).to.equal('');
+    });
+
+    test('normalizes any in-week date to the week start', async () => {
+      const el = await make();
+      el.value = '2025-06-10';
+      await el.updateComplete;
+      expect(el.value).to.equal('2025-06-08');
+    });
+
+    test('a date already on the week start stays put', async () => {
+      const el = await make();
+      el.value = '2025-06-08';
+      expect(el.value).to.equal('2025-06-08');
+    });
+
+    test('clears when set to an empty string', async () => {
+      const el = await make();
+      el.value = '2025-06-10';
+      el.value = '';
+      expect(el.value).to.equal('');
+    });
+
+    test('returns the week start as a Date when value-type="date"', async () => {
+      const el = await fixture<WeekCalendar>(
+        html`<u-week-calendar locale="en-US" value-type="date"></u-week-calendar>`,
+      );
+      el.value = '2025-06-10';
+      expect((el.value as Date).getTime()).to.equal(new Date(2025, 5, 8).getTime());
+    });
+  });
+
+  suite('selection', () => {
+    test('selecting any day selects its whole week and fires input then change', async () => {
+      const el = await make();
+      let inputFired = false;
+      let changeFired = false;
+      el.addEventListener('input', () => (inputFired = true));
+      el.addEventListener('change', () => (changeFired = true));
+
+      (el as unknown as { _selectDate: (d: Date) => void })._selectDate(new Date(2025, 5, 11));
+
+      expect(el.value).to.equal('2025-06-08');
+      expect(inputFired).to.be.true;
+      expect(changeFired).to.be.true;
+    });
+
+    test('marks the seven days of the selected week with start/end caps', async () => {
+      const el = await make();
+      el.value = '2025-06-10';
+      el.month = 5;
+      el.year = 2025;
+      await el.updateComplete;
+
+      expect(el.shadowRoot!.querySelectorAll('.calendar-item.week').length).to.equal(7);
+      expect(el.shadowRoot!.querySelectorAll('.calendar-item.week-start').length).to.equal(1);
+      expect(el.shadowRoot!.querySelectorAll('.calendar-item.week-end').length).to.equal(1);
+    });
+  });
+
+  suite('week interaction rows', () => {
+    // The week — not the day — is the interactive unit: one overlay row per week,
+    // each owning the hover/click and a week-wide ripple.
+    test('renders one interaction row per displayed week, each with a ripple', async () => {
+      const el = await make();
+      const rows = el.shadowRoot!.querySelectorAll('.week-row');
+      expect(rows.length).to.equal(6);
+      expect([...rows].every((row) => row.querySelector('u-ripple'))).to.be.true;
+    });
+
+    test('clicking a week row selects that week', async () => {
+      const el = await make();
+      el.month = 5;
+      el.year = 2025;
+      await el.updateComplete;
+      // June 2025 grid (en-US, Sunday start) begins Sun 2025-06-01; row 2 = 15–21.
+      (el.shadowRoot!.querySelectorAll<HTMLElement>('.week-row')[2]).click();
+      expect(el.value).to.equal('2025-06-15');
+    });
+
+    test('the per-day ripple is suppressed', async () => {
+      const el = await make();
+      const dayRipple = el.shadowRoot!.querySelector('.calendar-item u-ripple')!;
+      expect(getComputedStyle(dayRipple).display).to.equal('none');
     });
   });
 });

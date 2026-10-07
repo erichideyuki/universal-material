@@ -1,7 +1,9 @@
+import { consume } from '@lit/context';
 import { CSSResultGroup } from '@lit/reactive-element/css-tag';
 
 import { property, state } from 'lit/decorators.js';
 
+import { compactContext } from '../shared/compact-context.js';
 import { ButtonBase } from './button-base.js';
 import { styles } from './toggle-button.styles.js';
 
@@ -34,22 +36,40 @@ export abstract class ToggleButton extends ButtonBase {
   @property({ reflect: true }) shape: ButtonShape = 'round';
 
   /**
-   * Sets the size of the button
+   * Sets the size of the button. When omitted, defaults to `small`, or
+   * `extra-small` when the button sits inside a compact context (e.g.
+   * `provideCompact(document.body)`).
    */
-  @property({ reflect: true }) size: ButtonSize = 'small';
+  @property({ reflect: true }) size: ButtonSize | undefined = 'small';
 
   /**
    * The `aria-label` of the button when the button is toggleable and selected.
    */
   @property({ attribute: 'aria-label-selected' }) ariaLabelSelected = '';
 
+  @consume({ context: compactContext, subscribe: true })
+  @state()
+  private readonly _compactContext: boolean | undefined;
+
   @state() _hasSelectionIcon = false;
+
+  constructor() {
+    super();
+    // Reset to `undefined` so an explicitly set `size` can be told apart from
+    // the default, letting the compact context pick `extra-small` (see gotcha
+    // #1 in CLAUDE.md — a reflected default can't be detected via attributes).
+    this.size = undefined;
+  }
+
+  protected get _resolvedSize(): ButtonSize {
+    return this.size ?? (this._compactContext ? 'extra-small' : 'small');
+  }
 
   protected override _getContainerClasses(): Record<string, boolean> {
     return {
       ...super._getContainerClasses(),
       [this.shape]: true,
-      [this.size]: true,
+      [this._resolvedSize]: true,
       selected: this.selected,
       toggle: this.toggle,
       'toggle-shape': this.toggleShape,

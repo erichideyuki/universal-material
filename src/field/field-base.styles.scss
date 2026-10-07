@@ -1,5 +1,17 @@
 @use "../../scss/api";
 
+// Compact (desktop density): redirect the internal aliases to compact-specific
+// tokens (never override the base `--u-field-*` knobs). The filled box height is
+// `2 * vertical-padding + label-line-height (16px) + control-line-height (24px)`
+// = `2*4 + 16 + 24` = 48px, so the compact min-height must be the same 48px — the
+// resting label centers on `--_field-min-height`, and a smaller value would float
+// it above the true center. The text-area reuses the same `--_vertical-padding`
+// and `--_label-line-height`, so its top spacing matches automatically.
+:host([data-compact]) {
+  --_field-min-height: var(--u-field-compact-min-height, 48px);
+  --_vertical-padding: var(--u-field-compact-vertical-padding, 4px);
+}
+
 :host {
 
   --_control-line-height: var(--u-field-control-line-height, 1.5rem);

@@ -8,6 +8,7 @@ import basicHtml from './examples/basic.html';
 import iconsHtml from './examples/with-icons.html';
 import initialSelectionHtml from './examples/initial-selection.html';
 import secondaryHtml from './examples/secondary.html';
+import compactHtml from './examples/compact.html';
 
 @Component({
   selector: 'docs-tabs',
@@ -25,4 +26,5 @@ export class TabsComponent {
   iconsHtml = iconsHtml;
   initialSelectionHtml = initialSelectionHtml;
   secondaryHtml = secondaryHtml;
+  compactHtml = compactHtml;
 }

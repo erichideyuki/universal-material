@@ -1,0 +1,25 @@
+<!--
+  Buttons have no `compact` attribute of their own. In a compact app —
+  enabled once with `provideCompact(document.body)` — a button with no explicit
+  `size` defaults to `extra-small` instead of `small` (shown on the right).
+  Set `size` on a button to opt out. Other components take a `compact` attribute.
+-->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start">
+  <div style="display: flex; flex-direction: column; gap: 1rem; align-items: flex-start">
+    <h6 class="u-title-s">Default (size="small")</h6>
+    <u-button>Filled</u-button>
+    <u-button variant="tonal">Tonal</u-button>
+    <u-icon-button variant="filled">
+      <span class="material-symbols-outlined">favorite</span>
+    </u-icon-button>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 1rem; align-items: flex-start">
+    <h6 class="u-title-s">Compact (size="extra-small")</h6>
+    <u-button size="extra-small">Filled</u-button>
+    <u-button size="extra-small" variant="tonal">Tonal</u-button>
+    <u-icon-button size="extra-small" variant="filled">
+      <span class="material-symbols-outlined">favorite</span>
+    </u-icon-button>
+  </div>
+</div>

@@ -2,10 +2,11 @@ import { html, HTMLTemplateResult, nothing, TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
 import { ButtonWrapper } from '../shared/button-wrapper.js';
+import { mixinCompact } from '../shared/compact-mixin.js';
 import { styles } from './menu-item.styles.js';
 
 @customElement('u-menu-item')
-export class MenuItem extends ButtonWrapper {
+export class MenuItem extends mixinCompact(ButtonWrapper) {
   static override styles = [ButtonWrapper.styles, styles];
 
   /**

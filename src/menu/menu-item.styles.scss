@@ -3,13 +3,19 @@
 
 :host {
   display: block;
+  --_menu-item-height: var(--u-menu-item-height, 56px);
   --_menu-item-icon-size: var(--u-menu-item-icon-size, 1.5rem);
   --_menu-item-padding: var(--u-menu-item-padding, 12px);
   --u-focus-ring-outline-offset: -4px;
 }
 
+// Compact (desktop density): redirect the internal alias to a compact token.
+:host([data-compact]) {
+  --_menu-item-height: var(--u-menu-item-compact-height, 40px);
+}
+
 .container {
-  height: var(--u-menu-item-height, 56px);
+  height: var(--_menu-item-height);
   padding-inline: var(--_menu-item-padding);
   color: var(--u-menu-item-label-color, #{functions.get-color-var(on-surface)});
   @include mixins.typo(label-l, menu-item-label);

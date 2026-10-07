@@ -2,12 +2,13 @@ import { html, HTMLTemplateResult, LitElement, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 
+import { mixinCompact } from '../shared/compact-mixin.js';
 import { styles } from './list-item.styles.js';
 
 import '../ripple/ripple.js';
 
 @customElement('u-list-item')
-export class ListItem extends LitElement {
+export class ListItem extends mixinCompact(LitElement) {
   static override styles = styles;
 
   /**

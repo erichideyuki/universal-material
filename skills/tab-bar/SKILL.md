@@ -55,6 +55,10 @@ There's also a cancelable `changing` event — call `preventDefault()` to block 
 </u-tab-bar>
 ```
 
+## Compact density
+
+`<u-tab>` takes a `compact` boolean attribute — or inherits it app-wide from `provideCompact(document.body)` — shrinking tabs `48 → 40px` (`64 → 48px` with an icon). Retune with `--u-tab-compact-height` / `--u-tab-compact-with-icon-height`. See the **setup** skill for `provideCompact()`.
+
 ## Caveats
 
 - The bar is meant for **content** tabs (switching the body view). For top-level navigation between pages, use `<u-navigation-bar>` (mobile) or `<u-drawer>` items.

@@ -8,6 +8,8 @@ import { TitleComponent } from '@docs/docs/title/title.component';
 import { Field } from '@universal-material/web';
 import { ContextTestComponent } from '@docs/components/context-test/context-test.component';
 
+import compactHtml from './examples/compact.html';
+
 @Component({
   selector: 'docs-chips',
   templateUrl: './chips.component.html',
@@ -127,4 +129,5 @@ export class ChipsComponent {
   }
 
   template = '';
+  compactHtml = compactHtml;
 }

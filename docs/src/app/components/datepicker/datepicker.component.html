@@ -1,6 +1,6 @@
 <docs-title
   title="Datepicker"
-  tag="u-datepicker, u-range-datepicker, u-calendar, u-range-calendar"
+  tag="u-datepicker, u-range-datepicker, u-calendar, u-range-calendar, u-week-calendar"
   >Date selection components. `u-datepicker` and `u-range-datepicker` are form-associated text inputs with a calendar
   popover. For inline-only use, the library also exposes `u-calendar` and `u-range-calendar`.</docs-title
 >
@@ -152,6 +152,24 @@
   </div>
 </docs-example>
 <docs-example
+  sectionTitle="Week calendar"
+  [html]="weekCalendarHtml"
+  [renderExample]="false"
+>
+  <p>
+    <code>u-week-calendar</code> selects a whole week at a time — clicking any day selects the week that contains it, and
+    hovering previews the week. The value is the week's <strong>start date</strong> (ISO <code>YYYY-MM-DD</code>, or a
+    <code>Date</code> with <code>value-type="date"</code>).
+  </p>
+  <div
+    class="u-column"
+    example
+  >
+    <u-week-calendar (input)="onWeekInput($event)"></u-week-calendar>
+    <p>Week starting: {{ selectedWeek || "—" }}</p>
+  </div>
+</docs-example>
+<docs-example
   sectionTitle="Locale"
   [html]="localeHtml"
   [renderExample]="false"
@@ -177,3 +195,4 @@
 <docs-apis-table key="rangeDatepicker"></docs-apis-table>
 <docs-apis-table key="calendar"></docs-apis-table>
 <docs-apis-table key="rangeCalendar"></docs-apis-table>
+<docs-apis-table key="weekCalendar"></docs-apis-table>

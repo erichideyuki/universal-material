@@ -1,0 +1,25 @@
+<!--
+  The `compact` attribute shrinks the menu-item row (56px → 40px). It is also
+  inherited from an app-wide `provideCompact(document.body)`, so items inside a
+  compact app's `<u-menu>` become dense automatically. The items below are shown
+  on a plain surface (instead of a popup) so the height difference is visible.
+-->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start">
+  <div>
+    <h6 class="u-title-s">Default</h6>
+    <div style="width: 220px; padding: 8px 0; border-radius: 12px; background: var(--u-color-surface-container)">
+      <u-menu-item>New file</u-menu-item>
+      <u-menu-item>Open…</u-menu-item>
+      <u-menu-item>Save</u-menu-item>
+    </div>
+  </div>
+
+  <div>
+    <h6 class="u-title-s">Compact</h6>
+    <div style="width: 220px; padding: 8px 0; border-radius: 12px; background: var(--u-color-surface-container)">
+      <u-menu-item compact>New file</u-menu-item>
+      <u-menu-item compact>Open…</u-menu-item>
+      <u-menu-item compact>Save</u-menu-item>
+    </div>
+  </div>
+</div>

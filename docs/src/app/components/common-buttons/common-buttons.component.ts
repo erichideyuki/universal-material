@@ -12,6 +12,7 @@ import filledColorsHtml from './examples/filled-colors.html';
 import anchorButtonsHtml from './examples/anchor-buttons.html';
 import iconsHtml from './examples/buttons-icons.html';
 import trailingIconsHtml from './examples/buttons-trailing-icons.html';
+import compactHtml from './examples/compact.html';
 
 @Component({
   selector: 'docs-common-buttons',
@@ -33,4 +34,5 @@ export class CommonButtonsComponent {
   anchorButtonsHtml = anchorButtonsHtml;
   iconsHtml = iconsHtml;
   trailingIconsHtml = trailingIconsHtml;
+  compactHtml = compactHtml;
 }

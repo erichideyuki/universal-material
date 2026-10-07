@@ -1,0 +1,17 @@
+<!--
+  The `compact` attribute shrinks the field control height (56px → 48px). It
+  works on every field variant and is also inherited from an app-wide `provideCompact(document.body)`.
+-->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start">
+  <div style="display: flex; flex-direction: column; gap: 1rem">
+    <h6 class="u-title-s">Default</h6>
+    <u-text-field label="Name"></u-text-field>
+    <u-text-field variant="outlined" label="Email"></u-text-field>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 1rem">
+    <h6 class="u-title-s">Compact</h6>
+    <u-text-field compact label="Name"></u-text-field>
+    <u-text-field compact variant="outlined" label="Email"></u-text-field>
+  </div>
+</div>

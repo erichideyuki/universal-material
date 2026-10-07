@@ -144,6 +144,10 @@ Mark every item `collapse="always"` so nothing renders inline and only the "more
 
 For a single-trigger row menu, `<u-icon-button>` + `<u-menu>` (with `menu.anchorElement = theButton`) is often simpler than `<u-overflow-menu>`.
 
+## Compact density
+
+`<u-menu-item>` takes a `compact` boolean attribute — or inherits it app-wide from `provideCompact(document.body)` — shrinking the row `56 → 40px` (`<u-overflow-menu>` follows too). Retune with `--u-menu-item-compact-height`. See the **setup** skill for `provideCompact()`.
+
 ## Caveats
 
 - A `<u-menu>` is not modal — it doesn't trap focus or scrim the background. Use `<u-dialog>` for modal flows.

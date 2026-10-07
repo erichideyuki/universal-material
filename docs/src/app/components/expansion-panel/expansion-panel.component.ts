@@ -8,6 +8,7 @@ import singleHtml from './examples/single.html';
 import accordionHtml from './examples/accordion.html';
 import multiHtml from './examples/multi.html';
 import disabledHtml from './examples/disabled.html';
+import compactHtml from './examples/compact.html';
 
 @Component({
   selector: 'docs-expansion-panel',
@@ -25,4 +26,5 @@ export class ExpansionPanelComponent {
   accordionHtml = accordionHtml;
   multiHtml = multiHtml;
   disabledHtml = disabledHtml;
+  compactHtml = compactHtml;
 }

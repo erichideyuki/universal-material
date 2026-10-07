@@ -27,6 +27,17 @@
   --_tab-height: var(--u-tab-with-icon-height, 64px);
 }
 
+// Compact (desktop density): redirect the internal --_tab-height alias to
+// compact-specific tokens (text and with-icon). The `.has-icon` rule follows
+// `.container` so it still wins for icon tabs at equal specificity.
+:host([data-compact]) .container {
+  --_tab-height: var(--u-tab-compact-height, 40px);
+}
+
+:host([data-compact]) .has-icon {
+  --_tab-height: var(--u-tab-compact-with-icon-height, 48px);
+}
+
 .force-focus-ring .button,
 .button:focus-visible {
   border-radius: #{api.get-spacing-var(small)};

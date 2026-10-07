@@ -7,6 +7,7 @@ import { TitleComponent } from '@docs/docs/title/title.component';
 import basicHtml from './examples/basic.html';
 import iconsHtml from './examples/icons.html';
 import positioningHtml from './examples/positioning.html';
+import compactHtml from './examples/compact.html';
 
 const ANCHOR_CORNERS = ['start-start', 'start-end', 'end-start', 'end-end', 'auto-start', 'auto-end'] as const;
 const DIRECTIONS = ['down-start', 'down-end', 'up-start', 'up-end'] as const;
@@ -29,6 +30,7 @@ export class MenusComponent {
   readonly basicHtml = basicHtml;
   readonly iconsHtml = iconsHtml;
   readonly positioningHtml = positioningHtml;
+  readonly compactHtml = compactHtml;
 
   readonly anchorCorners = ANCHOR_CORNERS;
   readonly directions = DIRECTIONS;

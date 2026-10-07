@@ -3,14 +3,20 @@
 
 :host {
   display: block;
+  --_drawer-item-height: var(--u-drawer-item-height, 56px);
   --_drawer-item-icon-size: var(--u-drawer-item-icon-size, 1.5rem);
   --_drawer-item-padding: var(--u-drawer-item-padding, 16px);
+}
+
+// Compact (desktop density): redirect the internal alias to a compact token.
+:host([data-compact]) {
+  --_drawer-item-height: var(--u-drawer-item-compact-height, 44px);
 }
 
 .container {
   @include mixins.typo(label-l, drawer-item);
 
-  height: var(--u-drawer-item-height, 56px);
+  height: var(--_drawer-item-height);
   padding-inline: var(--_drawer-item-padding);
   margin-inline: calc(var(--_drawer-item-padding) * -1);
   border-radius: var(--u-drawer-item-shape-corner, #{functions.get-shape-corner-var(full)});

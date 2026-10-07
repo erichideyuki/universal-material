@@ -148,6 +148,10 @@ console.log(field.value);
 field.addEventListener("input", () => console.log(field.value));
 ```
 
+## Compact density
+
+Fields take a `compact` boolean attribute — or inherit it app-wide from `provideCompact(document.body)` — shrinking the control `56 → 48px` (the floating label stays centered; text-areas keep the same top spacing). Retune with `--u-field-compact-min-height` / `--u-field-compact-vertical-padding`. See the **setup** skill for `provideCompact()`.
+
 ## Caveats
 
 - The placeholder is hidden visually while the field is empty AND not focused so it doesn't collide with the floating label. Don't fight this with custom CSS — that's the M3 behavior.

@@ -7,6 +7,8 @@ import { ApisTableComponent } from '@docs/docs/apis-table/apis-table.component';
 import { ExampleComponent } from '@docs/docs/example/example.component';
 import { TitleComponent } from '@docs/docs/title/title.component';
 
+import compactHtml from './examples/compact.html';
+
 @Component({
   selector: 'docs-text-fields',
   templateUrl: './text-fields.component.html',
@@ -24,6 +26,7 @@ export class TextFieldsComponent {
   supportingText = '*required';
   errorText = 'Enter a description';
   template = '';
+  compactHtml = compactHtml;
   value = '';
 
   updated$ = new Subject<void>();

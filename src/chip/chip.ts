@@ -3,13 +3,14 @@ import { customElement, property, query, queryAssignedElements, state } from 'li
 
 import { Ripple } from '../ripple/ripple.js';
 import { ButtonWrapper } from '../shared/button-wrapper.js';
+import { mixinCompact } from '../shared/compact-mixin.js';
 import { styles } from './chip.styles.js';
 
 import '../ripple/ripple.js';
 import '../elevation/elevation.js';
 
 @customElement('u-chip')
-export class Chip extends ButtonWrapper {
+export class Chip extends mixinCompact(ButtonWrapper) {
   static override styles = [ButtonWrapper.styles, styles];
 
   #clickable = false;

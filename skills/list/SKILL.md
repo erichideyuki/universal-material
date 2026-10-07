@@ -122,6 +122,10 @@ A second line of supporting text wraps automatically when content exceeds one li
 
 For grouped lists with headlines, mix `<u-drawer-headline>`-style elements between groups, or use the `card`/`outlined-card` containers around each section.
 
+## Compact density
+
+`<u-list-item>` takes a `compact` boolean attribute — or inherits it app-wide from `provideCompact(document.body)` — shrinking the row `56 → 40px`. Retune with `--u-list-item-compact-min-height`. See the **setup** skill for `provideCompact()`.
+
 ## Caveats
 
 - `<u-list-item>` slots accept any node — keep leading/trailing icons inside `<span class="material-symbols-outlined">` or `<u-icon-button>` for consistent sizing.

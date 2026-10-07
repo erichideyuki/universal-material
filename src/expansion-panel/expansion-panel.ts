@@ -2,6 +2,7 @@ import { html, HTMLTemplateResult, LitElement, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
 import { styles as baseStyles } from '../shared/base.styles.js';
+import { mixinCompact } from '../shared/compact-mixin.js';
 import { styles } from './expansion-panel.styles.js';
 
 import '../ripple/ripple.js';
@@ -16,7 +17,7 @@ import '../collapse/collapse.js';
  * @fires change - Dispatched when the `expanded` state toggles.
  */
 @customElement('u-expansion-panel')
-export class ExpansionPanel extends LitElement {
+export class ExpansionPanel extends mixinCompact(LitElement) {
   static override styles = [baseStyles, styles];
 
   #expanded = false;

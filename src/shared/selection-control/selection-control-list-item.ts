@@ -1,13 +1,14 @@
 import { css, html, HTMLTemplateResult, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 
+import { mixinCompact } from '../compact-mixin.js';
 import { MixinBase, MixinReturn } from '../mixin.js';
 import { SelectionControl } from './selection-control.js';
 
 // @ts-ignore
 export const mixinSelectionControlListItem = <T extends MixinBase<SelectionControl>>(base: T): MixinReturn<T> => {
   // @ts-ignore
-  abstract class SelectionControlListItem extends base {
+  abstract class SelectionControlListItem extends mixinCompact(base) {
     static styles = [
       (base as unknown as typeof LitElement).styles ?? [],
       css`
@@ -41,7 +42,7 @@ export const mixinSelectionControlListItem = <T extends MixinBase<SelectionContr
     override render(): HTMLTemplateResult {
       return html`
         <label>
-          <u-list-item ?selectable=${!this.disabled} ?no-inset=${this.noInset}>
+          <u-list-item ?selectable=${!this.disabled} ?no-inset=${this.noInset} ?compact=${this.isCompact}>
             <div slot="${this.leading ? 'leading-icon' : 'trailing-icon'}">${super.render()}</div>
             <span id="label"><slot></slot></span>
             <span id="description" slot="supporting-text"><slot name="supporting-text"></slot></span>

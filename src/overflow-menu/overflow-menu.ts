@@ -4,12 +4,13 @@ import { classMap } from 'lit/directives/class-map.js';
 import { map } from 'lit/directives/map.js';
 import { when } from 'lit/directives/when.js';
 
+import { mixinCompact } from '../shared/compact-mixin.js';
 import { Menu } from '../menu/menu.js';
 import { OverflowMenuItem } from './overflow-menu-item.js';
 import { styles } from './overflow-menu.styles.js';
 
 @customElement('u-overflow-menu')
-export class OverflowMenu extends LitElement {
+export class OverflowMenu extends mixinCompact(LitElement) {
   static override styles = styles;
   readonly #resizeObserver: ResizeObserver = new ResizeObserver(() => this.#invalidate());
   #items: OverflowMenuItem[] = [];

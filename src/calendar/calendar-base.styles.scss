@@ -6,6 +6,11 @@
   display: inline-block;
 }
 
+.calendar-grid {
+  // Positioning context for the optional day-grid overlay (week calendar).
+  position: relative;
+}
+
 .calendar {
   display: grid;
   grid-template-columns: repeat(7, 48px);
@@ -15,6 +20,10 @@
 .calendar-item {
   --u-ripple-border-radius: 9999px;
   position: relative;
+  // Own stacking context so the `z-index: -1` selection band (range and week
+  // calendars) paints above the host surface — without it the band escapes
+  // behind an opaque ancestor and disappears.
+  isolation: isolate;
   display: flex;
   align-items: center;
   justify-content: center;
