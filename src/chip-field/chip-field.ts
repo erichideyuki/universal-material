@@ -1,6 +1,7 @@
 import { CSSResultGroup } from '@lit/reactive-element/css-tag';
+import DOMPurify from 'dompurify';
 
-import { html, HTMLTemplateResult, nothing } from 'lit';
+import { html, HTMLTemplateResult, nothing, TemplateResult } from 'lit';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 import { customElement, property, query } from 'lit/decorators.js';
 
@@ -24,9 +25,11 @@ export class ChipField extends TextFieldBase {
   @property({ type: Boolean }) manual = false;
 
   /**
-   * A function return a string based on a item from the `value`. Useful when the items of value are objects.
+   * A function that returns the chip label for an item of the `value`. Useful when the items of value are objects.
+   *
+   * A returned string is rendered as HTML, sanitized with DOMPurify. Return an `HTMLElement` or a Lit `TemplateResult` to render custom elements. Display only — it doesn't affect the form value.
    */
-  formatter: ((value: any) => string) | undefined;
+  formatter: ((value: any) => string | HTMLElement | TemplateResult) | undefined;
 
   /**
    * A string representing an HTML to be rendered inside as leading icon of each chip.
@@ -55,7 +58,7 @@ export class ChipField extends TextFieldBase {
     const formData = new FormData();
 
     for (const item of this.value) {
-      formData.append(this.name, this.getItemLabel(item));
+      formData.append(this.name, item.toString());
     }
 
     this.elementInternals.setFormValue(formData);
@@ -92,7 +95,7 @@ export class ChipField extends TextFieldBase {
 
       return html`
         <u-chip removable ?disabled=${this.disabled} @remove=${this.#removeChip(index)}>
-          ${leadingIcon} ${this.getItemLabel(item)}
+          ${leadingIcon} ${this.#renderItemLabel(item)}
         </u-chip>
       `;
     });
@@ -174,8 +177,15 @@ export class ChipField extends TextFieldBase {
     return event.defaultPrevented;
   }
 
-  private getItemLabel(item: any) {
-    return this.formatter ? this.formatter(item) : item.toString();
+  #renderItemLabel(item: any) {
+    // Only the formatter output is HTML — raw values (e.g. typed text) stay plain text.
+    if (!this.formatter) {
+      return item.toString();
+    }
+
+    const label = this.formatter(item);
+
+    return typeof label === 'string' ? unsafeHTML(DOMPurify.sanitize(label)) : label;
   }
 }
 

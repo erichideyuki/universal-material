@@ -25,4 +25,20 @@
   </div>
 </docs-example>
 
+<docs-example
+  sectionTitle="HTML formatter"
+  [renderExample]="false"
+  [html]="htmlFormatterHtml"
+  alignment="stretch"
+>
+  <div example>
+    <u-chip-field
+      label="Recipients"
+      manual
+      [formatter]="htmlFormatter"
+      [value]="recipients"
+    ></u-chip-field>
+  </div>
+</docs-example>
+
 <docs-apis-table key="chipField"></docs-apis-table>

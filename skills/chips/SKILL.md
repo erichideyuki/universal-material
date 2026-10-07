@@ -124,7 +124,20 @@ A text field where each typed value (separated by Enter or comma) becomes a remo
 </script>
 ```
 
-For object-valued chips (e.g. typeahead-driven), set `.value` to `Array<{ value, label }>` and the field renders the label.
+For object-valued chips (e.g. typeahead-driven), set a `formatter` that maps each item to its label. It is display only — `value` and the submitted form data are untouched. A returned string is rendered as **HTML** (sanitized with DOMPurify, which strips custom elements); return an `HTMLElement` or a Lit `TemplateResult` to render web components:
+
+```html
+<u-chip-field label="Recipients" manual></u-chip-field>
+
+<script>
+  const chipField = document.querySelector("u-chip-field");
+
+  chipField.formatter = (person) =>
+    `<strong>${person.name}</strong> <span style="color: var(--u-color-on-surface-variant)">${person.email}</span>`;
+
+  chipField.value = [{ name: "Ana", email: "ana@example.com" }];
+</script>
+```
 
 ## Compact density
 
@@ -136,4 +149,4 @@ For object-valued chips (e.g. typeahead-driven), set `.value` to `Array<{ value,
 - Don't use `toggle` for radio-like selectors — the user could deselect the only choice and the UI ends up in an invalid empty state.
 - `<u-chip-field>` is form-associated; pair with a `<form>` for native submit.
 - **The `remove` event bubbles and composes** — listen on the chip or delegate on the parent `<u-chip-set>`. The chip also **removes itself from the DOM** on remove unless you `preventDefault()` the event (do so when the chip's presence is driven by your own state).
-- **`<u-chip-field>` value:** reassign `.value = [...]` to re-render (mutating the array in place does not). Use `add(value, triggerChange?)` / `removeAt(index, triggerChange?)` to mutate, and set a `formatter` (`value => string`) for object items — otherwise objects render as `[object Object]`. The `change` event only fires on user add/remove (or when `triggerChange` is true).
+- **`<u-chip-field>` value:** reassign `.value = [...]` to re-render (mutating the array in place does not). Use `add(value, triggerChange?)` / `removeAt(index, triggerChange?)` to mutate, and set a `formatter` (`value => string | HTMLElement | TemplateResult`) for object items — otherwise objects render as `[object Object]`. A string formatter output is HTML (DOMPurify strips scripts/handlers and custom elements, but escape user-provided text yourself if `<` or `&` must stay literal); without a formatter, values render as plain text. Native form submission sends each item's `toString()` — object items submit `[object Object]`, so read `.value` (or use the Angular accessor) instead. The `change` event only fires on user add/remove (or when `triggerChange` is true).
