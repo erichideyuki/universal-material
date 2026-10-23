@@ -6,6 +6,22 @@ import './tab-bar.js';
 import { TabBar } from './tab-bar.js';
 import { Tab } from './tab.js';
 
+/** Text that names the inner control: its `aria-labelledby` target in the shadow root, with slots flattened. */
+const labelledByText = (el: HTMLElement): string | null => {
+  const control = el.shadowRoot!.querySelector('.button')!;
+  const id = control.getAttribute('aria-labelledby');
+  const target = id ? el.shadowRoot!.getElementById(id) : null;
+  const text = (node: Node): string => {
+    if (node instanceof HTMLSlotElement) {
+      return node.assignedNodes({ flatten: true }).map(text).join('');
+    }
+
+    return node.nodeType === Node.TEXT_NODE ? node.textContent ?? '' : [...node.childNodes].map(text).join('');
+  };
+
+  return target ? text(target).replace(/\s+/g, ' ').trim() : null;
+};
+
 // Tab-bar-driven behavior (changing/change events, activeTab setter, etc.) is
 // already covered in tab-bar.test.ts. This file targets Tab-specific behavior:
 // hasIcon detection, no-op when standalone, disconnect handling.
@@ -147,5 +163,22 @@ suite('u-tab', () => {
       // Slotchange recomputes the tab list and points to the surviving first tab.
       expect(removed._bar).to.equal(null);
     });
+  });
+});
+
+suite('u-tab accessible name', () => {
+  teardown(() => {
+    document.querySelectorAll('u-tab, u-tab-bar').forEach((el) => el.remove());
+  });
+
+  test('names the inner button with the slotted label, without the icon', async () => {
+    const bar = await fixture<TabBar>(html`
+      <u-tab-bar>
+        <u-tab><span slot="icon">event_note</span>Lessons</u-tab>
+      </u-tab-bar>
+    `);
+    const tab = bar.querySelector('u-tab') as Tab;
+    await tab.updateComplete;
+    expect(labelledByText(tab)).to.equal('Lessons');
   });
 });

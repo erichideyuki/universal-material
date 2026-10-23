@@ -2,6 +2,22 @@ import { expect, fixture, html } from '@open-wc/testing';
 
 import { Fab } from './fab.js';
 
+/** Text that names the inner control: its `aria-labelledby` target in the shadow root, with slots flattened. */
+const labelledByText = (el: HTMLElement): string | null => {
+  const control = el.shadowRoot!.querySelector('.button')!;
+  const id = control.getAttribute('aria-labelledby');
+  const target = id ? el.shadowRoot!.getElementById(id) : null;
+  const text = (node: Node): string => {
+    if (node instanceof HTMLSlotElement) {
+      return node.assignedNodes({ flatten: true }).map(text).join('');
+    }
+
+    return node.nodeType === Node.TEXT_NODE ? node.textContent ?? '' : [...node.childNodes].map(text).join('');
+  };
+
+  return target ? text(target).replace(/\s+/g, ' ').trim() : null;
+};
+
 const containerOf = (el: Fab) =>
   el.shadowRoot!.querySelector<HTMLElement>('[part="container"]')!;
 
@@ -133,5 +149,16 @@ suite('u-fab', () => {
       const fab = formEl.querySelector('u-fab') as Fab;
       expect(fab.form).to.equal(formEl);
     });
+  });
+});
+
+suite('u-fab accessible name', () => {
+  teardown(() => {
+    document.querySelectorAll('u-fab').forEach((el) => el.remove());
+  });
+
+  test('names an extended FAB with its label, without the icon', async () => {
+    const el = await fixture<Fab>(html`<u-fab label="Compose"><span>edit</span></u-fab>`);
+    expect(labelledByText(el)).to.equal('Compose');
   });
 });

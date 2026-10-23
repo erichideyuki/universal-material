@@ -55,7 +55,7 @@ export class FabMenuItem extends ButtonBase {
       <span class="icon" aria-hidden="true">
         <slot @slotchange=${this.#handleIconSlotChange}></slot>
       </span>
-      <span class="label">${this.label}</span>
+      <span class="label" id="text">${this.label}</span>
     `;
   }
 

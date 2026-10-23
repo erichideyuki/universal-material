@@ -2,6 +2,22 @@ import { expect, fixture, html, oneEvent } from '@open-wc/testing';
 
 import { Button } from './button.js';
 
+/** Text that names the inner control: its `aria-labelledby` target in the shadow root, with slots flattened. */
+const labelledByText = (el: HTMLElement): string | null => {
+  const control = el.shadowRoot!.querySelector('.button')!;
+  const id = control.getAttribute('aria-labelledby');
+  const target = id ? el.shadowRoot!.getElementById(id) : null;
+  const text = (node: Node): string => {
+    if (node instanceof HTMLSlotElement) {
+      return node.assignedNodes({ flatten: true }).map(text).join('');
+    }
+
+    return node.nodeType === Node.TEXT_NODE ? node.textContent ?? '' : [...node.childNodes].map(text).join('');
+  };
+
+  return target ? text(target).replace(/\s+/g, ' ').trim() : null;
+};
+
 const containerOf = (el: Button) =>
   el.shadowRoot!.querySelector<HTMLElement>('[part="container"]')!;
 
@@ -166,5 +182,46 @@ suite('u-button', () => {
       el.selected = true;
       expect(el.getAriaLabel()).to.equal('Action');
     });
+  });
+});
+
+suite('u-button accessible name', () => {
+  teardown(() => {
+    document.querySelectorAll('u-button').forEach((el) => el.remove());
+  });
+
+  test('names the inner button with the slotted label, without the icon', async () => {
+    const el = await fixture<Button>(html`<u-button><span slot="icon">add</span>Save</u-button>`);
+    expect(labelledByText(el)).to.equal('Save');
+  });
+
+  test('switches to the selection label while selected', async () => {
+    const el = await fixture<Button>(html`
+      <u-button toggle>Follow<span slot="label-selected">Following</span></u-button>
+    `);
+    await el.updateComplete;
+    expect(labelledByText(el)).to.equal('Follow');
+
+    el.selected = true;
+    await el.updateComplete;
+    expect(labelledByText(el)).to.equal('Following');
+  });
+
+  test('keeps the default label when selected without a selection label', async () => {
+    const el = await fixture<Button>(html`<u-button toggle selected>Follow</u-button>`);
+    expect(labelledByText(el)).to.equal('Follow');
+  });
+
+  test('aria-label replaces the slotted label', async () => {
+    const el = await fixture<Button>(html`<u-button aria-label="Close dialog">Close</u-button>`);
+    const control = el.shadowRoot!.querySelector('.button')!;
+    expect(control.getAttribute('aria-label')).to.equal('Close dialog');
+    expect(control.hasAttribute('aria-labelledby')).to.be.false;
+  });
+
+  test('names a link button with the slotted label', async () => {
+    const el = await fixture<Button>(html`<u-button href="/docs">Docs</u-button>`);
+    expect(el.shadowRoot!.querySelector('a')).to.exist;
+    expect(labelledByText(el)).to.equal('Docs');
   });
 });

@@ -3,6 +3,22 @@ import { expect, fixture, html, oneEvent } from '@open-wc/testing';
 import { ChipSet } from './chip-set.js';
 import { Chip } from './chip.js';
 
+/** Text that names the inner control: its `aria-labelledby` target in the shadow root, with slots flattened. */
+const labelledByText = (el: HTMLElement): string | null => {
+  const control = el.shadowRoot!.querySelector('.button')!;
+  const id = control.getAttribute('aria-labelledby');
+  const target = id ? el.shadowRoot!.getElementById(id) : null;
+  const text = (node: Node): string => {
+    if (node instanceof HTMLSlotElement) {
+      return node.assignedNodes({ flatten: true }).map(text).join('');
+    }
+
+    return node.nodeType === Node.TEXT_NODE ? node.textContent ?? '' : [...node.childNodes].map(text).join('');
+  };
+
+  return target ? text(target).replace(/\s+/g, ' ').trim() : null;
+};
+
 const containerOf = (el: Chip) =>
   el.shadowRoot!.querySelector<HTMLElement>('[part="container"]')!;
 
@@ -165,5 +181,18 @@ suite('u-chip-set', () => {
         expect(el.getAttribute('alignment')).to.equal(alignment);
       });
     });
+  });
+});
+
+suite('u-chip accessible name', () => {
+  teardown(() => {
+    document.querySelectorAll('u-chip').forEach((el) => el.remove());
+  });
+
+  test('names the inner button with the slotted label, without the icons', async () => {
+    const el = await fixture<Chip>(html`
+      <u-chip clickable><span slot="leading-icon">school</span>Mathematics</u-chip>
+    `);
+    expect(labelledByText(el)).to.equal('Mathematics');
   });
 });

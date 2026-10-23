@@ -89,8 +89,8 @@ export abstract class ButtonWrapper extends LitElement {
         class="button"
         href=${this.disabled ? nothing : ifDefined(this.href)}
         aria-disabled=${this.disabled || nothing}
-        aria-label=${this.ariaLabel || nothing}
-        aria-labelledby="${this.ariaLabel ? nothing : 'text'}"
+        aria-label=${this.getAriaLabel() || nothing}
+        aria-labelledby="${this.getAriaLabel() ? nothing : 'text'}"
         .role=${this.innerRole}
         target=${this.target || nothing}
         @click=${this.#innerClickHandler}>

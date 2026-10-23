@@ -62,7 +62,7 @@ export class Tab extends mixinCompact(ButtonWrapper) {
         <div class="icon" part="icon">
           <slot name="icon" @slotchange=${this.#iconSlotChange}></slot>
         </div>
-        <div class="label" part="label">
+        <div class="label" part="label" id="text">
           <slot></slot>
         </div>
       </div>

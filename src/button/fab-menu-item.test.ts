@@ -3,6 +3,22 @@ import { expect, fixture, html } from '@open-wc/testing';
 import './fab-menu.js';
 import { FabMenuItem } from './fab-menu-item.js';
 
+/** Text that names the inner control: its `aria-labelledby` target in the shadow root, with slots flattened. */
+const labelledByText = (el: HTMLElement): string | null => {
+  const control = el.shadowRoot!.querySelector('.button')!;
+  const id = control.getAttribute('aria-labelledby');
+  const target = id ? el.shadowRoot!.getElementById(id) : null;
+  const text = (node: Node): string => {
+    if (node instanceof HTMLSlotElement) {
+      return node.assignedNodes({ flatten: true }).map(text).join('');
+    }
+
+    return node.nodeType === Node.TEXT_NODE ? node.textContent ?? '' : [...node.childNodes].map(text).join('');
+  };
+
+  return target ? text(target).replace(/\s+/g, ' ').trim() : null;
+};
+
 const containerOf = (el: FabMenuItem) =>
   el.shadowRoot!.querySelector<HTMLElement>('[part="container"]')!;
 
@@ -90,5 +106,16 @@ suite('u-fab-menu-item', () => {
       await item.updateComplete;
       expect(containerOf(item).classList.contains('open')).to.be.true;
     });
+  });
+});
+
+suite('u-fab-menu-item accessible name', () => {
+  teardown(() => {
+    document.querySelectorAll('u-fab-menu-item').forEach((el) => el.remove());
+  });
+
+  test('names the inner button with its label, without the icon', async () => {
+    const el = await fixture<FabMenuItem>(html`<u-fab-menu-item label="Compose"><span>edit</span></u-fab-menu-item>`);
+    expect(labelledByText(el)).to.equal('Compose');
   });
 });

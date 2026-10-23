@@ -1,7 +1,7 @@
 import { PropertyValues } from '@lit/reactive-element';
 import { CSSResultGroup } from '@lit/reactive-element/css-tag';
 
-import { html, HTMLTemplateResult } from 'lit';
+import { html, HTMLTemplateResult, nothing } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 
@@ -75,6 +75,14 @@ export class Button extends ToggleButton {
     };
   }
 
+  /**
+   * Whether the `label-selected` slot is the visible label (same condition as the styles). The visible
+   * label carries `id="text"`, which names the inner button through `aria-labelledby`.
+   */
+  get #showsSelectionLabel(): boolean {
+    return this.selected && this._hasSelectionLabel;
+  }
+
   protected override _renderContent(): HTMLTemplateResult {
     const labelContainerClasses = { animate: this.animateTextChange };
 
@@ -90,10 +98,10 @@ export class Button extends ToggleButton {
 
       <span class="label-container ${classMap(labelContainerClasses)}">
         <span id="label">
-          <span class="label label-default">
+          <span class="label label-default" id=${this.#showsSelectionLabel ? nothing : 'text'}>
             <slot></slot>
           </span>
-          <span class="label label-selected">
+          <span class="label label-selected" id=${this.#showsSelectionLabel ? 'text' : nothing}>
             <slot name="label-selected" @slotchange="${this.#handleSelectedLabelSlotChange}"></slot>
           </span>
         </span>

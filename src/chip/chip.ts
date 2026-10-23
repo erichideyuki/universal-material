@@ -170,7 +170,7 @@ export class Chip extends mixinCompact(ButtonWrapper) {
           </svg>
         </slot>
       </span>
-      <div class="label">
+      <div class="label" id="text">
         <slot></slot>
       </div>
       <slot

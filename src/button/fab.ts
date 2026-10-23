@@ -91,7 +91,7 @@ export class Fab extends ButtonBase {
   }
 
   protected override _renderContent(): HTMLTemplateResult {
-    const labelTag = html`<span>${this.label}</span>`;
+    const labelTag = html`<span id="text">${this.label}</span>`;
 
     return html`
       <span class="icon" aria-hidden="true"><slot></slot></span>
