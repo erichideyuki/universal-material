@@ -115,6 +115,7 @@ export class TabBar extends LitElement {
       </div>
       <div
         class="container ${classMap(classes)}"
+        role="tablist"
         @scrollend=${this.#handleContainerScrollEnd}>
         <slot @slotchange=${this.#handleSlotChange}></slot>
         <div class="tab-indicator"></div>

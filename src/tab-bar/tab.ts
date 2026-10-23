@@ -13,6 +13,8 @@ export class Tab extends mixinCompact(ButtonWrapper) {
 
   _bar: TabBar | null = null;
 
+  protected override innerRole: string | null = 'tab';
+
   readonly #resizeObserver: ResizeObserver = new ResizeObserver(() => {
     if (this.active) {
       this._bar?._updateTabIndicator();
@@ -44,6 +46,10 @@ export class Tab extends mixinCompact(ButtonWrapper) {
    */
   @property({ type: Boolean }) hasIcon = false;
   @query('.container') private readonly _container!: HTMLElement;
+
+  protected override getAriaSelected(): boolean {
+    return this.active;
+  }
 
   get _paddingInline(): string {
     return getComputedStyle(this._container).paddingInline;

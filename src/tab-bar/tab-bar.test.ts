@@ -203,3 +203,65 @@ suite('u-tab-bar / u-tab', () => {
     });
   });
 });
+
+suite('u-tab-bar / u-tab ARIA tabs semantics', () => {
+  teardown(() => {
+    document.querySelectorAll('u-tab-bar').forEach((el) => el.remove());
+  });
+
+  const innerButton = (tab: Tab) => tab.shadowRoot!.querySelector<HTMLElement>('.button')!;
+
+  const selectedStates = async (bar: TabBar) => {
+    const tabs = [...bar.querySelectorAll<Tab>('u-tab')];
+    await Promise.all(tabs.map((tab) => tab.updateComplete));
+
+    return tabs.map((tab) => innerButton(tab).getAttribute('aria-selected'));
+  };
+
+  test('renders the tabs container as a tablist', async () => {
+    const bar = await fixture<TabBar>(html`<u-tab-bar><u-tab>A</u-tab></u-tab-bar>`);
+    await bar.updateComplete;
+    const slot = bar.shadowRoot!.querySelector('slot:not([name])')!;
+    expect(slot.closest('[role="tablist"]')).to.exist;
+  });
+
+  test('gives each inner button the tab role', async () => {
+    const bar = await fixture<TabBar>(html`<u-tab-bar><u-tab>A</u-tab><u-tab>B</u-tab></u-tab-bar>`);
+    await bar.updateComplete;
+    const tabs = [...bar.querySelectorAll<Tab>('u-tab')];
+    await Promise.all(tabs.map((tab) => tab.updateComplete));
+    expect(tabs.map((tab) => innerButton(tab).getAttribute('role'))).to.deep.equal(['tab', 'tab']);
+  });
+
+  test('marks only the active tab with aria-selected="true"', async () => {
+    const bar = await fixture<TabBar>(html`
+      <u-tab-bar>
+        <u-tab>A</u-tab>
+        <u-tab active>B</u-tab>
+        <u-tab>C</u-tab>
+      </u-tab-bar>
+    `);
+    await bar.updateComplete;
+    expect(await selectedStates(bar)).to.deep.equal(['false', 'true', 'false']);
+  });
+
+  test('moves aria-selected when a tab is clicked', async () => {
+    const bar = await fixture<TabBar>(html`<u-tab-bar><u-tab>A</u-tab><u-tab>B</u-tab></u-tab-bar>`);
+    await bar.updateComplete;
+    const tabs = bar.querySelectorAll<Tab>('u-tab');
+    await tabs[1].updateComplete;
+
+    innerButton(tabs[1]).click();
+
+    expect(await selectedStates(bar)).to.deep.equal(['false', 'true']);
+  });
+
+  test('moves aria-selected when activeTabIndex is set', async () => {
+    const bar = await fixture<TabBar>(html`<u-tab-bar><u-tab>A</u-tab><u-tab>B</u-tab><u-tab>C</u-tab></u-tab-bar>`);
+    await bar.updateComplete;
+
+    bar.activeTabIndex = 2;
+
+    expect(await selectedStates(bar)).to.deep.equal(['false', 'false', 'true']);
+  });
+});

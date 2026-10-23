@@ -72,6 +72,7 @@ export abstract class ButtonWrapper extends LitElement {
         ?disabled=${this.disabled}
         aria-label=${this.getAriaLabel() || nothing}
         aria-labelledby="${this.getAriaLabel() ? nothing : 'text'}"
+        aria-selected=${ifDefined(this.#ariaSelectedAttribute())}
         .role=${this.innerRole}
         type="button"
         @click=${this.#innerClickHandler}>
@@ -91,6 +92,7 @@ export abstract class ButtonWrapper extends LitElement {
         aria-disabled=${this.disabled || nothing}
         aria-label=${this.getAriaLabel() || nothing}
         aria-labelledby="${this.getAriaLabel() ? nothing : 'text'}"
+        aria-selected=${ifDefined(this.#ariaSelectedAttribute())}
         .role=${this.innerRole}
         target=${this.target || nothing}
         @click=${this.#innerClickHandler}>
@@ -124,6 +126,24 @@ export abstract class ButtonWrapper extends LitElement {
 
   protected getAriaLabel(): string | null {
     return this.ariaLabel;
+  }
+
+  /**
+   * `aria-selected` of the inner button/link. `null` (the default) leaves the attribute out; subclasses whose
+   * `innerRole` supports selection (e.g. `tab`) return their selected state.
+   */
+  protected getAriaSelected(): boolean | null {
+    return null;
+  }
+
+  #ariaSelectedAttribute(): 'true' | 'false' | undefined {
+    const selected = this.getAriaSelected();
+
+    if (selected === null) {
+      return undefined;
+    }
+
+    return selected ? 'true' : 'false';
   }
 
   #innerFocusHandler(): void {

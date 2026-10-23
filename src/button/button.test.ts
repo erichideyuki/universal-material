@@ -219,6 +219,11 @@ suite('u-button accessible name', () => {
     expect(control.hasAttribute('aria-labelledby')).to.be.false;
   });
 
+  test('does not render aria-selected (only tabs support selection)', async () => {
+    const el = await fixture<Button>(html`<u-button toggle selected>Follow</u-button>`);
+    expect(el.shadowRoot!.querySelector('.button')!.hasAttribute('aria-selected')).to.be.false;
+  });
+
   test('names a link button with the slotted label', async () => {
     const el = await fixture<Button>(html`<u-button href="/docs">Docs</u-button>`);
     expect(el.shadowRoot!.querySelector('a')).to.exist;
