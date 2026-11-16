@@ -3,7 +3,10 @@
   tag="u-fab-menu, u-fab-menu-item"
 >
   <markdown>
-    Represents a control that provides a menu of options. Mimic the behavior of the native `&lt;select&gt;`.
+    A FAB that opens a menu of related actions. Name the toggle with `aria-label` on the `u-fab-menu` (it has no visible
+    text); the toggle exposes `aria-expanded`. The menu closes when an item is clicked, on Escape (focus returns to the
+    toggle) and on a click outside it, and its items are inert while closed. Control it with the `open` attribute or
+    `show()`, `close()` and `toggle()`, and listen to `open`/`close` (cancelable) and `opened`/`closed`, like `u-menu`.
   </markdown>
 </docs-title>
 
@@ -17,7 +20,10 @@
     class="example-container"
     example
   >
-    <u-fab-menu size="large">
+    <u-fab-menu
+      size="large"
+      aria-label="Reply options"
+    >
       <span
         class="material-symbols-outlined"
         slot="icon"

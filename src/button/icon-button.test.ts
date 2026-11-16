@@ -85,3 +85,32 @@ suite('u-icon-button', () => {
     });
   });
 });
+
+suite('u-icon-button aria forwarding', () => {
+  teardown(() => {
+    document.querySelectorAll('u-icon-button').forEach((el) => el.remove());
+  });
+
+  const innerButton = (el: IconButton) => el.shadowRoot!.querySelector('button')!;
+
+  test('leaves aria-expanded out without the host attribute', async () => {
+    const el = await fixture<IconButton>(html`<u-icon-button aria-label="More"></u-icon-button>`);
+    expect(innerButton(el).hasAttribute('aria-expanded')).to.be.false;
+  });
+
+  test('forwards aria-expanded and follows its changes', async () => {
+    const el = await fixture<IconButton>(html`<u-icon-button aria-label="More" aria-expanded="false"></u-icon-button>`);
+    expect(innerButton(el).getAttribute('aria-expanded')).to.equal('false');
+
+    el.setAttribute('aria-expanded', 'true');
+    await el.updateComplete;
+    expect(innerButton(el).getAttribute('aria-expanded')).to.equal('true');
+  });
+
+  test('follows aria-label changes after the first render', async () => {
+    const el = await fixture<IconButton>(html`<u-icon-button aria-label="More"></u-icon-button>`);
+    el.setAttribute('aria-label', 'More options');
+    await el.updateComplete;
+    expect(innerButton(el).getAttribute('aria-label')).to.equal('More options');
+  });
+});

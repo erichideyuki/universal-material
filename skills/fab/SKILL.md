@@ -54,7 +54,10 @@ For ad-hoc placement, wrap the FAB in a positioned container.
 A FAB that toggles into multiple `<u-fab-menu-item>`s when clicked:
 
 ```html
-<u-fab-menu color="primary">
+<u-fab-menu
+  color="primary"
+  aria-label="Create"
+>
   <span
     class="material-symbols-outlined"
     slot="icon"
@@ -79,6 +82,32 @@ Slots on `<u-fab-menu>`:
 - `close-icon` — the open-state icon (defaults to an "×").
 
 The toggle FAB animates between the two icons; menu items animate in/out around it.
+
+### Accessibility and behavior
+
+- **Name the toggle with `aria-label` on `<u-fab-menu>`** — the toggle is rendered in the shadow root and has no visible text; the label is forwarded to its button, which also exposes `aria-expanded`.
+- The menu closes when an item is clicked, on Escape (focus returns to the toggle) and on a click outside it. An item's click handler can call `event.preventDefault()` to keep the menu open.
+- While closed, the items are `inert`: out of the Tab order and of the accessibility tree.
+- `focus()` on the host focuses the toggle.
+
+### Controlling it
+
+`open` is a reflected boolean attribute/property. Methods `show()`, `close()` and `toggle()`. Events (same as `u-menu`):
+
+- `open` / `close` — before the change, cancelable (`preventDefault()` keeps the current state);
+- `opened` / `closed` — after the animation ends.
+
+```js
+const fabMenu = document.querySelector("u-fab-menu");
+
+fabMenu.addEventListener("close", (event) => {
+  if (hasUnsavedChoice()) {
+    event.preventDefault(); // keeps the menu open
+  }
+});
+fabMenu.addEventListener("closed", () => console.log("menu closed"));
+fabMenu.show();
+```
 
 ## Caveats
 

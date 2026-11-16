@@ -17,7 +17,9 @@ import { MarkdownComponent } from 'ngx-markdown';
 })
 export class FabMenuComponent {
   example = `
-<u-fab-menu size="large">
+<u-fab-menu
+  size="large"
+  aria-label="Reply options">
   <span
     class="material-symbols-outlined"
     slot="icon">

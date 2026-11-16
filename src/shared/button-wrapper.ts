@@ -73,6 +73,7 @@ export abstract class ButtonWrapper extends LitElement {
         aria-label=${this.getAriaLabel() || nothing}
         aria-labelledby="${this.getAriaLabel() ? nothing : 'text'}"
         aria-selected=${ifDefined(this.#ariaSelectedAttribute())}
+        aria-expanded=${ifDefined(this.#ariaExpandedAttribute())}
         .role=${this.innerRole}
         type="button"
         @click=${this.#innerClickHandler}>
@@ -93,6 +94,7 @@ export abstract class ButtonWrapper extends LitElement {
         aria-label=${this.getAriaLabel() || nothing}
         aria-labelledby="${this.getAriaLabel() ? nothing : 'text'}"
         aria-selected=${ifDefined(this.#ariaSelectedAttribute())}
+        aria-expanded=${ifDefined(this.#ariaExpandedAttribute())}
         .role=${this.innerRole}
         target=${this.target || nothing}
         @click=${this.#innerClickHandler}>
@@ -103,6 +105,22 @@ export abstract class ButtonWrapper extends LitElement {
   }
 
   protected abstract _renderContent(): HTMLTemplateResult;
+
+  /**
+   * `aria-label` and `aria-expanded` on the host are forwarded to the inner button/link at render time, so changing
+   * them after the first render must request an update.
+   */
+  static override get observedAttributes(): string[] {
+    return [...super.observedAttributes, 'aria-label', 'aria-expanded'];
+  }
+
+  override attributeChangedCallback(name: string, oldValue: string | null, newValue: string | null): void {
+    super.attributeChangedCallback(name, oldValue, newValue);
+
+    if (name === 'aria-label' || name === 'aria-expanded') {
+      this.requestUpdate();
+    }
+  }
 
   override connectedCallback() {
     super.connectedCallback();
@@ -134,6 +152,30 @@ export abstract class ButtonWrapper extends LitElement {
    */
   protected getAriaSelected(): boolean | null {
     return null;
+  }
+
+  /**
+   * `aria-expanded` of the inner button/link: the host's `aria-expanded` attribute (e.g. a FAB or icon button that
+   * opens a menu). `null` (the default, without the attribute) leaves it out.
+   */
+  protected getAriaExpanded(): boolean | null {
+    const value = this.getAttribute('aria-expanded');
+
+    if (value === null || value === 'undefined') {
+      return null;
+    }
+
+    return value === 'true';
+  }
+
+  #ariaExpandedAttribute(): 'true' | 'false' | undefined {
+    const expanded = this.getAriaExpanded();
+
+    if (expanded === null) {
+      return undefined;
+    }
+
+    return expanded ? 'true' : 'false';
   }
 
   #ariaSelectedAttribute(): 'true' | 'false' | undefined {
