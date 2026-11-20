@@ -49,25 +49,93 @@
   dependency, shared with the rest of your app.
 </docs-example>
 
+@if (status() === 'error') {
+  <p class="data-grid-load-error">
+    The live examples could not load the grid from jsDelivr. The code below still shows how to use it.
+  </p>
+}
+
 <docs-example
   sectionTitle="Usage"
+  fluid
   [renderExample]="false"
   [html]="usageHtml"
 >
   Import the package once, give the grid a height (it fills its container), then set <code>columns</code> and
-  <code>items</code> as properties. Click a header to sort; drag it to the bar above the rows to group. See the
+  <code>items</code> as properties. Click a header to sort; <kbd>Shift</kbd>+click sorts by several columns.
+  <div
+    class="data-grid-demo"
+    example
+  >
+    <u-grid
+      style="height: 360px"
+      [columns]="usageColumns"
+      [items]="countries"
+    ></u-grid>
+  </div>
+</docs-example>
+
+<docs-example
+  sectionTitle="Grouping and summaries"
+  fluid
+  [renderExample]="false"
+  [html]="groupingHtml"
+>
+  <code>groupIndex</code> groups by a column; drag another header to the bar above to add a level, or a chip back
+  to ungroup. <code>summary</code> adds totals at the bottom and per group.
+  <div
+    class="data-grid-demo"
+    example
+  >
+    <u-grid
+      style="height: 400px"
+      auto-expand-groups
+      [columns]="groupingColumns"
+      [summary]="groupingSummary"
+      [items]="countries"
+    ></u-grid>
+  </div>
+</docs-example>
+
+<docs-example
+  sectionTitle="Filtering and selection"
+  fluid
+  [renderExample]="false"
+  [html]="filteringHtml"
+>
+  Attributes turn on the filter row, the search panel and row selection with checkboxes.
+  <code>selectedKeys</code> holds the <code>key-expr</code> values of the selected rows.
+  <div
+    class="data-grid-demo"
+    example
+  >
+    <u-grid
+      style="height: 400px"
+      key-expr="code"
+      selection-mode="multiple"
+      show-checkboxes
+      show-filter-row
+      show-search-panel
+      [columns]="filteringColumns"
+      [items]="countries"
+      (u-grid-selection-change)="onSelectionChange($event)"
+    ></u-grid>
+    <p class="data-grid-demo-status">Selected: {{ selectedKeys().join(', ') || 'none' }}</p>
+  </div>
+</docs-example>
+
+<p class="data-grid-more">
+  Editing, remote data, tree data, export and more are in the
   <a
     target="_blank"
     rel="noopener"
     [href]="docsUrl"
     >data grid documentation</a
-  >
-  for every feature, and the
+  >; the full API reference is on
   <a
     target="_blank"
     rel="noopener"
     [href]="repoUrl"
-    >GitHub repository</a
-  >
-  for the API reference.
-</docs-example>
+    >GitHub</a
+  >.
+</p>

@@ -1,0 +1,23 @@
+<u-grid
+  style="height: 400px"
+  key-expr="code"
+  selection-mode="multiple"
+  show-checkboxes
+  show-filter-row
+  show-search-panel
+></u-grid>
+
+<script type="module">
+  const grid = document.querySelector('u-grid');
+
+  grid.columns = [
+    { path: 'country', label: 'Country' },
+    { path: 'continent', label: 'Continent' },
+    { path: 'population', label: 'Population', dataType: 'number', format: { useGrouping: true } },
+  ];
+  grid.items = countries;
+
+  grid.addEventListener('u-grid-selection-change', () => {
+    console.log(grid.selectedKeys); // ['BR', 'JP', ...]
+  });
+</script>

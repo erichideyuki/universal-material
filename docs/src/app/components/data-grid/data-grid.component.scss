@@ -79,3 +79,26 @@
     color: var(--u-color-on-surface);
   }
 }
+
+.data-grid-demo {
+  padding-inline: 24px;
+}
+
+.data-grid-demo-status {
+  margin: 12px 0 0;
+  font-size: 14px;
+  color: var(--u-color-on-surface-variant);
+}
+
+.data-grid-load-error {
+  max-width: 720px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: var(--u-color-error-container);
+  color: var(--u-color-on-error-container);
+}
+
+.data-grid-more {
+  margin-block: 3rem 0;
+  color: var(--u-color-on-surface-variant);
+}

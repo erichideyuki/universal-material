@@ -1,0 +1,22 @@
+<u-grid
+  style="height: 400px"
+  auto-expand-groups
+></u-grid>
+
+<script type="module">
+  const grid = document.querySelector('u-grid');
+
+  grid.columns = [
+    { path: 'continent', label: 'Continent', groupIndex: 0 },
+    { path: 'country', label: 'Country' },
+    { path: 'population', label: 'Population', dataType: 'number', format: { useGrouping: true } },
+  ];
+  grid.summary = {
+    group: [{ column: 'population', type: 'sum', display: 'column' }],
+    total: [
+      { column: 'country', type: 'count' },
+      { column: 'population', type: 'sum' },
+    ],
+  };
+  grid.items = countries;
+</script>

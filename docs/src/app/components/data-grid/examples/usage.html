@@ -1,4 +1,4 @@
-<u-grid style="height: 400px"></u-grid>
+<u-grid style="height: 360px"></u-grid>
 
 <script type="module">
   // Registers <u-grid> once for the whole app.
@@ -9,11 +9,13 @@
   // Columns and rows are properties (arrays), not attributes.
   grid.columns = [
     { path: 'country', label: 'Country' },
-    { path: 'year', label: 'Year', dataType: 'number', groupIndex: 0 },
-    { path: 'population', label: 'Population', dataType: 'number' },
+    { path: 'capital', label: 'Capital' },
+    { path: 'population', label: 'Population', dataType: 'number', format: { useGrouping: true } },
+    { path: 'area', label: 'Area (km²)', dataType: 'number', format: { useGrouping: true } },
   ];
   grid.items = [
-    { country: 'Brazil', year: 2022, population: 215313498 },
-    { country: 'Japan', year: 2022, population: 124947000 },
+    { country: 'Brazil', capital: 'Brasília', population: 216422446, area: 8515767 },
+    { country: 'Japan', capital: 'Tokyo', population: 123294513, area: 377975 },
+    // ...
   ];
 </script>
