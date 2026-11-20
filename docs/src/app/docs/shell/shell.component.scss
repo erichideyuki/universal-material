@@ -100,6 +100,14 @@ u-top-app-bar {
   transition: color 0.2s;
 }
 
+.top-bar-sponsor {
+  color: light-dark(#bf3989, #db61a2);
+
+  .material-symbols-outlined {
+    font-size: 22px;
+  }
+}
+
 .u-divider {
   margin-block: 16px;
 }
