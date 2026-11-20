@@ -1,4 +1,4 @@
-import { ApplicationRef, ComponentFactoryResolver, Injectable, InjectionToken, Injector, Type, inject } from '@angular/core';
+import { ApplicationRef, Injectable, InjectionToken, Injector, Type, createComponent, inject } from '@angular/core';
 
 import { DialogInjector } from './dialog-injector';
 import { DialogStackService } from './dialog-stack.service';
@@ -10,7 +10,6 @@ export const DIALOG_DATA = new InjectionToken<any>('DIALOG_DATA');
   providedIn: 'root'
 })
 export class DialogService {
-  private readonly _componentFactoryResolver = inject(ComponentFactoryResolver);
   private readonly _appRef = inject(ApplicationRef);
   private readonly _injector = inject(Injector);
   private readonly _dialogStackService = inject(DialogStackService);
@@ -24,9 +23,10 @@ export class DialogService {
   }
 
   _internalOpen<T extends DialogComponent>(dialogType: Type<T>, customInjectionTokens: WeakMap<any, any>): T {
-    const dialogComponent = this._componentFactoryResolver.resolveComponentFactory(dialogType);
-
-    const dialogComponentRef = dialogComponent.create(new DialogInjector(this._injector, customInjectionTokens));
+    const dialogComponentRef = createComponent(dialogType, {
+      environmentInjector: this._appRef.injector,
+      elementInjector: new DialogInjector(this._injector, customInjectionTokens)
+    });
 
     dialogComponentRef.instance.afterClose.subscribe(() => {
       this._appRef.detachView(dialogComponentRef.hostView);
