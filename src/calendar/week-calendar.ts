@@ -72,8 +72,12 @@ export class WeekCalendar extends CalendarBase {
         <div
           class="week-row"
           style="top: ${(row + 1) * 48}px"
-          @mouseenter=${() => { this._hoverWeekStart = this.#rowWeekStart(row); }}
-          @mouseleave=${() => { this._hoverWeekStart = null; }}
+          @mouseenter=${() => {
+            this._hoverWeekStart = this.#rowWeekStart(row);
+          }}
+          @mouseleave=${() => {
+            this._hoverWeekStart = null;
+          }}
           @click=${() => this._selectDate(this.#rowWeekStart(row))}>
           <u-ripple></u-ripple>
         </div>

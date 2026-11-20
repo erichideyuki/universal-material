@@ -127,7 +127,10 @@ A text field where each typed value (separated by Enter or comma) becomes a remo
 For object-valued chips (e.g. typeahead-driven), set a `formatter` that maps each item to its label. It is display only — `value` and the submitted form data are untouched. A returned string is rendered as **HTML** (sanitized with DOMPurify, which strips custom elements); return an `HTMLElement` or a Lit `TemplateResult` to render web components:
 
 ```html
-<u-chip-field label="Recipients" manual></u-chip-field>
+<u-chip-field
+  label="Recipients"
+  manual
+></u-chip-field>
 
 <script>
   const chipField = document.querySelector("u-chip-field");

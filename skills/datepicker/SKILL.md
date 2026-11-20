@@ -178,8 +178,8 @@ The value is the week's **start date** (the first weekday, honoring the locale),
 
 ```html
 <u-week-calendar
-  locale="pt-BR"
   id="wk"
+  locale="pt-BR"
 ></u-week-calendar>
 <script>
   const wk = document.getElementById("wk");

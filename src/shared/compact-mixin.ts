@@ -3,8 +3,8 @@ import { consume } from '@lit/context';
 import { LitElement, PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
-import { MixinBase, MixinReturn } from './mixin.js';
 import { compactContext } from './compact-context.js';
+import { MixinBase, MixinReturn } from './mixin.js';
 
 export interface CompactInterface {
   /**
