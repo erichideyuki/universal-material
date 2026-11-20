@@ -1,9 +1,10 @@
 import { CSSResultGroup } from '@lit/reactive-element/css-tag';
-import DOMPurify from 'dompurify';
 
 import { html, HTMLTemplateResult, nothing, TemplateResult } from 'lit';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 import { customElement, property, query } from 'lit/decorators.js';
+
+import DOMPurify from 'dompurify';
 
 import { TextFieldBase } from '../shared/text-field-base/text-field-base.js';
 import { styles } from './chip-field.styles.js';

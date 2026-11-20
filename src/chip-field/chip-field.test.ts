@@ -1,5 +1,6 @@
 import { expect, fixture, html, oneEvent } from '@open-wc/testing';
 
+import '../badge/badge.js';
 import '../chip/chip.js';
 import { ChipField } from './chip-field.js';
 
@@ -141,24 +142,24 @@ suite('u-chip-field', () => {
     test('renders an HTMLElement returned by the formatter', async () => {
       const el = await fixture<ChipField>(html`<u-chip-field name="t"></u-chip-field>`);
       el.formatter = (v: string) => {
-        const badge = document.createElement('u-test-badge');
+        const badge = document.createElement('u-badge');
         badge.textContent = v;
         return badge;
       };
       el.value = ['Ana'];
       await el.updateComplete;
-      expect(chipOf(el).querySelector('u-test-badge')!.textContent).to.equal('Ana');
+      expect(chipOf(el).querySelector('u-badge')!.textContent).to.equal('Ana');
     });
 
     test('renders a TemplateResult returned by the formatter, custom elements included', async () => {
       const el = await fixture<ChipField>(html`<u-chip-field name="t"></u-chip-field>`);
-      el.formatter = (p: { name: string }) => html`<u-test-badge .person=${p}>${p.name}</u-test-badge>`;
-      const person = { name: 'Ana' };
-      el.value = [person];
+      el.formatter = (p: { name: string }) => html`<u-badge .static=${true}>${p.name}</u-badge>`;
+      el.value = [{ name: 'Ana' }];
       await el.updateComplete;
-      const badge = chipOf(el).querySelector('u-test-badge') as HTMLElement & { person: unknown };
+      const badge = chipOf(el).querySelector('u-badge')!;
       expect(badge.textContent).to.equal('Ana');
-      expect(badge.person).to.equal(person);
+      expect(badge.static).to.be.true;
+      expect(badge.shadowRoot).to.exist;
     });
 
     test('renders raw values as plain text when no formatter is set', async () => {
