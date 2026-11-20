@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "docs",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "docs:serve"],
+      "port": 4200
+    },
+    {
+      "name": "docs-preview",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [".claude/serve-docs.mjs"],
+      "port": 4300
+    },
+    {
+      "name": "mockup",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [".claude/serve.mjs"],
+      "port": 5173
+    }
+  ]
+}
