@@ -103,6 +103,10 @@ export const routes: Routes = [
         loadComponent: () => import('@docs/components/tables/tables.component').then(m => m.TablesComponent)
       },
       {
+        path: 'components/data-grid',
+        loadComponent: () => import('@docs/components/data-grid/data-grid.component').then(m => m.DataGridComponent)
+      },
+      {
         path: 'components/datepicker',
         loadComponent: () => import('@docs/components/datepicker/datepicker.component').then(m => m.DatepickerComponent)
       },

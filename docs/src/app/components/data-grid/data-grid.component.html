@@ -1,0 +1,73 @@
+<docs-title
+  title="Data grid"
+  tag="u-grid"
+>
+  A fast, accessible data grid for large data sets, published as its own package,
+  <code>&#64;universal-material/data-grid</code>. It is a standard custom element built with Lit, so it works in
+  plain HTML and in any framework.
+</docs-title>
+
+<a
+  class="data-grid-docs-cta"
+  target="_blank"
+  rel="noopener"
+  [href]="docsUrl"
+>
+  <span class="data-grid-docs-cta-icon material-symbols-outlined">table_view</span>
+  <span class="data-grid-docs-cta-text">
+    <span class="data-grid-docs-cta-title">Data grid documentation</span>
+    <span class="data-grid-docs-cta-sub">Live examples of every feature, with their source code and the full API</span>
+  </span>
+  <span class="data-grid-docs-cta-arrow material-symbols-outlined">arrow_outward</span>
+</a>
+
+<h5 class="u-headline-m data-grid-heading">Highlights</h5>
+<ul class="data-grid-highlights">
+  <li><strong>Millions of rows</strong> with row and column virtualization.</li>
+  <li><strong>Remote data</strong>: the server filters, sorts, groups, summarizes and pages; only visible blocks load.</li>
+  <li>
+    <strong>Data shaping</strong>: multi-column sorting, filter row, search panel, header filters, grouping by drag and
+    drop, summaries, tree data and master-detail.
+  </li>
+  <li><strong>Editing</strong> in cell, row and batch modes, with validation. Your items are never mutated.</li>
+  <li><strong>Real-time updates</strong> with <code>applyChanges()</code> and <code>reshapeOnChanges</code>.</li>
+  <li><strong>14 languages</strong> built in, plus right-to-left layout.</li>
+  <li><strong>Accessible</strong>: WAI-ARIA grid pattern, full keyboard support, WCAG 2.2 AA.</li>
+  <li>
+    <strong>SSR and theming</strong>: renders with <code>&#64;lit-labs/ssr</code> and reads the same
+    <code>--u-color-*</code> tokens as the rest of Universal Material.
+  </li>
+</ul>
+
+<docs-example
+  sectionTitle="Install"
+  [renderExample]="false"
+  [html]="installHtml"
+  [language]="'shell'"
+>
+  The grid is not part of <code>&#64;universal-material/web</code>: install its own package. Lit is a regular
+  dependency, shared with the rest of your app.
+</docs-example>
+
+<docs-example
+  sectionTitle="Usage"
+  [renderExample]="false"
+  [html]="usageHtml"
+>
+  Import the package once, give the grid a height (it fills its container), then set <code>columns</code> and
+  <code>items</code> as properties. Click a header to sort; drag it to the bar above the rows to group. See the
+  <a
+    target="_blank"
+    rel="noopener"
+    [href]="docsUrl"
+    >data grid documentation</a
+  >
+  for every feature, and the
+  <a
+    target="_blank"
+    rel="noopener"
+    [href]="repoUrl"
+    >GitHub repository</a
+  >
+  for the API reference.
+</docs-example>

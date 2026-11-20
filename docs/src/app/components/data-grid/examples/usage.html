@@ -1,0 +1,19 @@
+<u-grid style="height: 400px"></u-grid>
+
+<script type="module">
+  // Registers <u-grid> once for the whole app.
+  import '@universal-material/data-grid';
+
+  const grid = document.querySelector('u-grid');
+
+  // Columns and rows are properties (arrays), not attributes.
+  grid.columns = [
+    { path: 'country', label: 'Country' },
+    { path: 'year', label: 'Year', dataType: 'number', groupIndex: 0 },
+    { path: 'population', label: 'Population', dataType: 'number' },
+  ];
+  grid.items = [
+    { country: 'Brazil', year: 2022, population: 215313498 },
+    { country: 'Japan', year: 2022, population: 124947000 },
+  ];
+</script>
