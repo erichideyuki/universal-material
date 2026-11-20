@@ -1,6 +1,6 @@
 {
   "name": "@universal-material/web",
-  "version": "3.11.0",
+  "version": "3.13.0",
   "description": "Material web components",
   "type": "module",
   "keywords": [
@@ -75,6 +75,7 @@
   },
   "devDependencies": {
     "@angular/build": "^20.0.4",
+    "@angular/cdk": "^20.2.0",
     "@angular/cli": "^20.0.4",
     "@angular/common": "^20.0.0",
     "@angular/compiler": "^20.0.0",
