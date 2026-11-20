@@ -137,6 +137,14 @@ u-top-app-bar {
   }
 }
 
+.drawer-footer-sponsor {
+  margin-top: 8px;
+
+  > .material-symbols-outlined:first-child {
+    color: light-dark(#bf3989, #db61a2);
+  }
+}
+
 .drawer-footer-text {
   display: flex;
   flex-direction: column;
