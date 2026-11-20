@@ -43,7 +43,7 @@ const loadGrid = (): Promise<unknown> => {
 })
 export class DataGridComponent implements OnInit {
   readonly docsUrl = 'https://universal-material.github.io/data-grid/';
-  readonly repoUrl = 'https://github.com/universal-material/data-grid';
+  readonly repoUrl = 'https://github.com/erichideyuki/universal-data-grid';
   readonly status = signal<'loading' | 'ready' | 'error'>('loading');
   readonly selectedKeys = signal<readonly string[]>([]);
 

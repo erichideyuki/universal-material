@@ -57,10 +57,10 @@
     "changeset": "changeset",
     "dev": "npm run docs"
   },
-  "author": "https://github.com/universal-material/universal-material/graphs/contributors",
+  "author": "https://github.com/erichideyuki/universal-material/graphs/contributors",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/universal-material/universal-material-web.git"
+    "url": "git+https://github.com/erichideyuki/universal-material.git"
   },
   "license": "MIT",
   "homepage": "https://universal-material.github.io",
